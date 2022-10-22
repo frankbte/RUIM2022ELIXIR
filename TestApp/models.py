@@ -8,13 +8,13 @@ class Presentacion(models.Model):
     email = models.EmailField()
     institucion = models.CharField(max_length = 40)
     departamento = models.CharField(max_length = 40)
-    grado = models.TextChoices()
-    modalidad = models.TextChoices()
+    grado = models.CharField(max_length = 30)
+    modalidad = models.CharField(max_length = 30)
     titulo = models.CharField()
     autores = models.CharField()
     resumen = models.FileField(upload_to = 'registros/resumenes/')
     constancia = models.Filefield(upload_to = 'registros/constanciaas/')
-    estatus = models.TextChoices()
+    estatus = models.CharField(max_length = 30)
 
 class Inicio(models.Model):
     titulo = models.CharField(max_length = 40)
