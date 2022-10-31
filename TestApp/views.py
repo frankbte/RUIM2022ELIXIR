@@ -23,6 +23,12 @@ def ediciones(request):
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
+def login(request):
+    return render(request, 'TestApp/AdminFront/login.html')
+
+def iterAdmin(request):
+    return render(request, 'TestApp/AdminFront/edicionesFront.html')
+
 # Controladores
 def savemail(request):  
     if request.method == "POST":  
@@ -54,7 +60,7 @@ def remove_iteration(request):
 
         event.delete()
 
-    except Entry.DoesNotExist:
+    except Evento.DoesNotExist:
         println("Evento no existe")
 
     return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento

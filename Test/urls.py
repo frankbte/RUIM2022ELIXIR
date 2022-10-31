@@ -26,4 +26,7 @@ urlpatterns = [
     path('poster/', views.poster, name="Poster"),
     path('programa/', views.programa, name="Programa"),
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
+    path('admin/eliminar_evento/', views.remove_iteration, name = "Eliminar evento"),
+    path('login/', views.login, name="Login"),
+    path('edicionesAdmin/', views.iterAdmin, name="Edicion iteraciones")
 ]
