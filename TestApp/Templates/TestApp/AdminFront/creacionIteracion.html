@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Creación de iteración</title>
+    </head>
+
+    <body>
+        <center>
+        <h1>
+            Creación de una nueva iteración
+        </h1>
+        {% if form.errors %}
+            <p>Debe completar todos los campos correctamente.</p>
+        {% else %}
+            <p>Ingrese los datos de la nueva iteración:</p>
+        {% endif %}
+
+        <form action="//" method="POST">
+            {{ form.as_ul }}
+            {% csrf_token %}
+            <input type="submit" value="Crear">
+        </form>
+        </center>
+    </body>
+</html>

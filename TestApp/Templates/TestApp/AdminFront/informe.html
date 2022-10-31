@@ -7,15 +7,28 @@
     </head>
 
     <body>
+        <center>
         <h1>
             {{ evento.nombre_evento }}
         </h1>
+        <br>
         <p>Informe final</p>
         <p>
             Se presentan las estadísticas relacionadas a las presentaciones 
             registradas a traves de la página de la RUIM para esta edición:
         </p>
         <p>Cantidad de solicitudes recibidas: {{ solicitudes }} </p>
-        <p></p>
+        <br>
+        <p>Número de ponencias: {{ ponencias }}</p>
+        <p>Ponencias aceptadas: {{ p_aceptadas }} </p>
+        <p>Ponencias rechazadas: {{ p_rechazadas }}</p>
+        <br>
+        <p>Número de carteles: {{ carteles }}</p>
+        <p>Carteles aceptados: {{ c_aceptados }}</p>
+        <p>Carteles rechazados: {{ c_rechazados }}</p>
+        <br>
+        <p>Presentaciones totales aceptadas: {{ pres_aceptadas }}</p>
+        <p>Presentaciones totales rechazadas: {{ pres_rechazadas }}</p>
+        </center>
     </body>
 </html>
