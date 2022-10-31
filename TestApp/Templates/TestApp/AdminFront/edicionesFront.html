@@ -7,7 +7,7 @@
     </head>
 
     <body>
-        <h1>Editando: Edición " {{ iteracion.titulo }} "</h1>
+        <h1>Editando: Edición " {{ iteracion.year }} "</h1>
         <br/>
 
         <h2><button type="button" name="CreacionEvento">Crear una nueva iteración</button></h2>
@@ -17,7 +17,7 @@
                 <caption>Iteraciones creadas</caption>
                 {% for evento in iteracion_list %}
                 <tr>
-                    <td> {{ evento.titulo }} </td>
+                    <td> {{ evento.year }} </td>
                     <td> <button type="button" name="Editar">Editar</button> </td>
                     <td> <button type="button" name="Eliminar">Eliminar</button></td>
                 </tr>

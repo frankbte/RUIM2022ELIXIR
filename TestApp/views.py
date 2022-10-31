@@ -29,6 +29,11 @@ def login(request):
     return render(request, 'TestApp/AdminFront/login.html')
 
 def iterAdmin(request):
+    eventos = Evento.objects.all()
+    
+    if Evento.objects.count() > 0:
+    	return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos})
+    	
     return render(request, 'TestApp/AdminFront/edicionesFront.html')
 
 def informe(request):
