@@ -23,6 +23,12 @@ def ediciones(request):
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
+def login(request):
+    return render(request, 'TestApp/AdminFront/login.html')
+
+def iterAdmin(request):
+    return render(request, 'TestApp/AdminFront/edicionesFront.html')
+
 # Controladores
 def savemail(request):  
     if request.method == "POST":  
