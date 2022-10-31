@@ -40,7 +40,7 @@ def savemail(request):
 def remove_iteration(request):
     event_name = request.POST.get("nombre_evento") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
                                                     #y que corresponda con el nombre en la db.
-            try:  
+    try:  
         event = Evento.objects.get(nombre_evento = event_name)
 
         event.inicio.delete()
