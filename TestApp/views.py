@@ -54,7 +54,7 @@ def remove_iteration(request):
 
         event.delete()
 
-    except Entry.DoesNotExist:
+    except Evento.DoesNotExist:
         println("Evento no existe")
 
     return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento
