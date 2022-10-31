@@ -28,5 +28,8 @@ urlpatterns = [
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
     path('admin/eliminar_evento/', views.remove_iteration, name = "Eliminar evento"),
     path('login/', views.login, name="Login"),
-    path('edicionesAdmin/', views.iterAdmin, name="Edicion iteraciones")
+    path('informe/', views.informe, name="Informe final"),
+    path('edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
+    path('inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
+    path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
 ]

@@ -19,5 +19,21 @@
     </div>
   </section>
 
+  <body>
+    <center>
+    <h1 style="color:white;"> 
+        Solicitud para registro de ponencias
+    </h1>
+        <p style="color:white;"> Ingrese la información sobre su presentación:</p>
+
+
+    <form action="/ponencias/" method="POST" class="loginfrm">
+        {{ form.as_ul }}
+        {% csrf_token %}
+        <input type="submit" value="Registrar">
+    </form>
+    </center>
+  </body>
+
 
  {% endblock %}

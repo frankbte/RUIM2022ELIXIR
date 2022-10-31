@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Edición de Inicio</title>
+    </head>
+
+    <body>
+        <center>
+        <h1>
+            Edición de la pestaña de inicio
+        </h1>
+        {% if form.errors %}
+            <p>Debe completar todos los campos correctamente.</p>
+        {% else %}
+            <p>Ingrese los cambios a los campos que se mostrarán en la página de inicio:</p>
+        {% endif %}
+
+        <form action="/inicioAdmin/" method="POST">
+            {{ form.as_ul }}
+            {% csrf_token %}
+            <input type="submit" value="Confirmar cambios">
+        </form>
+        </center>
+    </body>
+</html>

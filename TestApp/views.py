@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import models
-from TestApp.forms import EventoForm  
-from TestApp.models import Evento
+from TestApp.forms import EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro
 
 
 def home(request):
@@ -15,7 +15,9 @@ def ubicacion(request):
 def contacto(request):
     return render(request, 'TestApp/contacto.html')
 def ponencias(request):
-    return render(request, 'TestApp/ponencias.html')
+        form = PresentacionForm()
+        return render(request, 'TestApp/ponencias.html', {'form': form})
+
 def ediciones(request):
     return render(request, 'TestApp/ediciones.html')
 
@@ -28,6 +30,17 @@ def login(request):
 
 def iterAdmin(request):
     return render(request, 'TestApp/AdminFront/edicionesFront.html')
+
+def informe(request):
+    return render(request, 'TestApp/AdminFront/informe.html')
+
+def inicioAdmin(request):
+    form = InicioPageForm()
+    return render(request, 'TestApp/AdminFront/inicioAdmin.html', {'form': form})
+
+def contactoAdmin(request):
+    form = ContactoPageForm()
+    return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
 
 # Controladores
 def savemail(request):  
