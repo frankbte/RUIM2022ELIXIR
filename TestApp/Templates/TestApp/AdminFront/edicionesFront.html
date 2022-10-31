@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Iteraciones</title>
+    </head>
+
+    <body>
+        <h1>Editando: Edición " {{ iteracion.titulo }} "</h1>
+        <br/>
+
+        <h2><button type="button" name="CreacionEvento">Crear una nueva iteración</button></h2>
+        <br/>
+        {% if iteracion_list %}
+            <table>
+                <caption>Iteraciones creadas</caption>
+                {% for evento in iteracion_list %}
+                <tr>
+                    <td> {{ evento.titulo }} </td>
+                    <td> <button type="button" name="Editar">Editar</button> </td>
+                    <td> <button type="button" name="Eliminar">Eliminar</button></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            No existen iteraciones guardadas de la RUIM para mostrar. Cree una iteración para mostrar datos.
+        {% endif %}
+    </body>
+</html>
