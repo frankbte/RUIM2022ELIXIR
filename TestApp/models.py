@@ -62,6 +62,7 @@ class EdicionesPage(models.Model):
     text = models.CharField(max_length = 300)
 
 class Evento(models.Model):
+    active = models.IntegerField()
     year = models.IntegerField()
     cartel = models.FileField(upload_to = 'base/', blank=True,null=True)
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -74,6 +75,13 @@ class Evento(models.Model):
     plantilla_constancias_pdf = models.FileField(upload_to = 'constancias/base/', blank=True,null=True)
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
+
+
+DEFAULT_EVENT = Evento(active = 0, year = 2022, \
+                        inicio = InicioPage(title_descripcion = "RUIM 2022", 
+                                text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \
+    \n\n Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022)."))
+
 
 
 

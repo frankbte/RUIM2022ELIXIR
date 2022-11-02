@@ -5,7 +5,13 @@ from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistr
 
 
 def home(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        home = current_events[0].inicio
+        return render(request, 'TestApp/home.html', {'home' : home})
+
     return render(request, 'TestApp/home.html')
+
 def programa(request):
     return render(request, 'TestApp/programa.html')
 def poster(request):
