@@ -32,4 +32,6 @@ urlpatterns = [
     path('edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
     path('inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
+    path('constancias/', views.constancias, name="Constancias"),
+    path('report/', views.report),
 ]

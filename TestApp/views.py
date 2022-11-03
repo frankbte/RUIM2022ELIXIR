@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.db import models
 from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
 from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
+from django.http import FileResponse
 
+from fpdf import FPDF
 
 def home(request):
     return render(request, 'TestApp/home.html')
@@ -31,6 +33,9 @@ def evento(request):
 def login(request):
     return render(request, 'TestApp/AdminFront/login.html')
 
+def constancias(request):
+    return render(request, 'TestApp/AdminFront/constancias.html')
+
 def iterAdmin(request):
     eventos = Evento.objects.all()
     
@@ -51,6 +56,17 @@ def contactoAdmin(request):
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
 
 # Controladores
+
+def report(request):
+    pdf = FPDF('L', 'mm', 'letter')
+    pdf.add_page()
+    pdf.image('TestApp\static\TestApp\img\Certificado.jpg', x=0, y=0, w=280, h=216)
+    pdf.set_font('courier', 'B', 24)
+    pdf.multi_cell(w = 0, h = 10, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+    pdf.output('report.pdf', 'F')
+    
+    return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
 def savemail(request):  
     if request.method == "POST":  
         form = EventoForm(request.POST)  
