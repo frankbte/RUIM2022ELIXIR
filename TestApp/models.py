@@ -1,8 +1,9 @@
 from django.db import models
+from django.forms import ModelForm
 
 class PresentacionRegistro(models.Model):
     presentacion_titulo = models.CharField(max_length = 40)
-    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE)
+    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '')
     resp_email = models.EmailField()
     a1 = models.ForeignKey('Author', related_name = "a1", on_delete = models.CASCADE, blank=True,null=True)
     a2 = models.ForeignKey('Author', related_name = "a2", on_delete = models.CASCADE, blank=True,null=True)

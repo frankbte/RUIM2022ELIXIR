@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import models
-from TestApp.forms import EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro
+from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
 
 
 def home(request):
@@ -15,8 +15,11 @@ def ubicacion(request):
 def contacto(request):
     return render(request, 'TestApp/contacto.html')
 def ponencias(request):
-        form = PresentacionForm()
-        return render(request, 'TestApp/ponencias.html', {'form': form})
+        pform = PresentacionForm()
+        aform = AuthorForm()
+        return render(request, 'TestApp/ponencias.html', 
+                      {'pform': pform, 
+                       'aform': aform})
 
 def ediciones(request):
     return render(request, 'TestApp/ediciones.html')
@@ -32,8 +35,8 @@ def iterAdmin(request):
     eventos = Evento.objects.all()
     
     if Evento.objects.count() > 0:
-    	return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos})
-    	
+        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos})
+    
     return render(request, 'TestApp/AdminFront/edicionesFront.html')
 
 def informe(request):
@@ -61,27 +64,60 @@ def savemail(request):
         form = EventoForm()  
     return render(request,'index.html',{'form':form})  
 
-def remove_iteration(request):
-    event_name = request.POST.get("nombre_evento") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
-                                                    #y que corresponda con el nombre en la db.
-    try:  
-        event = Evento.objects.get(nombre_evento = event_name)
+def insert(request):
+    presentacion_titulo = request.POST.get("presentacion_titulo")
+    resp_email =  request.POST.get("resp_email")
+    r_name = request.POST.get("resp_name")
+    r_am = request.POST.get("resp_ap")
+    r_ap = request.POST.get("resp_am")
+    a1_name = request.POST.get("a1_name")
+    a1_am = request.POST.get("a1_ap")
+    a1_ap = request.POST.get("a1_am")
+    a2_name = request.POST.get("a2_name")
+    a2_am = request.POST.get("a2_ap")
+    a2_ap = request.POST.get("a2_am")
+    a3_name = request.POST.get("a3_name")
+    a3_am = request.POST.get("a3_ap")
+    a3_ap = request.POST.get("a3_am")
+    a4_name = request.POST.get("a4_name")
+    a4_am = request.POST.get("a4_ap")
+    a4_ap = request.POST.get("a4_am")
+    a5_name = request.POST.get("a5_name")
+    a5_am = request.POST.get("a5_ap")
+    a5_ap = request.POST.get("a5_am")
+    a6_name = request.POST.get("a6_name")
+    a6_am = request.POST.get("a6_ap")
+    a6_ap = request.POST.get("a6_am")
+    a7_name = request.POST.get("a7_name")
+    a7_am = request.POST.get("a7_ap")
+    a7_ap = request.POST.get("a7_am")
+    institucion = request.POST.get("institucion")
+    departamento = request.POST.get("institucion")
+    modalidad = request.POST.get("institucion")
+    resumen = request.POST.get("institucion")
 
-        event.inicio.delete()
-        event.programa.delete()
-        event.poster.delete()
-        event.ubicaciones.delete()
-        event.contacto.delete()
-        event.registro.delete()
-        event.anteriores.delete()
-        event.base.delete()
+    register = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
+        resp = Author(nombre=r_name, apellido_mat = r_am, apellido_pat = r_ap),
+        resp_email = resp_email,
+        a1 = Author(nombre=a1_name, apellido_mat = a1_am, apellido_pat = a1_ap),
+        a2 = Author(nombre=a2_name, apellido_mat = a2_am, apellido_pat = a2_ap),
+        a3 = Author(nombre=a3_name, apellido_mat = a3_am, apellido_pat = a3_ap),
+        a4 = Author(nombre=a4_name, apellido_mat = a4_am, apellido_pat = a4_ap),
+        a5 = Author(nombre=a5_name, apellido_mat = a5_am, apellido_pat = a5_ap),
+        a6 = Author(nombre=a6_name, apellido_mat = a6_am, apellido_pat = a6_ap),
+        a7 = Author(nombre=a7_name, apellido_mat = a7_am, apellido_pat = a7_ap),
+        institucion = institucion,
+        departamento = departamento,
+        modalidad = modalidad,
+        resumen = resumen,
+        estatus = False,
+        evento = True)
 
-        event.delete()
+    register.save()
+    return render(request, "TestApp/ponencias.html",
+            { "message" : "Registro exitoso!"})
 
-    except Evento.DoesNotExist:
-        println("Evento no existe")
 
-    return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento
 
 
 
