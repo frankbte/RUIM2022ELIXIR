@@ -13,18 +13,47 @@ def home(request):
     return render(request, 'TestApp/home.html')
 
 def programa(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        programa = current_events[0].programa
+        return render(request, 'TestApp/programa.html', {'programa' : programa})
+
     return render(request, 'TestApp/programa.html')
+
 def poster(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        poster = current_events[0].poster
+        return render(request, 'TestApp/poster.html', {'poster' : poster})
+
     return render(request, 'TestApp/poster.html')
+
 def ubicacion(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        ubicacion = current_events[0].ubicacion
+        return render(request, 'TestApp/ubicacion.html', {'ubicacion' : ubicacion})
+
     return render(request, 'TestApp/ubicacion.html')
+
 def contacto(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        contacto = current_events[0].contacto
+        return render(request, 'TestApp/contacto.html', {'contacto' : contacto})
+
     return render(request, 'TestApp/contacto.html')
+
 def ponencias(request):
         form = PresentacionForm()
         return render(request, 'TestApp/ponencias.html', {'form': form})
 
 def ediciones(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        edicion = current_events[0].edicion
+        return render(request, 'TestApp/ediciones.html', {'' : edicion})
+
     return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
@@ -85,7 +114,7 @@ def remove_iteration(request):
         event.delete()
 
     except Evento.DoesNotExist:
-        println("Evento no existe")
+        print("Evento no existe")
 
     return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento
 
