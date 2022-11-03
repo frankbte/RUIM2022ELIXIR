@@ -1,8 +1,9 @@
 from django.db import models
+from django.forms import ModelForm
 
 class PresentacionRegistro(models.Model):
     presentacion_titulo = models.CharField(max_length = 40)
-    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE)
+    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '')
     resp_email = models.EmailField()
     a1 = models.ForeignKey('Author', related_name = "a1", on_delete = models.CASCADE, blank=True,null=True)
     a2 = models.ForeignKey('Author', related_name = "a2", on_delete = models.CASCADE, blank=True,null=True)
@@ -31,10 +32,11 @@ class InicioPage(models.Model):
 class ProgramaPage(models.Model):
     title = models.CharField(max_length = 40)
     programa_pdf = models.FileField(upload_to = 'TestApp/static/TestApp/archivos/')
+    programa_img = models.ImageField(upload_to = 'archivos/')
 
 class PosterPage(models.Model):
     title = models.CharField(max_length = 40)
-    poster_pdf = models.FileField(upload_to = 'archivos/')
+    poster_img = models.ImageField(upload_to = 'archivos/')
 
 class RegistroPage(models.Model):
     title_participacion_ponente = models.CharField(max_length = 40)
@@ -61,6 +63,7 @@ class ContactoPage(models.Model):
 class EdicionesPage(models.Model):
     title = models.CharField(max_length = 40)
     text = models.CharField(max_length = 300)
+    
 
 class Evento(models.Model):
     active = models.IntegerField()
@@ -73,7 +76,7 @@ class Evento(models.Model):
     contacto = models.ForeignKey('ContactoPage', on_delete = models.CASCADE, blank=True,null=True)
     registro = models.ForeignKey('RegistroPage', on_delete = models.CASCADE, blank=True,null=True)
     edicion = models.ForeignKey('EdicionesPage', on_delete = models.CASCADE,blank=True,null=True)
-    plantilla_constancias_pdf = models.FileField(upload_to = 'constancias/base/', blank=True,null=True)
+    plantilla_constancias_img = models.ImageField(upload_to = 'constancias/base/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
 

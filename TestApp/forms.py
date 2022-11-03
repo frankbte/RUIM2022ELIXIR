@@ -1,10 +1,20 @@
+from telnetlib import AUTHENTICATION
 from django import forms  
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
 
 class EventoForm(forms.ModelForm):  
     class Meta:  
         model = Evento
         fields = "__all__"
+        
+class AuthorForm(forms.ModelForm):  
+    class Meta:  
+        model = Author
+        fields = ['nombre', 'apellido_pat', 'apellido_mat']
+        labels = {'nombre' : 'Nombre',
+                  'apellido_pat' : 'Apellido Paterno',
+                  'apellido_mat' : 'Apellido Materno'}
+
 
 class PresentacionForm(forms.ModelForm):
     class Meta:
