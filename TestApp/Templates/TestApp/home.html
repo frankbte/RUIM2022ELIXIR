@@ -12,8 +12,7 @@
   <center>
     &nbsp;<br />
     <img alt="Póster del evento" src="{% static 'TestApp/img/banner.jpg'%}" /></a>
-    
-</center>
+    </center>
 
   <div><p></p></div>
 
@@ -29,13 +28,10 @@
                 <span class="section-heading-upper"></span>
                 <span class="section-heading-lower"></span>
               </h2> 
-              <h1 style="font-weight: bold;"> RUIM 2022</h1>
-              <p class="mb-0"> El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales.
-                <p>
+			  <h1 style="font-weight: bold;"> {{ home.title_descripcion }} </h1>
+			  {% if home %}<p class="mb-0">	{{ home.text_descripcion|linebreaks }}</p> 
+			  {% endif %}
 
-                </p>
-                Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022).
-              </p>
             </div>
           </div>
         </div>

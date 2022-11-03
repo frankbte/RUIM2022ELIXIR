@@ -7,15 +7,45 @@ from django.http import FileResponse
 from fpdf import FPDF
 
 def home(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        home = current_events[0].inicio
+        return render(request, 'TestApp/home.html', {'home' : home})
+
     return render(request, 'TestApp/home.html')
+
 def programa(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        programa = current_events[0].programa
+        return render(request, 'TestApp/programa.html', {'programa' : programa})
+
     return render(request, 'TestApp/programa.html')
+
 def poster(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        poster = current_events[0].poster
+        return render(request, 'TestApp/poster.html', {'poster' : poster})
+
     return render(request, 'TestApp/poster.html')
+
 def ubicacion(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        ubicacion = current_events[0].ubicacion
+        return render(request, 'TestApp/ubicacion.html', {'ubicacion' : ubicacion})
+
     return render(request, 'TestApp/ubicacion.html')
+
 def contacto(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        contacto = current_events[0].contacto
+        return render(request, 'TestApp/contacto.html', {'contacto' : contacto})
+
     return render(request, 'TestApp/contacto.html')
+
 def ponencias(request):
         pform = PresentacionForm()
         aform = AuthorForm()
@@ -24,6 +54,11 @@ def ponencias(request):
                        'aform': aform})
 
 def ediciones(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        edicion = current_events[0].edicion
+        return render(request, 'TestApp/ediciones.html', {'' : edicion})
+
     return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
@@ -132,6 +167,28 @@ def insert(request):
     register.save()
     return render(request, "TestApp/ponencias.html",
             { "message" : "Registro exitoso!"})
+
+def remove_iteration(request):
+    event_name = request.POST.get("nombre_evento") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
+                                                    #y que corresponda con el nombre en la db.
+    try:
+        event = Evento.objects.get(nombre_evento = event_name)
+
+        event.inicio.delete()
+        event.programa.delete()
+        event.poster.delete()
+        event.ubicaciones.delete()
+        event.contacto.delete()
+        event.registro.delete()
+        event.anteriores.delete()
+        event.base.delete()
+
+        event.delete()
+
+    except Evento.DoesNotExist:
+        print("Evento no existe")
+
+    return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento
 
 
 
