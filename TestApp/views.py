@@ -143,30 +143,34 @@ def insert(request):
     a7_am = request.POST.get("a7_ap")
     a7_ap = request.POST.get("a7_am")
     institucion = request.POST.get("institucion")
-    departamento = request.POST.get("institucion")
-    modalidad = request.POST.get("institucion")
-    resumen = request.POST.get("institucion")
+    departamento = request.POST.get("departamento")
+    modalidad = request.POST.get("modalidad")
+    resumen = request.POST.get("resumen")
 
-    register = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
-        resp = Author(nombre=r_name, apellido_mat = r_am, apellido_pat = r_ap),
-        resp_email = resp_email,
-        a1 = Author(nombre=a1_name, apellido_mat = a1_am, apellido_pat = a1_ap),
-        a2 = Author(nombre=a2_name, apellido_mat = a2_am, apellido_pat = a2_ap),
-        a3 = Author(nombre=a3_name, apellido_mat = a3_am, apellido_pat = a3_ap),
-        a4 = Author(nombre=a4_name, apellido_mat = a4_am, apellido_pat = a4_ap),
-        a5 = Author(nombre=a5_name, apellido_mat = a5_am, apellido_pat = a5_ap),
-        a6 = Author(nombre=a6_name, apellido_mat = a6_am, apellido_pat = a6_ap),
-        a7 = Author(nombre=a7_name, apellido_mat = a7_am, apellido_pat = a7_ap),
-        institucion = institucion,
-        departamento = departamento,
-        modalidad = modalidad,
-        resumen = resumen,
-        estatus = False,
-        evento = True)
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        register = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
+            resp = Author(nombre=r_name, apellido_mat = r_am, apellido_pat = r_ap).save(),
+            #resp_email = resp_email,
+            #a1 = Author(nombre=a1_name, apellido_mat = a1_am, apellido_pat = a1_ap).save(),
+            #a2 = Author(nombre=a2_name, apellido_mat = a2_am, apellido_pat = a2_ap).save(),
+            #a3 = Author(nombre=a3_name, apellido_mat = a3_am, apellido_pat = a3_ap).save(),
+            #a4 = Author(nombre=a4_name, apellido_mat = a4_am, apellido_pat = a4_ap).save(),
+            #a5 = Author(nombre=a5_name, apellido_mat = a5_am, apellido_pat = a5_ap).save(),
+            #a6 = Author(nombre=a6_name, apellido_mat = a6_am, apellido_pat = a6_ap).save(),
+            #a7 = Author(nombre=a7_name, apellido_mat = a7_am, apellido_pat = a7_ap).save(),
+            institucion = institucion,
+            departamento = departamento,
+            modalidad = modalidad,
+            resumen = resumen,
+            estatus = False,
+            evento = current_events[0])
 
-    register.save()
-    return render(request, "TestApp/ponencias.html",
-            { "message" : "Registro exitoso!"})
+        register.save()
+
+        return render(request, "TestApp/ponencias.html", { "message" : "Registro exitoso!"})
+
+    return render(request, "TestApp/ponencias.html", { "message" : "Registro no existoso :(" })
 
 def remove_iteration(request):
     event_name = request.POST.get("nombre_evento") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 

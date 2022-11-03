@@ -27,7 +27,7 @@
         <p style="color:white;"> Ingrese la información sobre su presentación:</p>
 
 
-    <form action="{/insert/}" method="POST" class="loginfrm">
+    <form method="POST" action="/ponencias/insert/" class="loginfrm">
       {% csrf_token %}
       <div>
         <label>{{pform.presentacion_titulo.label}}</label>
