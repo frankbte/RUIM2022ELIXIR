@@ -10,10 +10,12 @@ class EventoForm(forms.ModelForm):
 class AuthorForm(forms.ModelForm):  
     class Meta:  
         model = Author
-        fields = ['nombre', 'apellido_pat', 'apellido_mat']
+        fields = ['nombre', 'apellido_pat', 'apellido_mat', 'institucion', 'departamento']
         labels = {'nombre' : 'Nombre',
                   'apellido_pat' : 'Apellido Paterno',
-                  'apellido_mat' : 'Apellido Materno'}
+                  'apellido_mat' : 'Apellido Materno',
+                  'institucion' : 'Institución',
+                  'departamento' : 'Departamento/Facultad'}
 
 
 class PresentacionForm(forms.ModelForm):
@@ -30,8 +32,6 @@ class PresentacionForm(forms.ModelForm):
             'a5',
             'a6',
             'a7',
-            'institucion',
-            'departamento',
             'modalidad',
             'resumen'
             ]
@@ -47,8 +47,6 @@ class PresentacionForm(forms.ModelForm):
             'a5': 'Autor 5',
             'a6': 'Autor 6',
             'a7': 'Autor 7',
-            'institucion': 'Institución de procedencia',
-            'departamento': 'Departamento',
             'modalidad': 'Tipo de presentación (ponencia o cartel)',
             'resumen': 'Breve resumen de la presentación (archivo PDF)'
         }
