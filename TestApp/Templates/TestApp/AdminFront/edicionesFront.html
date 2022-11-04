@@ -10,6 +10,10 @@
         <h1>Editando: Edición " {{ iteracion.year }} "</h1>
         <br/>
 
+		{% if message %}
+		<h2><strong> {{ message }} </strong></h2>
+		{% endif %}
+
         <h2><button type="button" name="CreacionEvento">Crear una nueva iteración</button></h2>
         <br/>
         {% if iteracion_list %}
@@ -18,8 +22,12 @@
                 {% for evento in iteracion_list %}
                 <tr>
                     <td> {{ evento.year }} </td>
-                    <td> <button type="button" name="Editar">Editar</button> </td>
-                    <td> <button type="button" name="Eliminar">Eliminar</button></td>
+                    <td> <button type="button" name="Editar" >Editar</button> </td>
+					<td> <form action="/edicionesAdmin/eliminar" method="POST"> 
+									{% csrf_token %}
+									<input type="submit" name="Eliminar" value={{ evento.year }}>Eliminar</input>
+						 </form>
+					</td>
                 </tr>
                 {% endfor %}
             </table>

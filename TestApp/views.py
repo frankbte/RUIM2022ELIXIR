@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import models
 from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
 from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseRedirect
 
 from fpdf import FPDF
 
@@ -71,13 +71,13 @@ def login(request):
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
-def iterAdmin(request):
+def iterAdmin(request, message = ""):
     eventos = Evento.objects.all()
     
     if Evento.objects.count() > 0:
-        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos})
+        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos, 'message' : message})
     
-    return render(request, 'TestApp/AdminFront/edicionesFront.html')
+    return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
 
 def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html')
@@ -173,26 +173,18 @@ def insert(request):
     return render(request, "TestApp/ponencias.html", { "message" : "Registro no existoso :(" })
 
 def remove_iteration(request):
-    event_name = request.POST.get("nombre_evento") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
+    event_year = request.POST.get("Eliminar") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
                                                     #y que corresponda con el nombre en la db.
     try:
-        event = Evento.objects.get(nombre_evento = event_name)
-
-        event.inicio.delete()
-        event.programa.delete()
-        event.poster.delete()
-        event.ubicaciones.delete()
-        event.contacto.delete()
-        event.registro.delete()
-        event.anteriores.delete()
-        event.base.delete()
-
+        event = Evento.objects.get(year = event_year)
         event.delete()
 
     except Evento.DoesNotExist:
-        print("Evento no existe")
+        eventos = Evento.objects.all()
+        current_event = Evento.objects.get(active = 1)
+        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : "Ocurrió un error!"})
 
-    return render(request, 'TestApp/home.html') #esto es solo mientras se construye la pagina en donde el administrador podra eliminar ediciones del evento
+    return HttpResponseRedirect("/edicionesAdmin")
 
 
 

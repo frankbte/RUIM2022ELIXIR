@@ -30,6 +30,7 @@ urlpatterns = [
     path('login/', views.login, name="Login"),
     path('informe/', views.informe, name="Informe final"),
     path('edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
+    path('edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
     path('inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
     path('constancias/', views.constancias, name="Constancias"),
