@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.db import models
 from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
 from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
+from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
+from django.urls import reverse
 
 from fpdf import FPDF
 
@@ -73,7 +75,7 @@ def constancias(request):
 
 def iterAdmin(request, message = ""):
     eventos = Evento.objects.all()
-    
+        
     if Evento.objects.count() > 0:
         return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos, 'message' : message})
     
@@ -173,8 +175,8 @@ def insert(request):
     return render(request, "TestApp/ponencias.html", { "message" : "Registro no existoso :(" })
 
 def remove_iteration(request):
-    event_year = request.POST.get("Eliminar") #Desde el view, la seleccion de evento a borrar tiene que venir con ese nombre 
-                                                    #y que corresponda con el nombre en la db.
+    event_year = request.POST.get("eliminar") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
+
     try:
         event = Evento.objects.get(year = event_year)
         event.delete()
@@ -184,9 +186,7 @@ def remove_iteration(request):
         current_event = Evento.objects.get(active = 1)
         return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : "Ocurrió un error!"})
 
-    return HttpResponseRedirect("/edicionesAdmin")
-
-
+    return redirect(reverse('Edicion Iteraciones'), message = "Evento eliminado!") 
 
 
 

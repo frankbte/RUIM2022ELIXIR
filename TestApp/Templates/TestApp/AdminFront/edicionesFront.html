@@ -25,8 +25,8 @@
                     <td> <button type="button" name="Editar" >Editar</button> </td>
 					<td> <form action="/edicionesAdmin/eliminar" method="POST"> 
 									{% csrf_token %}
-									<input type="submit" name="Eliminar" value={{ evento.year }}>Eliminar</input>
-						 </form>
+									<button type="submit" name="eliminar" value={{ evento.year }}>Eliminar</button> 
+						 </form> 
 					</td>
                 </tr>
                 {% endfor %}
