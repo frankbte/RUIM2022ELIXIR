@@ -90,14 +90,53 @@ def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
 
+
 # Controladores
 
 def report(request):
+    font = 'times'
+    size = 20
+    height = 12
+    
     pdf = FPDF('L', 'mm', 'letter')
+    pdf.set_text_color(0,0,0)
+    
     pdf.add_page()
     pdf.image('TestApp\static\TestApp\img\Certificado.jpg', x=0, y=0, w=280, h=216)
-    pdf.set_font('courier', 'B', 24)
-    pdf.multi_cell(w = 0, h = 10, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+    pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
+    pdf.set_font(font, '', size)
+    pos = pdf.get_y() + 40
+    
+    pdf.set_xy(10, pos)
+    pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+    pos = pdf.get_y() + 5
+    
+    pdf.set_xy(10, pos)
+    pdf.set_font(font, 'B', size + 8)
+    pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
+    pos = pdf.get_y() + 5
+    
+    pdf.set_xy(10, pos)
+    pdf.set_font(font, '', size)
+    pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
+    pdf.set_xy(15,pos)
+    pdf.set_font(font, 'I', size)
+    pdf.multi_cell(w = 0, h = height, txt= '___________________________', border = 0 ,align ='c')
+    pos = pdf.get_y() + 5
+    
+    pdf.set_xy(10,pos)
+    pdf.set_font(font, '', size)
+    pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su _______ con título', border = 0 ,align ='c')
+    pos = pdf.get_y() + 5
+    
+    pdf.set_xy(10,pos)
+    pdf.set_font(font, 'I', size)
+    pdf.multi_cell(w = 0, h = height, txt= ' ____________________________________', border = 0 ,align ='c')
+    pos = pdf.get_y() + 5
+    
+    pdf.set_xy(10,pos)
+    pdf.set_font(font, '', size)
+    pdf.multi_cell(w = 0, h = height, txt= 'el día ________ en ____________________', border = 0 ,align ='c')
     pdf.output('report.pdf', 'F')
     
     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
