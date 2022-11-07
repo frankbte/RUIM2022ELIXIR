@@ -73,11 +73,18 @@ def login(request):
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
-def iterAdmin(request, message = ""):
+def iterAdmin(request):
     eventos = Evento.objects.all()
+
+    message = request.session.get("success_message", "")
+    request.session["success_message"] = ""
         
     if Evento.objects.count() > 0:
-        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : eventos[0], 'iteracion_list' : eventos, 'message' : message})
+        if Evento.objects.filter(active = 1).count() == 1:
+            current_event = Evento.objects.get(active = 1)
+            return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : message})
+            
+        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion_list' : eventos, 'message' : message})
     
     return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
 
@@ -180,13 +187,12 @@ def remove_iteration(request):
     try:
         event = Evento.objects.get(year = event_year)
         event.delete()
+        request.session["success_message"] = "Evento eliminado!"
 
     except Evento.DoesNotExist:
-        eventos = Evento.objects.all()
-        current_event = Evento.objects.get(active = 1)
-        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : "Ocurrió un error!"})
+        request.session["seccess_message"] = "Ha ocurrido un error!"
 
-    return redirect(reverse('Edicion Iteraciones'), message = "Evento eliminado!") 
+    return redirect(reverse('TestApp:Edicion Iteraciones')) 
 
 
 
