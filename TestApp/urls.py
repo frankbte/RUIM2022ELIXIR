@@ -8,7 +8,7 @@ urlpatterns = [
     path('contacto/', views.contacto, name="Contacto"),
     path('ediciones/', views.ediciones, name="Ediciones"),
     path('ponencias/', views.ponencias, name="Ponencias"),
-    path('ponencias/insert/', views.insert, name="Insert"),
+    #path('ponencias/insert/', views.insert, name="Insert"),
     path('poster/', views.poster, name="Poster"),
     path('programa/', views.programa, name="Programa"),
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
@@ -20,5 +20,9 @@ urlpatterns = [
     path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
     path('constancias/', views.constancias, name="Constancias"),
     path('report/', views.report),
+    #####
+    path('add/', views.AddPresentation),
+    #path('addauthor/', views.AddPresentation),
+    
 ]
 

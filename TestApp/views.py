@@ -99,7 +99,59 @@ def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
 
+############################
+# COSAS DE ERICK, NO TOCAR #
+############################
+#def FormPage(request):
+#    return render(request, "TestApp/AdminFront/form.html")
 
+def ResultPage(request):
+    results = PresentacionRegistro.objects.filter()
+    return render(request, "TestApp/AdminFront/results.html",{"results":results})
+
+def AddPresentation(request):
+    presentacion = PresentacionRegistro(presentacion_titulo=request.GET["pres_tit"],
+                                        resp_email=request.GET["pres_email"],
+                                        modalidad=request.GET["mod"],
+                                        estatus="Sin revisar",
+                                        evento=Evento.objects.get())
+
+    presentacion.save()
+
+    responsable = Author(nombre=request.GET["resp_nom"],
+                        apellido_pat=request.GET["resp_pat"],
+                        apellido_mat=request.GET["resp_mat"],
+                        institucion=request.GET["resp_inst"],
+                        departamento=request.GET["resp_dep"],
+                        grado=request.GET["resp_grado"],
+                        presentacion=presentacion)
+
+    responsable.save()
+    
+    presentacion.resp = responsable
+
+    cant_auth=int(request.GET["cant_auth"])
+    if cant_auth > 0:
+        for x in range(cant_auth):
+            autor = Author(nombre=request.GET["a" + x + "_nom"],
+                            apellido_pat=request.GET["a" + x + "_pat"],
+                            apellido_mat=request.GET["a" + x + "_mat"],
+                            institucion=request.GET["a" + x + "_inst"],
+                            departamento=request.GET["a" + x + "_dep"],
+                            grado=request.GET["a" + x + "_grado"],
+                            presentacion=presentacion)
+            autor.save()
+
+    presentacion.save()
+
+    return render(request, "TestApp/ponencias.html")
+
+def delete(request):
+    congresos = PresentacionRegistro.objects.filter()
+    congresos.delete()
+    return render(request, "form.html")
+
+###########################
 # Controladores
 
 def report(request):
@@ -163,62 +215,6 @@ def savemail(request):
         form = EventoForm()  
     return render(request,'index.html',{'form':form})  
 
-def insert(request):
-    presentacion_titulo = request.POST.get("presentacion_titulo")
-    resp_email =  request.POST.get("resp_email")
-    r_name = request.POST.get("resp_name")
-    r_am = request.POST.get("resp_ap")
-    r_ap = request.POST.get("resp_am")
-    a1_name = request.POST.get("a1_name")
-    a1_am = request.POST.get("a1_ap")
-    a1_ap = request.POST.get("a1_am")
-    a2_name = request.POST.get("a2_name")
-    a2_am = request.POST.get("a2_ap")
-    a2_ap = request.POST.get("a2_am")
-    a3_name = request.POST.get("a3_name")
-    a3_am = request.POST.get("a3_ap")
-    a3_ap = request.POST.get("a3_am")
-    a4_name = request.POST.get("a4_name")
-    a4_am = request.POST.get("a4_ap")
-    a4_ap = request.POST.get("a4_am")
-    a5_name = request.POST.get("a5_name")
-    a5_am = request.POST.get("a5_ap")
-    a5_ap = request.POST.get("a5_am")
-    a6_name = request.POST.get("a6_name")
-    a6_am = request.POST.get("a6_ap")
-    a6_ap = request.POST.get("a6_am")
-    a7_name = request.POST.get("a7_name")
-    a7_am = request.POST.get("a7_ap")
-    a7_ap = request.POST.get("a7_am")
-    institucion = request.POST.get("institucion")
-    departamento = request.POST.get("departamento")
-    modalidad = request.POST.get("modalidad")
-    resumen = request.POST.get("resumen")
-
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        register = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
-            resp = Author(nombre=r_name, apellido_mat = r_am, apellido_pat = r_ap).save(),
-            #resp_email = resp_email,
-            #a1 = Author(nombre=a1_name, apellido_mat = a1_am, apellido_pat = a1_ap).save(),
-            #a2 = Author(nombre=a2_name, apellido_mat = a2_am, apellido_pat = a2_ap).save(),
-            #a3 = Author(nombre=a3_name, apellido_mat = a3_am, apellido_pat = a3_ap).save(),
-            #a4 = Author(nombre=a4_name, apellido_mat = a4_am, apellido_pat = a4_ap).save(),
-            #a5 = Author(nombre=a5_name, apellido_mat = a5_am, apellido_pat = a5_ap).save(),
-            #a6 = Author(nombre=a6_name, apellido_mat = a6_am, apellido_pat = a6_ap).save(),
-            #a7 = Author(nombre=a7_name, apellido_mat = a7_am, apellido_pat = a7_ap).save(),
-            institucion = institucion,
-            departamento = departamento,
-            modalidad = modalidad,
-            resumen = resumen,
-            estatus = False,
-            evento = current_events[0])
-
-        register.save()
-
-        return render(request, "TestApp/ponencias.html", { "message" : "Registro exitoso!"})
-
-    return render(request, "TestApp/ponencias.html", { "message" : "Registro no existoso :(" })
 
 def remove_iteration(request):
     event_year = request.POST.get("eliminar") #Desde el view, la seleccion de evento es a trav\'es del a\~no.

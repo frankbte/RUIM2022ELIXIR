@@ -3,15 +3,8 @@ from django.forms import ModelForm
 
 class PresentacionRegistro(models.Model):
     presentacion_titulo = models.CharField(max_length = 40)
-    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '')
+    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '', blank=True,null=True)
     resp_email = models.EmailField()
-    a1 = models.ForeignKey('Author', related_name = "a1", on_delete = models.CASCADE, blank=True,null=True)
-    a2 = models.ForeignKey('Author', related_name = "a2", on_delete = models.CASCADE, blank=True,null=True)
-    a3 = models.ForeignKey('Author', related_name = "a3", on_delete = models.CASCADE, blank=True,null=True)
-    a4 = models.ForeignKey('Author', related_name = "a4", on_delete = models.CASCADE, blank=True,null=True)
-    a5 = models.ForeignKey('Author', related_name = "a5", on_delete = models.CASCADE, blank=True,null=True)
-    a6 = models.ForeignKey('Author', related_name = "a6", on_delete = models.CASCADE, blank=True,null=True)
-    a7 = models.ForeignKey('Author', related_name = "a7", on_delete = models.CASCADE, blank=True,null=True)
     modalidad = models.CharField(max_length = 30) # cartel o ponencia
     resumen = models.FileField(upload_to = 'registros/resumenes/')
     estatus = models.CharField(max_length = 30)
@@ -24,6 +17,7 @@ class Author(models.Model):
     grado = models.CharField(max_length = 30)
     institucion = models.CharField(max_length = 60)
     departamento = models.CharField(max_length = 40)
+    presentacion = models.ForeignKey('PresentacionRegistro', on_delete = models.CASCADE, default = '')
 
 class InicioPage(models.Model):
     title_descripcion = models.CharField(max_length = 40)
@@ -77,6 +71,8 @@ class Evento(models.Model):
     plantilla_constancias_img = models.ImageField(upload_to = 'constancias/base/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
+    fecha = models.DateField()
+    lugar = models.CharField(max_length=100)
 
     def save_all(self):
         self.inicio.save()
@@ -107,5 +103,25 @@ DEFAULT_EVENT = Evento(active = 0, year = 2022, \
                                                 contacto = "ruim@unison.mx"), \
                         edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""))
 
-
-
+#class Presentation(models.Model):
+#    modalidadChoices = (
+#        ('Cartel','Cartel'),
+#    )
+#    estatusChoices = (
+#        ('Sin revisar','Sin revisar'),
+#        ('Aceptado', 'Aceptado'),
+#        ('Rechazado', 'Rechazado')
+#    )
+#    presentacion_titulo = models.CharField(max_length = 40,verbose_name="Título")
+#    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, verbose_name="Responsable")
+#    resp_email = models.EmailField(blank=True,null=True)
+#    a1 = models.ForeignKey('Author', related_name = "a1", on_delete = models.CASCADE, blank=True,null=True)
+#    a2 = models.ForeignKey('Author', related_name = "a2", on_delete = models.CASCADE, blank=True,null=True)
+#    a3 = models.ForeignKey('Author', related_name = "a3", on_delete = models.CASCADE, blank=True,null=True)
+#    a4 = models.ForeignKey('Author', related_name = "a4", on_delete = models.CASCADE, blank=True,null=True)
+#    a5 = models.ForeignKey('Author', related_name = "a5", on_delete = models.CASCADE, blank=True,null=True)
+#    a6 = models.ForeignKey('Author', related_name = "a6", on_delete = models.CASCADE, blank=True,null=True)
+#    a7 = models.ForeignKey('Author', related_name = "a7", on_delete = models.CASCADE, blank=True,null=True)
+#    modalidad = models.CharField(max_length = 30,default='Cartel',choices=modalidadChoices,verbose_name="Modalidad") # cartel o ponencia
+#    estatus = models.CharField(max_length = 30, default='Sin revisar', choices=estatusChoices,verbose_name="Estatus")
+#    anio = models.IntegerField(default=2022, verbose_name="Año")
