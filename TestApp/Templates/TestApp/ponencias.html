@@ -15,12 +15,12 @@
             <p>Departamento: <input type=\"text\" name=\"a` + arg + `_dep\" required></p>
             <label for=\"grado\">Grado: </label>
             <select id=\"grado\" name=\"a` + arg + `_grado\">
-                <option value=\"Estudiante\">Estudiante</option>
-                <option value=\"Ingeniero\">Ingeniero</option>
-                <option value=\"Licenciado\">Licenciado</option>
-                <option value=\"Doctor\">Doctor</option>
-                <option value=\"Maestro\">Maestro</option>
-            </select><hr />`;
+              <option value="Estudiante">Estudiante</option>
+              <option value="Ingeniería">Ingeniería</option>
+              <option value="Licenciatura">Licenciatura</option>
+              <option value="Doctorado">Doctorado</option>
+              <option value="Maestría">Maestría</option>
+            </select>`;
           document.getElementById("a" + arg).innerHTML = data;
       }
       function addauthors(arg){
@@ -75,10 +75,10 @@
       <p>Seleccione la cantidad de autores:
         <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
         <output "cant_auth.value" default="0"></output>
+        <button onclick="addauthors(cant_auth.value)">Agregar autores</button>
       </p>
         
 
-      <button onclick="addauthors(cant_auth.value)">Agregar autores</button>
 
       <p><input type="submit" value="Enviar"></p>
   </form>
