@@ -8,10 +8,13 @@ urlpatterns = [
     path('contacto/', views.contacto, name="Contacto"),
     path('ediciones/', views.ediciones, name="Ediciones"),
     path('ponencias/', views.ponencias, name="Ponencias"),
-    #path('ponencias/insert/', views.insert, name="Insert"),
+
     path('poster/', views.poster, name="Poster"),
     path('programa/', views.programa, name="Programa"),
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
+
+    # URLs de la interfaz del admin
+    path('admin/home/', views.baseFront, name="BaseFront"),
     path('login/', views.login, name="Login"),
     path('informe/', views.informe, name="Informe final"),
     path('edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
