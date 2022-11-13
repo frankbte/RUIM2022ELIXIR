@@ -1,4 +1,4 @@
- {% extends "TestApp/AdminFront/base.html" %}
+ {% extends "TestApp/AdminFront/baseAdmin.html" %}
 
  {% load static %}
 
@@ -7,26 +7,26 @@
    <!-- Heading -->
    <div><p></p></div>
    <center>
-        <h1 style="font-weight: bold; color: white">
+        <h1 style="font-weight: bold; color: black">
             Login
         </h1>
         {% if form.errors %}
-            <p class="mb-0" style="color: white">El usuario y la contraseña no coinciden. Por favor, intente de nuevo.</p>
+            <p class="mb-0" style="color: black">El usuario y la contraseña no coinciden. Por favor, intente de nuevo.</p>
         {% else %}
-            <p class="mb-0" style="color: white">Ingrese el usuario y la contraseña de la cuenta del administrador de la página de la RUIM:</p>
+            <p class="mb-0" style="color: black">Ingrese el usuario y la contraseña de la cuenta del administrador de la página de la RUIM:</p>
         {% endif %}
 
 
 		{% if next %}
 			{% if user.is_authenticated %}
-			<p class="mb-0" style="color: white">Your account doesn't have access to this page. To proceed,
+			<p class="mb-0" style="color: black">Your account doesn't have access to this page. To proceed,
 			please login with an account that has access.</p>
 			{% else %}
-			<p class="mb-0" style="color: white">Please login to see this page.</p>
+			<p class="mb-0" style="color: black">Please login to see this page.</p>
 			{% endif %}
 		{% endif %}
 
-		<form method="post" action="{% url 'TestApp:login' %}" style="color: white">
+		<form method="post" action="{% url 'TestApp:login' %}" style="color: black">
 		{% csrf_token %}
 
 		<div>

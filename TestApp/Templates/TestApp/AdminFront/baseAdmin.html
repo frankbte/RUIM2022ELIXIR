@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{% static 'TestApp/vendor/bootstrap/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'TestApp/css/baseFront.css' %}">
 
-        <title>Administración RUIM</title>
+        <title>{% block title %}Administración RUIM{% endblock %}</title>
     </head>
 
     <body>
@@ -69,6 +69,8 @@
               </div>
           </nav>
         </div>
+    {% block content %}
 
+    {% endblock %}
     </body>
 </html>

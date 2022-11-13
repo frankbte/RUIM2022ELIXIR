@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import models
 from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, DEFAULT_EVENT
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -90,6 +90,7 @@ def correos(request):
     return render(request, 'TestApp/AdminFront/correos.html')
 
 
+@login_required
 def iterAdmin(request):
     eventos = Evento.objects.all()
     
@@ -104,6 +105,11 @@ def iterAdmin(request):
         return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion_list' : eventos, 'message' : message})
     
     return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
+
+@login_required
+def create_iter(request):
+    return render(request, 'TestApp/AdminFront/creacionIteracion.html')
+
 
 @login_required
 def informe(request):
@@ -174,6 +180,46 @@ def delete(request):
 ###########################
 # Controladores
 
+@login_required
+def insert_iter(request):
+    year = request.POST.get("year")
+    cartel = request.POST.get("cartel")
+    correo = request.POST.get("correo")
+    correo_contrasena = request.POST.get("correo_contrasena")
+    fecha = request.POST.get("date")
+    lugar = request.POST.get("place")
+    plantilla_constancias = request.POST.get("plantilla_constancias")
+
+    new_event = Evento()
+    new_event.active = False
+    new_event.year = year
+    new_event.cartel = cartel
+    new_event.correo_comunicacion = correo
+    new_event.correo_contrasena = correo_contrasena
+    new_event.fecha = fecha
+    new_event.lugar = lugar
+    new_event.plantilla_constancias_img = plantilla_constancias
+
+    new_event.inicio = DEFAULT_EVENT.inicio
+    new_event.programa = DEFAULT_EVENT.programa
+    new_event.poster = DEFAULT_EVENT.poster
+    new_event.ubicacion = DEFAULT_EVENT.ubicacion
+    new_event.contacto = DEFAULT_EVENT.contacto
+    new_event.registro = DEFAULT_EVENT.registro
+    new_event.edicion = DEFAULT_EVENT.edicion
+    new_event.contacto = DEFAULT_EVENT.contacto
+
+    try:
+        new_event.save_all()
+        new_event.save() 
+        request.session["success_message"] = "Evento nuevo creado con información default para vistas de usuario."
+
+    except Evento.DoesNotExist:
+        request.session["seccess_message"] = "No se pudo crear el evento!"
+
+    return redirect(reverse('TestApp:Edicion Iteraciones')) 
+    
+
 def report(request):
     font = 'times'
     size = 20
@@ -237,6 +283,8 @@ def remove_iteration(request):
 
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
 
+
+    
 
 def send_email(request):
     subject = request.POST.get('subject')
