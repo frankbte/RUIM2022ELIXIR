@@ -12,6 +12,9 @@ urlpatterns = [
     path('poster/', views.poster, name="Poster"),
     path('programa/', views.programa, name="Programa"),
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
+
+    # URLs para la página del administrador
+    path('admin/home/', views.baseFront, name="BaseFront"),
     path('login/', views.login, name="Login"),
     path('informe/', views.informe, name="Informe final"),
     path('edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
