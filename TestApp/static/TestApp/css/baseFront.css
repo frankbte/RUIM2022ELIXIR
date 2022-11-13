@@ -1,0 +1,30 @@
+#header {
+    background: rgb(9,88,60);
+    background: linear-gradient(90deg, rgba(9,88,60,1) 0%, rgba(13,133,94,1) 50%, rgba(22,209,164,1) 100%);
+    color: whitesmoke;
+}
+
+#titleheader {
+    font-weight: bold;
+    font-family: "Segoe UI", Tahoma, Verdana, sans-serif;
+    text-align: center;
+}
+
+
+#subheader h2 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+}
+
+#navbar {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #363636;
+}
+
+#navbarNav li {
+    padding-left: 1em;
+}
+
+#navbarNav a {
+    color: whitesmoke;
+}
