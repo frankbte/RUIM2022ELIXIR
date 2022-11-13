@@ -19,16 +19,16 @@ urlpatterns = [
 
 
     path('informe/', views.informe, name="Informe final"),
-    path('administrador/edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
-    path('administrador/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
+    path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
+    path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
     path('inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
     path('constancias/', views.constancias, name="Constancias"),
     path('report/', views.report),
 
 
-    path('administrador/', include('django.contrib.auth.urls')),
-    path('administrador/', views.administrador_redirect_login),
+    path('admin/', include('django.contrib.auth.urls')),
+    path('admin/', views.administrador_redirect_login),
 
     path('correos/', views.correos, name="Correos"),
     path('sendmail/', views.send_email),
