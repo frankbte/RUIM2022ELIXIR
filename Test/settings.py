@@ -123,3 +123,14 @@ MEDIA_ROOT = 'archivos/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# EMAIL settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = 'RUinvestigacionmateriales@outlook.com'
+EMAIL_HOST_PASSWORD = 'Reunion.2023'
+EMAIL_PORT = 587

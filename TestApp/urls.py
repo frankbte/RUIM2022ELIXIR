@@ -20,5 +20,7 @@ urlpatterns = [
     path('contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
     path('constancias/', views.constancias, name="Constancias"),
     path('report/', views.report),
+    path('correos/', views.correos, name="Correos"),
+    path('sendmail/', views.send_email),
 ]
 
