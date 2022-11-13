@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, BadHeaderError, send_mail, EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
     
 from fpdf import FPDF
 
@@ -67,6 +68,9 @@ def ediciones(request):
     return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
+
+def administrador_redirect_login(request):
+    return HttpResponseRedirect(reverse("TestApp:login"))
 
 @login_required
 def baseFront(request):
@@ -169,9 +173,6 @@ def delete(request):
 
 ###########################
 # Controladores
-
-def redirect_login(request): 
-
 
 def report(request):
     font = 'times'

@@ -16,7 +16,6 @@ urlpatterns = [
 
     # URLs de la interfaz del admin
     path('admin/home/', views.baseFront, name="BaseFront"),
-    path('login/', views.login, name="Login"),
 
 
     path('informe/', views.informe, name="Informe final"),
@@ -29,6 +28,7 @@ urlpatterns = [
 
 
     path('administrador/', include('django.contrib.auth.urls')),
+    path('administrador/', views.administrador_redirect_login),
 
     path('correos/', views.correos, name="Correos"),
     path('sendmail/', views.send_email),
