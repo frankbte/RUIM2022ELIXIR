@@ -68,20 +68,23 @@ def ediciones(request):
 
 # Vistas de administrador
 
+@login_required
 def baseFront(request):
     return render(request, 'TestApp/AdminFront/baseAdmin.html')
 
+@login_required
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
-def login(request):
-    return render(request, 'TestApp/AdminFront/login.html')
-
+@login_required
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
+
+@login_required
 def correos(request):
     return render(request, 'TestApp/AdminFront/correos.html')
+
 
 def iterAdmin(request):
     eventos = Evento.objects.all()
@@ -98,13 +101,16 @@ def iterAdmin(request):
     
     return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
 
+@login_required
 def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html')
 
+@login_required
 def inicioAdmin(request):
     form = InicioPageForm()
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', {'form': form})
 
+@login_required
 def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
@@ -163,6 +169,9 @@ def delete(request):
 
 ###########################
 # Controladores
+
+def redirect_login(request): 
+
 
 def report(request):
     font = 'times'

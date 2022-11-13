@@ -1,0 +1,52 @@
+ {% extends "TestApp/base.html" %}
+
+ {% load static %}
+
+ {% block content %}
+
+   <!-- Heading -->
+   <div><p></p></div>
+   <center>
+        <h1 style="font-weight: bold; color: white">
+            Login
+        </h1>
+        {% if form.errors %}
+            <p class="mb-0" style="color: white">El usuario y la contraseña no coinciden. Por favor, intente de nuevo.</p>
+        {% else %}
+            <p class="mb-0" style="color: white">Ingrese el usuario y la contraseña de la cuenta del administrador de la página de la RUIM:</p>
+        {% endif %}
+
+
+		{% if next %}
+			{% if user.is_authenticated %}
+			<p class="mb-0" style="color: white">Your account doesn't have access to this page. To proceed,
+			please login with an account that has access.</p>
+			{% else %}
+			<p class="mb-0" style="color: white">Please login to see this page.</p>
+			{% endif %}
+		{% endif %}
+
+		<form method="post" action="{% url 'TestApp:login' %}" style="color: white">
+		{% csrf_token %}
+
+		<div>
+		  <td class="mb-0">{{ form.username.label_tag }}</td>
+		  <td class="mb-0">{{ form.username }}</td>
+		</div>
+		<div>
+		  <td class="mb-0">{{ form.password.label_tag }}</td>
+		  <td class="mb-0">{{ form.password }}</td>
+		</div>
+
+		<div>
+		  <input type="submit" value="login" />
+		  <input type="hidden" name="next" value="{{ next }}" />
+		</div>
+		</form>
+
+		{# Assumes you setup the password_reset view in your URLconf #}
+		{# <p class="mb-0" style="color: white"><a href="{% url 'TestApp:password_reset' %}">Lost password?</a></p> #}
+
+   </center>
+
+{% endblock %}
