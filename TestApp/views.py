@@ -120,31 +120,23 @@ def contactoAdmin(request):
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
 
 ############################
-# COSAS DE ERICK, NO TOCAR #
-############################
-#def FormPage(request):
-#    return render(request, "TestApp/AdminFront/form.html")
-
-def ResultPage(request):
-    results = PresentacionRegistro.objects.filter()
-    return render(request, "TestApp/AdminFront/results.html",{"results":results})
 
 def AddPresentation(request):
     presentacion = PresentacionRegistro(presentacion_titulo=request.GET["pres_tit"],
                                         resp_email=request.GET["pres_email"],
                                         modalidad=request.GET["mod"],
                                         estatus="Sin revisar",
-                                        evento=Evento.objects.get())
+                                        evento=Evento.objects.filter(active=True).get())
 
     presentacion.save()
 
-    responsable = Author(nombre=request.GET["resp_nom"],
-                        apellido_pat=request.GET["resp_pat"],
-                        apellido_mat=request.GET["resp_mat"],
-                        institucion=request.GET["resp_inst"],
-                        departamento=request.GET["resp_dep"],
-                        grado=request.GET["resp_grado"],
-                        presentacion=presentacion)
+    responsable = Author(   nombre=request.GET["resp_nom"],
+                            apellido_pat=request.GET["resp_pat"],
+                            apellido_mat=request.GET["resp_mat"],
+                            institucion=request.GET["resp_inst"],
+                            departamento=request.GET["resp_dep"],
+                            grado=request.GET["resp_grado"],
+                            presentacion=presentacion)
 
     responsable.save()
     
@@ -152,24 +144,19 @@ def AddPresentation(request):
 
     cant_auth=int(request.GET["cant_auth"])
     if cant_auth > 0:
-        for x in range(cant_auth):
-            autor = Author(nombre=request.GET["a" + x + "_nom"],
-                            apellido_pat=request.GET["a" + x + "_pat"],
-                            apellido_mat=request.GET["a" + x + "_mat"],
-                            institucion=request.GET["a" + x + "_inst"],
-                            departamento=request.GET["a" + x + "_dep"],
-                            grado=request.GET["a" + x + "_grado"],
+        for x in range(1,cant_auth+1):
+            autor = Author( nombre=request.GET["a" + str(x) + "_nom"],
+                            apellido_pat=request.GET["a" + str(x) + "_pat"],
+                            apellido_mat=request.GET["a" + str(x) + "_mat"],
+                            institucion=request.GET["a" + str(x) + "_inst"],
+                            departamento=request.GET["a" + str(x) + "_dep"],
+                            grado=request.GET["a" + str(x) + "_grado"],
                             presentacion=presentacion)
             autor.save()
 
     presentacion.save()
 
     return render(request, "TestApp/ponencias.html")
-
-def delete(request):
-    congresos = PresentacionRegistro.objects.filter()
-    congresos.delete()
-    return render(request, "form.html")
 
 ###########################
 # Controladores
