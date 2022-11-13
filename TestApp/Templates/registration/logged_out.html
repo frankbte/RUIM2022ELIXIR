@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends "TestApp/base.html" %}
 
 {% block content %}
-<p>Logged out!</p>
+<center>
+<p style="color: white; font-weight: bold">Logged out!</p>
 
-<a href="{% url 'login'%}">Click here to login again.</a>
+<a style="color: white;" href="{% url 'TestApp:login'%}">Click here to login again.</a>
+</center>
 {% endblock %}

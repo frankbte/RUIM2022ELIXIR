@@ -5,6 +5,7 @@ from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistr
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from fpdf import FPDF
 
@@ -64,15 +65,15 @@ def ediciones(request):
     return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
+@login_required
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
-def login(request):
-    return render(request, 'TestApp/AdminFront/login.html')
-
+@login_required
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
+@login_required
 def iterAdmin(request):
     eventos = Evento.objects.all()
 
@@ -88,13 +89,16 @@ def iterAdmin(request):
     
     return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
 
+@login_required
 def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html')
 
+@login_required
 def inicioAdmin(request):
     form = InicioPageForm()
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', {'form': form})
 
+@login_required
 def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})

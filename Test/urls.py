@@ -20,6 +20,6 @@ from TestApp import urls
 app_name = 'Test'
 
 urlpatterns = [
-    path('', include('TestApp.urls')),
+    path('', include('TestApp.urls', namespace='TestApp')),
     path('admin/', admin.site.urls),
 ]

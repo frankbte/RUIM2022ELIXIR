@@ -23,7 +23,7 @@
                 <tr>
                     <td> {{ evento.year }} </td>
                     <td> <button type="button" name="Editar" >Editar</button> </td>
-					<td> <form action="/edicionesAdmin/eliminar" method="POST"> 
+					<td> <form action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
 									{% csrf_token %}
 									<button type="submit" name="eliminar" value={{ evento.year }}>Eliminar</button> 
 						 </form> 
