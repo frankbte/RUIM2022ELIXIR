@@ -5,7 +5,6 @@ from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistr
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 
 from fpdf import FPDF
 
@@ -105,6 +104,9 @@ def contactoAdmin(request):
 
 
 # Controladores
+
+def redirect_login(request): 
+
 
 def report(request):
     font = 'times'
