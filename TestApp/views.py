@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, BadHeaderError, send_mail, EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
     
 from fpdf import FPDF
 
@@ -68,20 +69,26 @@ def ediciones(request):
 
 # Vistas de administrador
 
+def administrador_redirect_login(request):
+    return HttpResponseRedirect(reverse("TestApp:login"))
+
+@login_required
 def baseFront(request):
     return render(request, 'TestApp/AdminFront/baseAdmin.html')
 
+@login_required
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
-def login(request):
-    return render(request, 'TestApp/AdminFront/login.html')
-
+@login_required
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
+
+@login_required
 def correos(request):
     return render(request, 'TestApp/AdminFront/correos.html')
+
 
 def iterAdmin(request):
     eventos = Evento.objects.all()
@@ -98,13 +105,16 @@ def iterAdmin(request):
     
     return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
 
+@login_required
 def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html')
 
+@login_required
 def inicioAdmin(request):
     form = InicioPageForm()
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', {'form': form})
 
+@login_required
 def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
