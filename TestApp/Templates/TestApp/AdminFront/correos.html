@@ -1,0 +1,47 @@
+{% extends "TestApp/AdminFront/base.html" %}
+
+ {% load static %}
+
+ {% block content %}
+
+ <div><p>
+    <head>
+        <meta charset="UTF-8">
+        <title>Send Mails</title>
+    </head>
+    <body>
+        <div class="container shadow"
+            style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
+            <p class="text-white"> Ingresa los datos del correo</p>
+        </div>
+            
+    <form method="POST" action="/sendmail/" class="loginfrm">
+        {% csrf_token %}
+        <div>
+          <label>Asunto del correo: </label>
+          <input type = "text" name="subject" >
+        </div><br>
+        <div>
+            <label>Destinatario </label>
+            <input type = "email" name="to_email" >
+        </div><br>
+        <div>
+            <label>Contenido del mensaje </label>
+            <input type = "text" name="message" >
+        </div><br>
+
+        <!-- submit button -->
+        <div class="form-group row">  
+            <label class="col-sm-1 col-form-label"></label>  
+            <div class="col-sm-4">  
+                <button type="submit" class="btn btn-primary">Send</button>  
+            </div>  
+        </div>  
+  
+          </div>  
+      </form>
+       
+    </body>
+ </p></div>
+
+ {% endblock %}

@@ -1,11 +1,22 @@
-{% extends "TestApp/base.html" %}
+{% extends "TestApp/AdminFront/base.html" %}
 
  {% load static %}
 
  {% block content %}
 
  <div><p>
-    
+    <head>
+        <meta charset="UTF-8">
+        <title>PDF Report</title>
+    </head>
+    <body>
+            <div class="container shadow"
+                style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
+                <p class="text-white"> Para generar una constancia presione el boton debajo</p>
+                <a class="btn btn-primary" href="/report/">Generar</a>
+            </div>
+       
+    </body>
  </p></div>
 
  {% endblock %}

@@ -3,23 +3,86 @@
  {% load static %}
 
  {% block content %}
- <div><p></p></div>
 
-
-    <center>
+ <head>
+  <script>
+      function addauthor(arg){
+            var data =
+            `<hr /><p>Nombre(s): <input type=\"text\" name=\"a` + arg + `_nom\" required></p>
+            <p>Apellido paterno: <input type=\"text\" name=\"a` + arg + `_pat\" required></p>
+            <p>Apellido materno: <input type=\"text\" name=\"a` + arg + `_mat\" required></p>
+            <p>Institución: <input type=\"text\" name=\"a` + arg + `_inst\" required></p>
+            <p>Departamento: <input type=\"text\" name=\"a` + arg + `_dep\" required></p>
+            <label for=\"grado\">Grado: </label>
+            <select id=\"grado\" name=\"a` + arg + `_grado\">
+                <option value=\"Estudiante\">Estudiante</option>
+                <option value=\"Ingeniero\">Ingeniero</option>
+                <option value=\"Licenciado\">Licenciado</option>
+                <option value=\"Doctor\">Doctor</option>
+                <option value=\"Maestro\">Maestro</option>
+            </select><hr />`;
+          document.getElementById("a" + arg).innerHTML = data;
+      }
+      function addauthors(arg){
+        for(i=1; i<=arg; i++){
+            addauthor(i);
+        }
+      }
+  </script>
+</head>
+<body>
+  <center>
     <h1 style="color:white;"> 
         Solicitud para registro de ponencias
     </h1>
         <p style="color:white;"> Ingrese la información sobre su presentación:</p>
+        
+  <form action="/add/" method="GET" class="loginfrm">
+      <h1>Información de la presentación</h1>
+      <p>Título de la presentación: <input type="text" name="pres_tit" required></p>
+      <p>Correo electrónico: <input type="text" name="pres_email" pattern=".*@.*\..*" required></p>
+      <label for="modalidad">Modalidad: </label>
+      <select id="modalidad" name="mod">
+          <option value="Cartel">Cartel</option>
+          <option value="Ponencia">Ponencia</option>
+      </select>
+      <p>Resumen de presentación: <input type="file" name="pres_file" required></p>
 
+      <h1>Información del responsable</h1>
+      <p>Nombre(s): <input type="text" name="resp_nom" required></p>
+      <p>Apellido paterno: <input type="text" name="resp_pat" required></p>
+      <p>Apellido materno: <input type="text" name="resp_mat" required></p>
+      <p>Institución: <input type="text" name="resp_inst" required></p>
+      <p>Departamento: <input type="text" name="resp_dep" required></p>
+      <label for="grado">Grado de estudios: </label>
+      <select id="grado" name="resp_grado">
+          <option value="Estudiante">Estudiante</option>
+          <option value="Ingeniería">Ingeniería</option>
+          <option value="Licenciatura">Licenciatura</option>
+          <option value="Doctorado">Doctorado</option>
+          <option value="Maestría">Maestría</option>
+      </select>
+      
 
-    <form action="/ponencias/" method="POST" class="loginfrm">
-        {{ form.as_ul }}
-        {% csrf_token %}
-        <input type="submit" value="Registrar">
-    </form>
-    </center>
- 
+      <div id="a1"></div>
+      <div id="a2"></div>
+      <div id="a3"></div>
+      <div id="a4"></div>
+      <div id="a5"></div>
+      <div id="a6"></div>
+      <div id="a7"></div>
 
+      <p>Seleccione la cantidad de autores:
+        <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
+        <output "cant_auth.value" default="0"></output>
+      </p>
+        
 
- {% endblock %}
+      <button onclick="addauthors(cant_auth.value)">Agregar autores</button>
+
+      <p><input type="submit" value="Enviar"></p>
+  </form>
+</center>
+</body>
+
+{% endblock %}

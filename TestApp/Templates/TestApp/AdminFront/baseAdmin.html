@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'TestApp/vendor/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'TestApp/css/baseFront.css' %}">
+
+        <title>Administración RUIM</title>
+    </head>
+
+    <body>
+        <div class="container-fluid" id="header">
+          <div class="row">
+            <div class="col-4-sm p-3" id="titleheader">
+              <h1>Administración RUIM</h1>
+            </div>
+
+            <div class="col-7-sm p-3 my-auto vw" id="subheader">
+              <h2>Reunión Universitaria de Investigación en Materiales</h2>
+            </div>
+
+            <div class="col-1-sm p-3 pr-5 my-auto ml-auto" id="logout">
+              <button type="button" class="btn btn-secondary rounded">Logout</button>
+            </div>
+          </div>
+          <nav class="row navbar-expand-lg navbar-dark" id="navbar">
+              <span class="navbar-brand px-4 mb-0 h1">Edición {{ evento.year }} </span>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <u1 class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Iteraciones</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Inicio</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Programa</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Poster</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Ubicación</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Registro</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Estado de presentaciones</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Constancia</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Envío de correos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Informe</a>
+                  </li>
+                </u1>
+              </div>
+          </nav>
+        </div>
+
+    </body>
+</html>
