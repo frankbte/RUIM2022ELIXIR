@@ -8,19 +8,50 @@
   <script>
       function addauthor(arg){
             var data =
-            `<hr /><p>Nombre(s): <input type=\"text\" name=\"a` + arg + `_nom\" required></p>
-            <p>Apellido paterno: <input type=\"text\" name=\"a` + arg + `_pat\" required></p>
-            <p>Apellido materno: <input type=\"text\" name=\"a` + arg + `_mat\" required></p>
-            <p>Institución: <input type=\"text\" name=\"a` + arg + `_inst\" required></p>
-            <p>Departamento: <input type=\"text\" name=\"a` + arg + `_dep\" required></p>
-            <label for=\"grado\">Grado: </label>
-            <select id=\"grado\" name=\"a` + arg + `_grado\">
-                <option value=\"Estudiante\">Estudiante</option>
-                <option value=\"Ingeniero\">Ingeniero</option>
-                <option value=\"Licenciado\">Licenciado</option>
-                <option value=\"Doctor\">Doctor</option>
-                <option value=\"Maestro\">Maestro</option>
-            </select><hr />`;
+            `<div class="ms-0 ps-0 container-fluid row">
+               <div class="container col-9 me-2 col">
+                  <div class="mb-2">
+                     <h6 class=" text-uppercase">Información del autor ` + arg + `</h6>
+                     <hr class="dashed">
+                  </div>
+                  <div class="col">
+                     <label class="form-label">Nombre(s)</label>
+                     <input type="text" name="a` + arg + `_nom" placeholder="Nombre del autor ` + arg + `" class="form-control" required>
+                  </div><br>
+                  <div class="row">
+                     <div class="col">
+                        <label class="form-label">Apellido paterno:</label>
+                        <input placeholder="Apellido paterno del autor ` + arg + `"  type="text" name="a` + arg + `_mat" class="form-control" required >
+                     </div>
+                     <div class="col">
+                        <label class="form-label">Apellido materno:</label>
+                        <input placeholder="Apellido paterno del autor ` + arg + `"  type="text" name="a` + arg + `_pat" class="form-control" required >
+                     </div>
+                  </div><br>
+                  <div class="row">
+                     <div class="col">
+                        <label class="form-label">Institucion</label>
+                        <input placeholder="Institución del autor ` + arg + `" type="text" name="a` + arg + `_inst" class="form-control" required >
+                     </div>
+                     <div class="col">
+                        <label class="form-label">Departamento</label>
+                        <input placeholder="Departamento del autor ` + arg + `" type="text" name="a` + arg + `_dep" class="form-control" required >
+                     </div>
+                  </div> <br>
+                  <div class="row">
+                     <div class="col">
+                        <label class="form-label">Grado academico</label>
+                        <select id="grado" name="a` + arg + `_grado" class="form-select">
+                           <option value="Estudiante">Estudiante</option>
+                           <option value="Ingeniería">Ingeniería</option>
+                           <option value="Licenciatura">Licenciatura</option>
+                           <option value="Doctorado">Doctorado</option>
+                           <option value="Maestría">Maestría</option>
+                        </select>
+                     </div>
+                  </div><br>
+               </div>
+            </div>`;
           document.getElementById("a" + arg).innerHTML = data;
       }
       function addauthors(arg){
@@ -32,118 +63,124 @@
 </head>
 <body>
   <center>
-    <h1 style="color:white;"> 
-        Solicitud para registro de ponencias
-    </h1>
-        <p style="color:white;"> Ingrese la información sobre su presentación:</p>
-        
-  <form action="/add/" method="GET" class="loginfrm">
-      <h1>Información de la presentación</h1>
-      <p>Título de la presentación: <input type="text" name="pres_tit" required></p>
-      <p>Correo electrónico: <input type="text" name="pres_email" pattern=".*@.*\..*" required></p>
-      <label for="modalidad">Modalidad: </label>
-      <select id="modalidad" name="mod">
-          <option value="Cartel">Cartel</option>
-          <option value="Ponencia">Ponencia</option>
-      </select>
-      <p>Resumen de presentación: <input type="file" name="pres_file" required></p>
-
-      <h1>Información del responsable</h1>
-      <p>Nombre(s): <input type="text" name="resp_nom" required></p>
-      <p>Apellido paterno: <input type="text" name="resp_pat" required></p>
-      <p>Apellido materno: <input type="text" name="resp_mat" required></p>
-      <p>Institución: <input type="text" name="resp_inst" required></p>
-      <p>Departamento: <input type="text" name="resp_dep" required></p>
-      <label for="grado">Grado de estudios: </label>
-      <select id="grado" name="resp_grado">
-          <option value="Estudiante">Estudiante</option>
-          <option value="Ingeniería">Ingeniería</option>
-          <option value="Licenciatura">Licenciatura</option>
-          <option value="Doctorado">Doctorado</option>
-          <option value="Maestría">Maestría</option>
-      </select>
       
+      <form action="/add/" method="GET" class="loginfrm">
+         <div class="ms-0 h-100 ps-0 container-fluid h-100 row">
+            <div class="container p-2 col-9 mt-4 me-2 col">
 
-      <div id="a1"></div>
-      <div id="a2"></div>
-      <div id="a3"></div>
-      <div id="a4"></div>
-      <div id="a5"></div>
-      <div id="a6"></div>
-      <div id="a7"></div>
+               <h1 style="color:white;"> 
+                  Solicitud para registro de ponencias
+               </h1><br>
+               
+               <h6 class=" text-uppercase">Información del proyecto</h6>
+               <hr class="dashed">
 
-      <p>Seleccione la cantidad de autores:
-        <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
-        <output "cant_auth.value" default="0"></output>
-      </p>
-        
+               <div class="mb-5">
+                  <div class="row">
+                     <div class="col">
+                        <div><label class="form-label">Titulo</label><input class="form-control" type="text" name="pres_tit" required></div>
+                     </div>
+                     <div class="col">
+                        <div class="row">
+                           <div class="col">
+                              <label class="form-label">Resumen</label>
+                              <span class="ms-2 badge bg-secondary">i</span>
+                           </div>
+                        </div>
+                        <input name="resumen" accept="application/pdf" controlid="" type="file" class="form-control">
+                     </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                     <div class="col">
+                           <label class="form-label">Modalidad</label>
+                           <select class="form-select">
+                              <option value="Cartel">Cartel</option>
+                              <option value="Ponencia">Ponencia</option>
+                           </select>
+                     </div>
+                     <div class="col"></div>
+                  </div>
+               </div>
+               <div class="mb-2">
+                  <div class="mb-2">
+                     <h6 class=" text-uppercase">Información del representante</h6>
+                     <hr class="dashed">
+                  </div>
+                  <div class="row">
+                     <div class="col">
+                        <label class="form-label">Nombre(s)</label>
+                        <input type="text" name="resp_nom" placeholder="Nombre del representante" class="form-control" required >
+                     </div> 
+                     <div class="col">
+                        <label class="form-label">Apellido paterno:</label>
+                        <input placeholder="Apellido paterno del representante"  type="text" name="resp_mat" class="form-control" required >
+                     </div>
+                     <div class="col">
+                        <label class="form-label">Apellido materno:</label>
+                        <input placeholder="Apellido paterno del representante"  type="text" name="resp_mat" class="form-control" required >
+                     </div>                    
+                  </div>
+                  <br>
+                  <div class="col">
+                     <label class="form-label">Correo electronico</label>
+                     <input placeholder="Correo electronico del representante" type="email" class="form-control" required >
+                  </div>
+                  <br>
+                  <div class="row">
+                     <div class="col">
+                        <div>
+                           <label class="form-label">Institucion</label>
+                           <input placeholder="Institución del autor" type="text" name="resp_inst" class="form-control" required>
+                        </div>
+                     </div>
+                     <div class="col">
+                        <label class="form-label">Departamento</label>
+                        <input placeholder="Departamento del autor" type="text" name="resp_dep" class="form-control" required>
+                     </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                     <div class="col">
+                        <div>
+                           <label class="form-label">Grado academico</label>
+                           <select class="form-select">
+                              <option value="Estudiante">Estudiante</option>
+                              <option value="Ingeniería">Ingeniería</option>
+                              <option value="Licenciatura">Licenciatura</option>
+                              <option value="Doctorado">Doctorado</option>
+                              <option value="Maestría">Maestría</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col"></div>
+                  </div>
+               </div>
+               <br>
+               <h6 class=" text-uppercase">Información del equipo</h6>
+               <hr class="dashed">
 
-      <button onclick="addauthors(cant_auth.value)">Agregar autores</button>
-
-      <p><input type="submit" value="Enviar"></p>
-  </form>
-</center>
+               <div id="a1"></div> 
+               <div id="a2"></div>
+               <div id="a3"></div>
+               <div id="a4"></div>
+               <div id="a5"></div>
+               <div id="a6"></div>
+               <div id="a7"></div>
+               
+               <p>Seleccione la cantidad de autores a agregar 
+                  <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
+                  <output 'cant_auth.value' default="0"></output>
+               </p>        
+               
+               <button onclick="addauthors(cant_auth.value)" class=" btn-primary mt-4  btn btn-primary">Agregar autores</button><br>
+               
+               
+               <p><input type="submit" value="Enviar"></p>
+            </div>
+         </div>
+      </form>
+   </center>
 </body>
-
-<!--
-  <body>
-    <center>
-    <h1 style="color:white;"> 
-        Solicitud para registro de ponencias
-    </h1>
-        <p style="color:white;"> Ingrese la información sobre su presentación:</p>
-
-        
-    <form method="POST" action="/ponencias/insert/" class="loginfrm">
-      {% csrf_token %}
-      <div>
-        <label>{{pform.presentacion_titulo.label}}</label>
-        <input type = "text" name="presentacion_titulo" >
-      </div><br>
-      <div>
-        {{pform.resp.label}}<br>
-        <label>{{aform.nombre.label}} </label>
-         <input type = "text" name="resp_name" >
-      </div><br>
-      <div>
-        <label>{{aform.apellido_pat.label}} </label>
-         <input type = "text" name="resp_ap" >
-      </div><br>
-        <div>
-          <label>{{aform.apellido_mat.label}} </label>
-           <input type = "text" name="resp_am" >
-        </div><br>
-        <div>
-          <label>{{pform.institucion.label}} </label>
-           <input type = "text" name="institucion" >
-        </div><br>
-        <div>
-          <label>{{pform.departamento.label}} </label>
-           <input type = "text" name="departamento" >
-        </div><br>
-        <div>
-          <label>{{pform.modalidad.label}} </label>
-          <input type = "radio" name = "modalidad" id = "cartel" value = "cartel" {% if captured_data.modalidad == "cartel" %} checked = checked {% endif %}>
-          <label for = "cartel">Cartel</label><br>
-          <input type = "radio" name = "modalidad" id = "ponencia" value = "ponencia" {% if captured_data.modalidad == "ponencia" %} checked = checked {% endif %}>
-          <label for = "ponencia">Ponencia</label><br>
-        </div><br>
-        <div>
-          <label>{{pform.resumen.label}} </label>
-           <input type = "file" name="resumen" >
-        </div><br>
-
-              <div class="form-group row">  
-              <label class="col-sm-1 col-form-label"></label>  
-              <div class="col-sm-4">  
-              <button type="submit" class="btn btn-primary">Submit</button>  
-            </div>  
-          </div>  
-
-        </div>  
-    </form>
-    </center>
-  </body>
--->
-
- {% endblock %}
+  
+{% endblock %}

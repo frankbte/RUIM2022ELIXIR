@@ -2,19 +2,35 @@ from django.db import models
 from django.forms import ModelForm
 
 class PresentacionRegistro(models.Model):
-    presentacion_titulo = models.CharField(max_length = 40)
+    modalidadChoices = (
+        ('Cartel','Cartel'),
+        ('Ponencia','Ponencia'),
+    )
+    estatusChoices = (
+        ('Sin revisar','Sin revisar'),
+        ('Aceptado', 'Aceptado'),
+        ('Rechazado', 'Rechazado')
+    )
+    presentacion_titulo = models.CharField(max_length = 40, verbose_name="Título de la presentación")
     resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '', blank=True,null=True)
     resp_email = models.EmailField()
-    modalidad = models.CharField(max_length = 30) # cartel o ponencia
+    modalidad = models.CharField(max_length = 30, choices=modalidadChoices) # cartel o ponencia
     resumen = models.FileField(upload_to = 'registros/resumenes/')
-    estatus = models.CharField(max_length = 30)
+    estatus = models.CharField(max_length = 30, choices=estatusChoices)
     evento = models.ForeignKey('Evento', on_delete = models.CASCADE,)
     
 class Author(models.Model):
+    gradoChoices = (
+        ('Estudiante','Estudiante'),
+        ('Ingeniería', 'Ingeniería'),
+        ('Licenciatura', 'Licenciatura'),
+        ('Doctorado', 'Doctorado'),
+        ('Maestría', 'Maestría')
+    )
     nombre = models.CharField(max_length = 20)
     apellido_pat = models.CharField(max_length = 20)
     apellido_mat = models.CharField(max_length = 20)
-    grado = models.CharField(max_length = 30)
+    grado = models.CharField(max_length = 30, choices=gradoChoices)
     institucion = models.CharField(max_length = 60)
     departamento = models.CharField(max_length = 40)
     presentacion = models.ForeignKey('PresentacionRegistro', on_delete = models.CASCADE, default = '')
@@ -58,8 +74,8 @@ class EdicionesPage(models.Model):
     
 
 class Evento(models.Model):
-    active = models.IntegerField()
-    year = models.IntegerField()
+    active = models.BooleanField()
+    year = models.IntegerField(default=2022)
     cartel = models.FileField(upload_to = 'base/', blank=True,null=True)
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
     programa = models.ForeignKey('ProgramaPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -80,12 +96,12 @@ class Evento(models.Model):
         self.poster.save()
         self.ubicacion.save()
         self.contacto.save()
-        #self.registro.save()
+        self.registro.save()
         self.edicion.save()
         return 0
 
 
-DEFAULT_EVENT = Evento(active = 0, year = 2022, \
+DEFAULT_EVENT = Evento(active = False, year = 2022, \
                         inicio = InicioPage(title_descripcion = "RUIM 2022", \
                                 text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \
     \n\n Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022)."), \
