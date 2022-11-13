@@ -52,8 +52,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Test.urls'
 
-LOGIN_URL = '/administrador/login'
-LOGIN_REDIRECT_URL = '/administrador/edicionesAdmin/'
+LOGIN_URL = '/admin/login'
+LOGIN_REDIRECT_URL = '/admin/edicionesAdmin/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 TEMPLATES = [
