@@ -5,7 +5,10 @@ from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistr
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
-
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, BadHeaderError, send_mail, EmailMessage
+from django.http import HttpResponse, HttpResponseRedirect
+    
 from fpdf import FPDF
 
 def home(request):
@@ -73,9 +76,12 @@ def login(request):
 def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html')
 
+def correos(request):
+    return render(request, 'TestApp/AdminFront/correos.html')
+
 def iterAdmin(request):
     eventos = Evento.objects.all()
-
+    
     message = request.session.get("success_message", "")
     request.session["success_message"] = ""
         
@@ -202,18 +208,6 @@ def report(request):
     
     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
 
-def savemail(request):  
-    if request.method == "POST":  
-        form = EventoForm(request.POST)  
-        if form.is_valid():  
-            try:  
-                form.save()  
-                return redirect('/show')  
-            except:  
-                pass  
-    else:  
-        form = EventoForm()  
-    return render(request,'index.html',{'form':form})  
 
 
 def remove_iteration(request):
@@ -229,6 +223,17 @@ def remove_iteration(request):
 
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
 
+
+def send_email(request):
+    subject = request.POST.get('subject')
+    message = request.POST.get('message')
+    to_email = request.POST.get('to_email')
+    
+    try:
+        send_mail(subject, message, 'RUinvestigacionmateriales@outlook.com', [to_email],)
+    except BadHeaderError:
+        return render(request, "TestApp/AdminFront/correos.html", { "message" : "Invalid Header Found" })
+    return render(request, "TestApp/AdminFront/correos.html", { "message" : "Envío de correo exitoso" })
 
 
 
