@@ -1,38 +1,41 @@
-<!DOCTYPE html>
+{% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Iteraciones</title>
-    </head>
+{% block title %}Iteraciones{% endblock %}
 
-    <body>
-        <h1>Editando: Edición " {{ iteracion.year }} "</h1>
-        <br/>
+{% block content %}
+<body>
+    <center>
+    <br/>
+    <h1>Editando: Edición " {{ iteracion.year }} "</h1>
+    <br/>
 
-		{% if message %}
-		<h2><strong> {{ message }} </strong></h2>
-		{% endif %}
+    {% if message %}
+    <h2><strong> {{ message }} </strong></h2>
+    {% endif %}
 
-        <h2><button type="button" name="CreacionEvento">Crear una nueva iteración</button></h2>
-        <br/>
-        {% if iteracion_list %}
-            <table>
-                <caption>Iteraciones creadas</caption>
-                {% for evento in iteracion_list %}
-                <tr>
-                    <td> {{ evento.year }} </td>
-                    <td> <button type="button" name="Editar" >Editar</button> </td>
-					<td> <form action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
-									{% csrf_token %}
-									<button type="submit" name="eliminar" value={{ evento.year }}>Eliminar</button> 
-						 </form> 
-					</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            No existen iteraciones guardadas de la RUIM para mostrar. Cree una iteración para mostrar datos.
-        {% endif %}
-    </body>
-</html>
+    <h3><form action="{% url 'TestApp:Crear una Iteración' %}" method="POST"> 
+                                {% csrf_token %}
+                                <button type="submit" name="createIter">Crear una nueva iteración</button> 
+                        </form></h3>
+    <br/>
+    {% if iteracion_list %}
+        <table>
+            <caption>Iteraciones creadas</caption>
+            {% for evento in iteracion_list %}
+            <tr>
+                <td> {{ evento.year }} </td>
+                <td> <button type="button" name="Editar" >Editar</button> </td>
+                <td> <form action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
+                                {% csrf_token %}
+                                <button type="submit" name="eliminar" value={{ evento.year }}>Eliminar</button> 
+                        </form> 
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        No existen iteraciones guardadas de la RUIM para mostrar. Cree una iteración para mostrar datos.
+    {% endif %}
+    </center>
+</body>
+{% endblock %}

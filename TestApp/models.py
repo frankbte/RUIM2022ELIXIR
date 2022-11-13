@@ -117,7 +117,8 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, \
                         contacto = ContactoPage(title = "RUIM 2022", \
                                                 text = "Para cualquier duda o comentario, ponemos a su disposición \n la siguiente dirección de correo electrónico: \n", \
                                                 contacto = "ruim@unison.mx"), \
-                        edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""))
+                        edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""),
+                        fecha = "2022-11-12")
 
 #class Presentation(models.Model):
 #    modalidadChoices = (

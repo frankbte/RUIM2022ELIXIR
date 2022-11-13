@@ -1,13 +1,11 @@
-<!DOCTYPE html>
+{% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Creación de iteración</title>
-    </head>
+{% block title %}Creación de una iteración{% endblock %}
 
+{% block content %}
     <body>
         <center>
+		<br/>
         <h1>
             Creación de una nueva iteración
         </h1>
@@ -17,11 +15,17 @@
             <p>Ingrese los datos de la nueva iteración:</p>
         {% endif %}
 
-        <form action="//" method="POST">
-            {{ form.as_ul }}
+		<form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" class="loginfrm">
+			<p>Año del evento: <input type="number" name="year" required></p>
+			<p>Cartel del evento(.jpg): <input type="file" name="cartel"></p>
+			<p>Plantilla para constancias(.jpg): <input type="file" name="plantilla_constancias"></p>
+			<p>Correo de comunicación: <input type="text" name="correo"></p>
+			<p>Contraseña del correo de comunicación: <input type="text" name="correo_constrasena"></p>
+			<p>Fecha del evento: <input type="date" name="date" required></p>
+			<p>Lugar del evento: <input type="text" name="place"></p>
             {% csrf_token %}
             <input type="submit" value="Crear">
         </form>
         </center>
     </body>
-</html>
+{% endblock %}
