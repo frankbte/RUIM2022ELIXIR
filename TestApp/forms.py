@@ -25,13 +25,6 @@ class PresentacionForm(forms.ModelForm):
             'presentacion_titulo', 
             'resp',
             'resp_email',
-            'a1',
-            'a2',
-            'a3',
-            'a4',
-            'a5',
-            'a6',
-            'a7',
             'modalidad',
             'resumen'
             ]
@@ -40,13 +33,6 @@ class PresentacionForm(forms.ModelForm):
             'presentacion_titulo': 'Titulo de la presentación',
             'resp': 'Responsable de la presentación',
             'resp_email': 'Correo electrónico del representante de la presentación',
-            'a1': 'Autor 1',
-            'a2': 'Autor 2',
-            'a3': 'Autor 3',
-            'a4': 'Autor 4',
-            'a5': 'Autor 5',
-            'a6': 'Autor 6',
-            'a7': 'Autor 7',
             'modalidad': 'Tipo de presentación (ponencia o cartel)',
             'resumen': 'Breve resumen de la presentación (archivo PDF)'
         }

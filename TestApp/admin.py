@@ -4,7 +4,13 @@ from TestApp.models import PresentacionRegistro, InicioPage, ProgramaPage, Poste
 
 # Register your models here.
 
-admin.site.register(PresentacionRegistro)
+class AuthorInfo(admin.ModelAdmin):
+    list_display = ("nombre", "apellido_pat", "apellido_mat", "institucion")
+
+class PresentationRegistroInfo(admin.ModelAdmin):
+    list_display = ("presentacion_titulo", "resp", "modalidad", "estatus", "evento")
+
+admin.site.register(PresentacionRegistro,PresentationRegistroInfo)
 admin.site.register(InicioPage)
 admin.site.register(ProgramaPage)
 admin.site.register(PosterPage)
@@ -12,5 +18,5 @@ admin.site.register(RegistroPage)
 admin.site.register(UbicacionPage)
 admin.site.register(ContactoPage)
 admin.site.register(EdicionesPage)
-admin.site.register(Author)
+admin.site.register(Author,AuthorInfo)
 admin.site.register(Evento)
