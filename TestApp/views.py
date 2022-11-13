@@ -67,6 +67,10 @@ def ediciones(request):
     return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
+
+def baseFront(request):
+    return render(request, 'TestApp/AdminFront/baseAdmin.html')
+
 def evento(request):
     return render(request, 'TestApp/evento.html')
 
