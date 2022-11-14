@@ -267,7 +267,7 @@ def remove_iteration(request):
     except Evento.DoesNotExist:
         request.session["seccess_message"] = "Ha ocurrido un error!"
 
-    return redirect(reverse('TestApp:Edicion Iteraciones')) 
+    return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
     
 def activate_event(request):
