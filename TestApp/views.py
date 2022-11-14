@@ -255,7 +255,7 @@ def report(request):
     
     pdf.set_xy(10,pos)
     pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'el día ' + fecha + ' en ' + lugar + '.', border = 0 ,align ='c')
+    pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
     pdf.output('report.pdf', 'F')
     
     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
