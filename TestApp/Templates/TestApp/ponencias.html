@@ -21,11 +21,11 @@
                   <div class="row">
                      <div class="col">
                         <label class="form-label">Apellido paterno:</label>
-                        <input placeholder="Apellido paterno del autor ` + arg + `"  type="text" name="a` + arg + `_mat" class="form-control" required >
+                        <input placeholder="Apellido paterno del autor ` + arg + `"  type="text" name="a` + arg + `_pat" class="form-control" required >
                      </div>
                      <div class="col">
                         <label class="form-label">Apellido materno:</label>
-                        <input placeholder="Apellido paterno del autor ` + arg + `"  type="text" name="a` + arg + `_pat" class="form-control" required >
+                        <input placeholder="Apellido materno del autor ` + arg + `"  type="text" name="a` + arg + `_mat" class="form-control" required >
                      </div>
                   </div><br>
                   <div class="row">
@@ -64,7 +64,7 @@
 
 <center>
    <body>
-      <form action="/add/" method="GET" class="loginfrm" >
+      <form action="/admin/add/" method="GET" class="loginfrm" >
          <div class="ms-0  ps-0 container-fluid row" style="background-color: rgba(28, 72, 124); margin-top: auto; margin-bottom: 1cm; width: 70%; text-align: center;">
             <div class="container p-2 col-9 mt-4 me-2 col">
 
@@ -94,7 +94,7 @@
                   <div class="row">
                      <div class="col">
                            <label class="form-label">Modalidad</label>
-                           <select class="form-select">
+                           <select name="mod" class="form-select">
                               <option value="Cartel">Cartel</option>
                               <option value="Ponencia">Ponencia</option>
                            </select>
@@ -114,17 +114,17 @@
                      </div> 
                      <div class="col">
                         <label class="form-label">Apellido paterno:</label>
-                        <input placeholder="Apellido paterno del representante"  type="text" name="resp_mat" class="form-control" required >
+                        <input placeholder="Apellido paterno del representante"  type="text" name="resp_pat" class="form-control" required >
                      </div>
                      <div class="col">
                         <label class="form-label">Apellido materno:</label>
-                        <input placeholder="Apellido paterno del representante"  type="text" name="resp_mat" class="form-control" required >
+                        <input placeholder="Apellido materno del representante"  type="text" name="resp_mat" class="form-control" required >
                      </div>                    
                   </div>
                   <br>
                   <div class="col">
                      <label class="form-label">Correo electronico</label>
-                     <input placeholder="Correo electronico del representante" type="email" class="form-control" required >
+                     <input placeholder="Correo electronico del representante" type="email" name="pres_email" class="form-control" required >
                   </div>
                   <br>
                   <div class="row">
@@ -143,7 +143,7 @@
                      <div class="col">
                         <div>
                            <label class="form-label">Grado academico</label>
-                           <select class="form-select">
+                           <select name="resp_grado" class="form-select">
                               <option value="Estudiante">Estudiante</option>
                               <option value="Ingeniería">Ingeniería</option>
                               <option value="Licenciatura">Licenciatura</option>
