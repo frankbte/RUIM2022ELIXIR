@@ -55,7 +55,8 @@ class RegistroPage(models.Model):
     text_constancias_participacion = models.CharField(max_length = 300)
     title_participacion_asistente = models.CharField(max_length = 40)
     text_participacion_asistente = models.CharField(max_length = 300)
-    formato_resumen_pdf = models.FileField(upload_to = 'registros/resumenes/')
+    formato_resumen_pdf = models.FileField(upload_to = 'archivos/registros/resumenes/')
+
 
 class UbicacionPage(models.Model):
     title = models.CharField(max_length = 40)
@@ -118,7 +119,18 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, \
                                                 text = "Para cualquier duda o comentario, ponemos a su disposición \n la siguiente dirección de correo electrónico: \n", \
                                                 contacto = "ruim@unison.mx"), \
                         edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""),
+                        registro = RegistroPage(title_participacion_ponente = "Participación como ponenete",
+                                                text_participacion_ponente = "Las formas de Participación en la RUIM 2022 son las siguientes: \n\n Pláticas Invitdas;\n Posters.\n",
+                                                title_formato_resumen = "Formato para Resumen",
+                                                text_formato_resumen = "El formato del Resumen es igual para las dos formas de participación y la extensión es de una o dos cuartillas siguiendo la plantilla en formato Word 2010 y posteriores (*.docx), la cual está disponible en esta página",
+                                                title_constancias_participacion = "Constancias de participación",
+                                                text_constancias_participacion = "Se extenderán Constancias de Participación en los siguientes formatos: \n\n Plática Invitada (Constancias de Plática Invitada);\n Poster (Constancia de Presentación de Cartel).\n",
+                                                title_participacion_asistente = "Participacición en los Cursos Talleres",
+                                                text_participacion_asistente = "Para participar en alguno de los Cursos-Talleres que se realizarán durante la RUIM 2022, se hace necesario pre-registrarse, para ello, próximamente se habilitará el enlace correspondiente",
+                                                formato_resumen_pdf = "archivos/registros/resumenes/RUIM2022.docx"),
                         fecha = "2022-11-12")
+
+
 
 #class Presentation(models.Model):
 #    modalidadChoices = (
