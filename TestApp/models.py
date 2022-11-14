@@ -120,11 +120,11 @@ DEFAULT_EVENT = Evento(active = True, year = 2022, \
                                                 contacto = "ruim@unison.mx"), \
                         edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""),
                         registro = RegistroPage(title_participacion_ponente = "Participación como ponenete",
-                                                text_participacion_ponente = "Las formas de Participación en la RUIM 2022 son las siguientes: \n\n Pláticas Invitdas;\n Posters.\n",
+                                                text_participacion_ponente = "Las formas de Participación en la RUIM 2022 son las siguientes: \n\n - Pláticas Invitadas\n - Posters.\n",
                                                 title_formato_resumen = "Formato para Resumen",
                                                 text_formato_resumen = "El formato del Resumen es igual para las dos formas de participación y la extensión es de una o dos cuartillas siguiendo la plantilla en formato Word 2010 y posteriores (*.docx), la cual está disponible en esta página",
                                                 title_constancias_participacion = "Constancias de participación",
-                                                text_constancias_participacion = "Se extenderán Constancias de Participación en los siguientes formatos: \n\n Plática Invitada (Constancias de Plática Invitada);\n Poster (Constancia de Presentación de Cartel).\n",
+                                                text_constancias_participacion = "Se extenderán Constancias de Participación en los siguientes formatos: \n\n - Plática Invitada (Constancias de Plática Invitada);\n - Poster (Constancia de Presentación de Cartel).\n",
                                                 title_participacion_asistente = "Participacición en los Cursos Talleres",
                                                 text_participacion_asistente = "Para participar en alguno de los Cursos-Talleres que se realizarán durante la RUIM 2022, se hace necesario pre-registrarse, para ello, próximamente se habilitará el enlace correspondiente",
                                                 formato_resumen_pdf = "archivos/registros/resumenes/RUIM2022.docx"),
