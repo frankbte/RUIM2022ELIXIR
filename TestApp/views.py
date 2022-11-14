@@ -48,12 +48,8 @@ def ediciones(request):
 
 
 def inforegistro(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        inf_registro = current_events[0].registro
-        return render(request, 'TestApp/inforegistro.html', {'inf_registro' : inf_registro})
+    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : get_current_event().registro})
 
-    return render(request, 'TestApp/inforegistro.html')
 
 # Vistas de administrador
 
@@ -161,6 +157,11 @@ def AddPresentation(request):
 @login_required
 def insert_iter(request):
     year = request.POST.get("year")
+
+    if Evento.objects.filter(year = year).count() > 0:
+        request.session["success_message"] = "No se pueden registrar dos eventos de un mismo año!"
+        return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
+
     cartel = request.POST.get("cartel")
     correo = request.POST.get("correo")
     correo_contrasena = request.POST.get("correo_contrasena")
@@ -195,16 +196,7 @@ def insert_iter(request):
     except Evento.DoesNotExist:
         request.session["seccess_message"] = "No se pudo crear el evento!"
 
-    return redirect(reverse('TestApp:Edicion Iteraciones')) 
-
-def get_current_event():
-    if Evento.objects.count() > 0:
-        if Evento.objects.filter(active = 1).count() == 1:
-            return Evento.objects.get(active = 1)
-        else:
-            return DEFAULT_EVENT
-    else:
-        return DEFAULT_EVENT
+    return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
 def report(request):
     nombre = request.POST.get('nombre_completo')
@@ -277,12 +269,27 @@ def remove_iteration(request):
 
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
 
+    
+def activate_event(request):
+    year = request.POST.get("activar")
+
+    active_events = Evento.objects.filter(active = True)
+
+    for i in active_events:
+        i.active = False
+        i.save()
+
+    to_activate = Evento.objects.get(year = year)
+    to_activate.active = True
+    to_activate.save()
+
+    return redirect(reverse('TestApp:Edicion_Iteraciones'))
 
 
 # return true if email_address is valid, false if is not valid
 def valid_email_address(email_address):
    return re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", email_address) != None
-   
+
 
 def send_email(request):
     subject = request.POST.get('subject')
