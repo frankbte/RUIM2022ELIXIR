@@ -67,6 +67,14 @@ def ediciones(request):
 
     return render(request, 'TestApp/ediciones.html')
 
+def inforegistro(request):
+    current_events = Evento.objects.filter(active = 1)
+    if current_events.count() == 1:
+        inf_registro = current_events[0].registro
+        return render(request, 'TestApp/inforegistro.html', {'inf_registro' : inf_registro})
+
+    return render(request, 'TestApp/inforegistro.html')
+
 # Vistas de administrador
 
 def administrador_redirect_login(request):
