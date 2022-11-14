@@ -102,7 +102,7 @@ class Evento(models.Model):
         return 0
 
 
-DEFAULT_EVENT = Evento(active = False, year = 2022, \
+DEFAULT_EVENT = Evento(active = True, year = 2022, \
                         inicio = InicioPage(title_descripcion = "RUIM 2022", \
                                 text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \
     \n\n Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022)."), \
@@ -128,7 +128,9 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, \
                                                 title_participacion_asistente = "Participacición en los Cursos Talleres",
                                                 text_participacion_asistente = "Para participar en alguno de los Cursos-Talleres que se realizarán durante la RUIM 2022, se hace necesario pre-registrarse, para ello, próximamente se habilitará el enlace correspondiente",
                                                 formato_resumen_pdf = "archivos/registros/resumenes/RUIM2022.docx"),
-                        fecha = "2022-11-12")
+                        fecha = "2022-11-12",
+                        lugar = "Hermosillo, Sonora")
+
 
 
 
