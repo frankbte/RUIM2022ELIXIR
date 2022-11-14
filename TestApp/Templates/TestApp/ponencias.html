@@ -1,16 +1,16 @@
 {% extends "TestApp/base.html" %}
 
- {% load static %}
 
  {% block content %}
-
+<div>
  <head>
   <script>
       function addauthor(arg){
             var data =
-            `<div class="ms-0 ps-0 container-fluid row">
+            `<div class="container-fluid row" style="background-color: rgba(28, 72, 124); text-align: center;">
                <div class="container col-9 me-2 col">
                   <div class="mb-2">
+                     <br><br><br>
                      <h6 class=" text-uppercase">Información del autor ` + arg + `</h6>
                      <hr class="dashed">
                   </div>
@@ -61,18 +61,18 @@
       }
   </script>
 </head>
-<body>
-  <center>
-      
-      <form action="/add/" method="GET" class="loginfrm">
-         <div class="ms-0 h-100 ps-0 container-fluid h-100 row">
+
+<center>
+   <body>
+      <form action="/add/" method="GET" class="loginfrm" >
+         <div class="ms-0  ps-0 container-fluid row" style="background-color: rgba(28, 72, 124); margin-top: auto; margin-bottom: 1cm; width: 70%; text-align: center;">
             <div class="container p-2 col-9 mt-4 me-2 col">
 
-               <h1 style="color:white;"> 
+               <h3 style="color:white;"> 
                   Solicitud para registro de ponencias
-               </h1><br>
+               </h3><br>
                
-               <h6 class=" text-uppercase">Información del proyecto</h6>
+               <h5 class=" text-uppercase">Información del proyecto</h5>
                <hr class="dashed">
 
                <div class="mb-5">
@@ -104,7 +104,7 @@
                </div>
                <div class="mb-2">
                   <div class="mb-2">
-                     <h6 class=" text-uppercase">Información del representante</h6>
+                     <h5 class=" text-uppercase">Información del representante</h5>
                      <hr class="dashed">
                   </div>
                   <div class="row">
@@ -140,7 +140,6 @@
                      </div>
                   </div>
                   <br>
-                  <div class="row">
                      <div class="col">
                         <div>
                            <label class="form-label">Grado academico</label>
@@ -152,12 +151,10 @@
                               <option value="Maestría">Maestría</option>
                            </select>
                         </div>
-                     </div>
-                     <div class="col"></div>
                   </div>
                </div>
                <br>
-               <h6 class=" text-uppercase">Información del equipo</h6>
+               <h5 class=" text-uppercase">Información del equipo</h5>
                <hr class="dashed">
 
                <div id="a1"></div> 
@@ -168,19 +165,28 @@
                <div id="a6"></div>
                <div id="a7"></div>
                
-               <p>Seleccione la cantidad de autores a agregar 
-                  <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
-                  <output 'cant_auth.value' default="0"></output>
-               </p>        
+               <div class="row" >
+                  
+                  <div class="col">
+                     <p>Seleccione la cantidad de autores a agregar 
+                        <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
+                        <output cant_auth.value default="0"></output>
+                     </p> 
+                  </div>
+                  <div class="col">
+                     <button onclick="addauthors(cant_auth.value)" class=" btn-primary mt-4  btn btn-info">Agregar autores</button><br>
+                  </div>
+                  <p><br><br><input type="submit" value="Enviar" class=" btn-primary mt-4  btn btn-primary"></p>
+               </div>
+
                
-               <button onclick="addauthors(cant_auth.value)" class=" btn-primary mt-4  btn btn-primary">Agregar autores</button><br>
-               
-               
-               <p><input type="submit" value="Enviar"></p>
             </div>
          </div>
       </form>
-   </center>
-</body>
-  
+   </body>
+</center>
+</div>
+
 {% endblock %}
+  
+
