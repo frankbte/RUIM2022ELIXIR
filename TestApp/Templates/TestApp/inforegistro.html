@@ -25,7 +25,7 @@
     </u>
     </h3>
 	<h2 style="color: black;">
-			<a href="{% url 'TestApp:Ponencias' %}" target="_blank" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique:">Acceso a registro de ponencias</a><br/>
+			<a href="{% url 'TestApp:Ponencias' %}" target="_blank" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique;">Acceso a registro de ponencias</a><br/>
 	</h2>
     </div>
     </center>
@@ -37,22 +37,21 @@
               <div class="cta-inner text-left rounded">
                 <h2 class="section-heading mb-4">
                   <span class="section-heading-upper"></span>
-                  <span class="section-heading-lower"></span>
-                </h2> 
-                <h2 style="font-weight: bold; color: black"> {{ inf_registro.title_presentacion_ponente }} </h2>
-                <h3> {{ inf_registro.text_participacion_ponente|linebreaks }}</h3>
+                  <span class="section-heading-lower"></span> 
+                <h2 style="font-weight: bold; color: white"> {{ inf_registro.title_participacion_ponente }} </h2>
+                <h3 style="font-size: 110%; font-family: Arial;">  {{ inf_registro.text_participacion_ponente|linebreaks }}</h3>
                 <br>
                 <br>
                 <h2 style="font-weight: bold;"> {{ inf_registro.title_formato_resumen }} </h2>
-                <h3> {{ inf_registro.text_formato_resumen|linebreaks }}</h3>
+                <h3 style="font-size: 110%; font-family: Arial;"> {{ inf_registro.text_formato_resumen|linebreaks }}</h3>
                 <br>
                 <br>
                 <h2 style="font-weight: bold;"> {{ inf_registro.title_constancias_participacion }} </h2>
-                <h3> {{ inf_registro.text_constancias_participacion|linebreaks }}</h3>
+                <h3 style="font-size: 110%; font-family: Arial;"> {{ inf_registro.text_constancias_participacion|linebreaks }}</h3>
                 <br>
                 <br>
                 <h2 style="font-weight: bold;"> {{ inf_registro.title_participacion_asistente }} </h2>
-                <h3> {{ inf_registro.text_participacion_asistente|linebreaks }}</h3>
+                <h3 style="font-size: 110%; font-family: Arial;"> {{ inf_registro.text_participacion_asistente|linebreaks }}</h3>
               </div>
             </div>
           </div>
