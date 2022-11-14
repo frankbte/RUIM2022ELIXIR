@@ -48,7 +48,10 @@ def ediciones(request):
 
 
 def inforegistro(request):
-    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : get_current_event().registro})
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+
+    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : get_current_event().registro, 'message' : message })
 
 
 # Vistas de administrador
@@ -120,41 +123,42 @@ def contactoAdmin(request):
 ############################
 
 def AddPresentation(request):
-    presentacion = PresentacionRegistro(presentacion_titulo=request.GET["pres_tit"],
-                                        resp_email=request.GET["pres_email"],
-                                        modalidad=request.GET["mod"],
+    presentacion = PresentacionRegistro(presentacion_titulo=request.POST.get("pres_tit"),
+                                        resp_email=request.POST.get("pres_email"),
+                                        modalidad=request.POST.get("mod"),
                                         estatus="Sin revisar",
                                         evento=Evento.objects.filter(active=True).get())
 
     presentacion.save()
 
-    responsable = Author(   nombre=request.GET["resp_nom"],
-                            apellido_pat=request.GET["resp_pat"],
-                            apellido_mat=request.GET["resp_mat"],
-                            institucion=request.GET["resp_inst"],
-                            departamento=request.GET["resp_dep"],
-                            grado=request.GET["resp_grado"],
-                            presentacion=presentacion)
+    responsable = Author(nombre=request.POST.get("resp_nom"),
+                         apellido_pat=request.POST.get("resp_pat"),
+                         apellido_mat=request.POST.get("resp_mat"),
+                         institucion=request.POST.get("resp_inst"),
+                         departamento=request.POST.get("resp_dep"),
+                         grado=request.POST.get("resp_grado"),
+                         presentacion=presentacion)
 
     responsable.save()
     
     presentacion.resp = responsable
 
-    cant_auth=int(request.GET["cant_auth"])
+    cant_auth=int(request.POST.get("cant_auth"))
     if cant_auth > 0:
         for x in range(1,cant_auth+1):
-            autor = Author( nombre=request.GET["a" + str(x) + "_nom"],
-                            apellido_pat=request.GET["a" + str(x) + "_pat"],
-                            apellido_mat=request.GET["a" + str(x) + "_mat"],
-                            institucion=request.GET["a" + str(x) + "_inst"],
-                            departamento=request.GET["a" + str(x) + "_dep"],
-                            grado=request.GET["a" + str(x) + "_grado"],
+            autor = Author( nombre=request.POST.get("a" + str(x) + "_nom"),
+                            apellido_pat=request.POST.get("a" + str(x) + "_pat"),
+                            apellido_mat=request.POST.get("a" + str(x) + "_mat"),
+                            institucion=request.POST.get("a" + str(x) + "_inst"),
+                            departamento=request.POST.get("a" + str(x) + "_dep"),
+                            grado=request.POST.get("a" + str(x) + "_grado"),
                             presentacion=presentacion)
             autor.save()
 
     presentacion.save()
 
-    return render(request, "TestApp/ponencias.html")
+    request.session["message"] = "Registro de ponencia exitoso!"
+    return HttpResponseRedirect(reverse('TestApp:Registro')) 
 
 ###########################
 # Controladores

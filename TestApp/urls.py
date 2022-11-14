@@ -38,7 +38,7 @@ urlpatterns = [
 
     path('admin/correos/', views.correos, name="Correos"),
     path('admin/sendmail/', views.send_email),
-    path('admin/add/', views.AddPresentation),
+    path('add/', views.AddPresentation),
     #path('addauthor/', views.AddPresentation),
 
 ]
