@@ -29,9 +29,17 @@
                                 {% csrf_token %}
                                 <button type="submit" name="eliminar" value={{ evento.year }}>Eliminar</button> 
                         </form> 
+				{% if evento.active %}
+				<td> Evento activo! </td>
+				{% else %}
+                <td> <form action="{% url 'TestApp:Activar Iteracion' %}" method="POST"> 
+						{% csrf_token %}
+						<button type="submit" name="activar" value={{ evento.year }}>Activar evento</button> 
+                    </form> 
                 </td>
+            	{% endif %}
             </tr>
-            {% endfor %}
+			{% endfor %}
         </table>
     {% else %}
         No existen iteraciones guardadas de la RUIM para mostrar. Cree una iteración para mostrar datos.
