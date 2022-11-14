@@ -13,63 +13,45 @@ from django.contrib.auth.decorators import login_required
 from fpdf import FPDF
 
 def home(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        home = current_events[0].inicio
-        return render(request, 'TestApp/home.html', {'home' : home})
-
-    return render(request, 'TestApp/home.html')
+    return render(request, 'TestApp/home.html', {'home' : get_current_event().inicio})
 
 def programa(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        programa = current_events[0].programa
-        return render(request, 'TestApp/programa.html', {'programa' : programa})
-
-    return render(request, 'TestApp/programa.html')
+    return render(request, 'TestApp/programa.html', 
+            {'programa' : get_current_event().programa})
 
 def poster(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        poster = current_events[0].poster
-        return render(request, 'TestApp/poster.html', {'poster' : poster})
-
-    return render(request, 'TestApp/poster.html')
+    return render(request, 'TestApp/poster.html', 
+            {'poster' : get_current_event().poster})
 
 def ubicacion(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        ubicacion = current_events[0].ubicacion
-        return render(request, 'TestApp/ubicacion.html', {'ubicacion' : ubicacion})
+    return render(request, 'TestApp/ubicacion.html', 
+            {'ubicacion' : get_current_event().ubicacion})
 
-    return render(request, 'TestApp/ubicacion.html')
 
 def contacto(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        contacto = current_events[0].contacto
-        return render(request, 'TestApp/contacto.html', {'contacto' : contacto})
+    return render(request, 'TestApp/contacto.html', 
+            {'contacto' : get_current_event().contacto})
 
-    return render(request, 'TestApp/contacto.html')
 
 def ponencias(request):
         pform = PresentacionForm()
         aform = AuthorForm()
         return render(request, 'TestApp/ponencias.html', 
                       {'pform': pform, 
-                       'aform': aform})
+                       'aform': aform,
+                       'registro': get_current_event().registro})
 
 def ediciones(request):
-    current_events = Evento.objects.filter(active = 1)
-    if current_events.count() == 1:
-        edicion = current_events[0].edicion
-        return render(request, 'TestApp/ediciones.html', {'' : edicion})
+    return render(request, 'TestApp/ediciones.html', 
+            {'edicion' : get_current_event().edicion})
 
-    return render(request, 'TestApp/ediciones.html')
 
 # Vistas de administrador
 
 def administrador_redirect_login(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("TestApp:Edicion_Iteraciones"))
+
     return HttpResponseRedirect(reverse("TestApp:login"))
 
 @login_required
@@ -269,8 +251,6 @@ def remove_iteration(request):
         request.session["seccess_message"] = "Ha ocurrido un error!"
 
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
-
-
     
 
 def send_email(request):
@@ -285,4 +265,13 @@ def send_email(request):
     return render(request, "TestApp/AdminFront/correos.html", { "message" : "Envío de correo exitoso" })
 
 
+def get_current_event():
+    eventos = Evento.objects.all()
+
+    if eventos.count() > 0:
+        eventos = eventos.filter(active = True)
+        if eventos.count() > 0:
+            return eventos[0]
+
+    return DEFAULT_EVENT
 
