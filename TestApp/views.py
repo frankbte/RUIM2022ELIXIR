@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, BadHeaderError, send_mail, EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+import re
     
 from fpdf import FPDF
 
@@ -205,9 +206,26 @@ def insert_iter(request):
         request.session["seccess_message"] = "No se pudo crear el evento!"
 
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
-    
+
+def get_current_event():
+    if Evento.objects.count() > 0:
+        if Evento.objects.filter(active = 1).count() == 1:
+            return Evento.objects.get(active = 1)
+        else:
+            return DEFAULT_EVENT
+    else:
+        return DEFAULT_EVENT
 
 def report(request):
+    nombre = request.POST.get('nombre_completo')
+    modalidad = request.POST.get('modalidad')
+    titulo = request.POST.get('title_pres')
+    
+    current_event = get_current_event()
+    fecha = current_event.fecha;
+    lugar = current_event.lugar;
+        
+
     font = 'times'
     size = 20
     height = 12
@@ -235,26 +253,25 @@ def report(request):
     pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
     pdf.set_xy(15,pos)
     pdf.set_font(font, 'I', size)
-    pdf.multi_cell(w = 0, h = height, txt= '___________________________', border = 0 ,align ='c')
+    pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
     pos = pdf.get_y() + 5
     
     pdf.set_xy(10,pos)
     pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su _______ con título', border = 0 ,align ='c')
+    pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
     pos = pdf.get_y() + 5
     
     pdf.set_xy(10,pos)
     pdf.set_font(font, 'I', size)
-    pdf.multi_cell(w = 0, h = height, txt= ' ____________________________________', border = 0 ,align ='c')
+    pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
     pos = pdf.get_y() + 5
     
     pdf.set_xy(10,pos)
     pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'el día ________ en ____________________', border = 0 ,align ='c')
+    pdf.multi_cell(w = 0, h = height, txt= 'el día ' + fecha + ' en ' + lugar + '.', border = 0 ,align ='c')
     pdf.output('report.pdf', 'F')
     
     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-
 
 
 def remove_iteration(request):
@@ -271,15 +288,31 @@ def remove_iteration(request):
     return redirect(reverse('TestApp:Edicion Iteraciones')) 
 
 
-    
+# return true if email_address is valid, false if is not valid
+def valid_email_address(email_address):
+   return re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", email_address) != None
+   
 
 def send_email(request):
     subject = request.POST.get('subject')
     message = request.POST.get('message')
     to_email = request.POST.get('to_email')
+    from_email = request.POST.get('from_email')
+    fpass = request.POST.get('pass')
+        
+    current_event = get_current_event();
+        
+    #correo = current_event.correo_comunicacion;
+    #cpass = current_event.correo_contrasena;
+    
+    if not valid_email_address(from_email) :
+        return render(request, "TestApp/AdminFront/correos.html", { "message" : "El correo registrado por el administrador no es válido" })
+    
+    if not valid_email_address(to_email) :
+        return render(request, "TestApp/AdminFront/correos.html", { "message" : "El correo destinatario no es válido" })    
     
     try:
-        send_mail(subject, message, 'RUinvestigacionmateriales@outlook.com', [to_email],)
+        send_mail(subject, message, from_email, [to_email], False, from_email, fpass,)
     except BadHeaderError:
         return render(request, "TestApp/AdminFront/correos.html", { "message" : "Invalid Header Found" })
     return render(request, "TestApp/AdminFront/correos.html", { "message" : "Envío de correo exitoso" })

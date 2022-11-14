@@ -13,9 +13,32 @@
             <div class="container shadow"
                 style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
                 <p class="text-black"> Para generar una constancia presione el boton debajo</p>
-                <a class="btn btn-primary" href="/report/">Generar</a>
+            
+                <form method="POST" action="/admin/report/" class="loginfrm">
+                    {% csrf_token %}
+                    <div>
+                        <label>Nombre Completo: </label>
+                        <input type = "text" name="nombre_completo" >
+                    </div><br>
+                    <div>
+                        <label>Modalidad: </label>
+                        <input type = "text" name="modalidad" >
+                    </div><br>
+                    <div>
+                        <label>Titulo de la presentacion </label>
+                        <input type = "text" name="title_pres" >
+                    </div><br>
+            
+                    <!-- submit button -->
+                    <div class="form-group row">  
+                        <label class="col-sm-1 col-form-label"></label>  
+                        <div class="col-sm-4">  
+                            <button type="submit" class="btn btn-primary">Send</button>  
+                        </div>  
+                    </div>  
+                </form>
             </div>
-    
+        </div> 
     </body>
 </p></div>
 
