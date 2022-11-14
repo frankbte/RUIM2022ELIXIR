@@ -8,6 +8,8 @@ urlpatterns = [
     path('contacto/', views.contacto, name="Contacto"),
     path('ediciones/', views.ediciones, name="Ediciones"),
     path('ponencias/', views.ponencias, name="Ponencias"),
+    path('registro/', views.inforegistro, name="Registro"),
+
 
     path('poster/', views.poster, name="Poster"),
     path('programa/', views.programa, name="Programa"),
@@ -19,7 +21,7 @@ urlpatterns = [
 
 
     path('admin/informe/', views.informe, name="Informe final"),
-    path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
+    path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion_Iteraciones"),
     path('admin/crearEdicion/', views.create_iter, name= "Crear una Iteración"),
     path('admin/insertEdicion/', views.insert_iter, name = "Insertando Iteración"),
     path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),

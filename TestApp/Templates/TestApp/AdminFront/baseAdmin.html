@@ -21,7 +21,12 @@
             </div>
 
             <div class="col-1-sm p-3 pr-5 my-auto ml-auto" id="logout">
-              <button type="button" class="btn btn-secondary rounded">Logout</button>
+				{% if user.is_authenticated %}
+			  	<form action="{% url 'TestApp:logout' %}" method="POST">
+					  {% csrf_token %}
+					  <button type="submit" class="btn btn-secondary rounded">Logout</button>
+				</form>
+				{% endif %}
             </div>
           </div>
           <nav class="row navbar-expand-lg navbar-dark" id="navbar">
