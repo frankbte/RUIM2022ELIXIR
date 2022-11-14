@@ -1,0 +1,51 @@
+{% extends "TestApp/base.html" %}
+
+ {% load static %}
+
+ {% block content %}
+
+<br> 
+
+
+    <div style="background-color: rgba(28, 72, 124); width: 30%;">
+    </div>
+<center>
+    <section class="page-section cta" style="padding-top: 1cm; padding-bottom: 1cm;">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-12 mx-auto">
+              <div class="cta-inner text-left rounded">
+                <h2 class="section-heading mb-4">
+                  <span class="section-heading-upper"></span>
+                  <span class="section-heading-lower"></span>
+                </h2> 
+                <h2 style="font-weight: bold;"> {{ inf_registro.title_presentacion_ponente}} </h2>
+                <h3> {{inf_registro.text.participacion_ponente}}</h3>
+                <br>
+                <br>
+                <h2 style="font-weight: bold;"> {{ inf_registro.title_formato_resumen }} </h2>
+                <h3> {{ inf_registro.text_formato_resumen }}</h3>
+                <br>
+                <br>
+                <h2 style="font-weight: bold;"> {{ inf_registro.title_constancias_participacion }} </h2>
+                <h3> {{ inf_registro.text_constancias_participacion }}</h3>
+                <br>
+                <br>
+                <h2 style="font-weight: bold;"> {{ inf_registro.title_participacion_asistente }} </h2>
+                <h3> {{ inf_registro.text_participacion_asistente }}</h3>
+
+                
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+</center>
+
+
+
+<br>
+
+ {% endblock %}
