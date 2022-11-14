@@ -21,7 +21,7 @@ urlpatterns = [
 
 
     path('admin/informe/', views.informe, name="Informe final"),
-    path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion Iteraciones"),
+    path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion_Iteraciones"),
     path('admin/crearEdicion/', views.create_iter, name= "Crear una Iteración"),
     path('admin/insertEdicion/', views.insert_iter, name = "Insertando Iteración"),
     path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
