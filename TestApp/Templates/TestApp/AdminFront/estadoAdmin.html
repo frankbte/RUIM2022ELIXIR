@@ -1,0 +1,60 @@
+{% extends "TestApp/AdminFront/baseAdmin.html" %}
+
+{% block title %}Estados de aprobación{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            {% if not ponencias_list %}
+                <div class="col">
+                    <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado presentaciones a la iteración </p>
+                </div>
+            {% else %}        
+                <table id="listaPonencias" class="table table-bordered table-hover">
+                    <caption style="caption-side:top ">Lista de presentaciones registradas:</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">Representante</th>
+                            <th scope="col">Correo del representante</th>
+                            <th scope="col">Grado académico</th>
+                            <th scope="col">Institución</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Modalidad</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ponencia in ponencias_list %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</td>
+                                <td>{{ ponencia.presentacion_titulo }}</td>
+                                <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
+                                <td>{{ ponencia.resp_email }}</td>
+                                <td>{{ ponencia.resp.grado }}</td>
+                                <td>{{ ponencia.resp.institucion }}</td>
+                                <td>{{ ponencia.resp.departamento }}</td>
+                                <td>{{ ponencia.modalidad }}</td>
+                                <td>
+                                    <form>
+                                        <div class="form-group">
+                                            <select name="estatus_form" id="inputEstado" class="p-2 form-control">
+                                                <option selected>{{ ponencia.estatus }}</option>
+                                                <option value="Aceptado">Aceptado</option>
+                                                <option value="Rechazado">Rechazado</option>
+                                                <option value="Sin revisar">Pendiente</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td><button type="button" class="btn btn-info">Detalles</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
