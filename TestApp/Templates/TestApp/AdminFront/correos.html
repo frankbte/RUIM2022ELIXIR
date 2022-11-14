@@ -15,11 +15,19 @@
             <p class="text-black"> Ingresa los datos del correo</p>
         </div>
             
-    <form method="POST" action="/sendmail/" class="loginfrm">
+    <form method="POST" action="/admin/sendmail/" class="loginfrm">
         {% csrf_token %}
         <div>
-          <label>Asunto del correo: </label>
-          <input type = "text" name="subject" >
+            <label>HOST email: </label>
+            <input type = "text" name="from_email" >
+        </div><br>
+        <div>
+            <label>HOST pass: </label>
+            <input type = "password" name="pass" >
+        </div><br>
+        <div>
+            <label>Asunto del correo: </label>
+            <input type = "text" name="subject" >
         </div><br>
         <div>
             <label>Destinatario </label>
