@@ -73,7 +73,7 @@ def constancias(request):
 
 @login_required
 def ponenciasAdmin(request):
-    evento = Evento.objects.get(pk=1)
+    evento = get_current_event()
     ponencias_list = evento.presentacionregistro_set.all()
     return render(request, 'TestApp/AdminFront/estadoAdmin.html', {'ponencias_list' : ponencias_list})
 
