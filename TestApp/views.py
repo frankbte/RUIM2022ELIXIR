@@ -6,10 +6,13 @@ from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives, BadHeaderError, send_mail, EmailMessage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.core.mail.backends.smtp import EmailBackend
+from django.core import mail
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 import re
+import socket
     
 from fpdf import FPDF
 
@@ -35,12 +38,8 @@ def contacto(request):
 
 
 def ponencias(request):
-        pform = PresentacionForm()
-        aform = AuthorForm()
         return render(request, 'TestApp/ponencias.html', 
-                      {'pform': pform, 
-                       'aform': aform,
-                       'registro': get_current_event().registro})
+                      {'registro': get_current_event().registro})
 
 def ediciones(request):
     return render(request, 'TestApp/ediciones.html', 
@@ -72,7 +71,17 @@ def evento(request):
 
 @login_required
 def constancias(request):
-    return render(request, 'TestApp/AdminFront/constancias.html')
+    evento = get_current_event()
+    ponencias_list = evento.presentacionregistro_set.all()
+    authors_list = []
+    
+    for ponencia in ponencias_list:
+        autores = Author.objects.filter(presentacion = ponencia)
+        for autor in autores:
+            authors_list.append(autor)
+            
+    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list})
+
 
 @login_required
 def ponenciasAdmin(request):
@@ -108,6 +117,7 @@ def create_iter(request):
 
 @login_required
 def informe(request):
+    evento = get_current_event()
     return render(request, 'TestApp/AdminFront/informe.html')
 
 @login_required
@@ -207,6 +217,7 @@ def insert_iter(request):
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
+@login_required
 def report(request):
     nombre = request.POST.get('nombre_completo')
     modalidad = request.POST.get('modalidad')
@@ -215,7 +226,8 @@ def report(request):
     current_event = get_current_event()
     fecha = current_event.fecha;
     lugar = current_event.lugar;
-        
+    
+    
 
     font = 'times'
     size = 20
@@ -260,11 +272,14 @@ def report(request):
     pdf.set_xy(10,pos)
     pdf.set_font(font, '', size)
     pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
-    pdf.output('report.pdf', 'F')
     
-    return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+    pdfname = 'constancia' + nombre.replace(' ','_') + '.pdf'
+    dest = 'TestApp/static/TestApp/archivos/constancias/'
+    pdf.output(dest + pdfname, 'F')
+    
+    return FileResponse(open(pdfname, 'rb'), as_attachment=True, content_type='TestApp/static/TestApp/archivos/constancias/')
 
-
+@login_required
 def remove_iteration(request):
     event_year = request.POST.get("eliminar") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
 
@@ -278,7 +293,7 @@ def remove_iteration(request):
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
-    
+@login_required
 def activate_event(request):
     year = request.POST.get("activar")
 
@@ -299,30 +314,39 @@ def activate_event(request):
 def valid_email_address(email_address):
    return re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", email_address) != None
 
-
+@login_required
 def send_email(request):
     subject = request.POST.get('subject')
     message = request.POST.get('message')
-    to_email = request.POST.get('to_email')
+    to_email = request.POST.get('to_email') # A list or tuple of recipient addresses.
     from_email = request.POST.get('from_email')
     fpass = request.POST.get('pass')
-        
-    current_event = get_current_event();
-        
-    #correo = current_event.correo_comunicacion;
-    #cpass = current_event.correo_contrasena;
+    
+    if from_email=='':
+        current_event = get_current_event();
+        from_email = current_event.correo_comunicacion;
+        fpass = current_event.correo_contrasena;
     
     if not valid_email_address(from_email) :
-        return render(request, "TestApp/AdminFront/correos.html", { "message" : "El correo registrado por el administrador no es válido" })
+        return  HttpResponseBadRequest('El correo emisor no es válido')
     
     if not valid_email_address(to_email) :
-        return render(request, "TestApp/AdminFront/correos.html", { "message" : "El correo destinatario no es válido" })    
+        return HttpResponseBadRequest('El correo destinatario no es válido')
+
+    # Manually open the connection
+    connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
+    connection.open()
     
+    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
+
     try:
-        send_mail(subject, message, from_email, [to_email], False, from_email, fpass,)
+        email.send(fail_silently=False)
     except BadHeaderError:
-        return render(request, "TestApp/AdminFront/correos.html", { "message" : "Invalid Header Found" })
-    return render(request, "TestApp/AdminFront/correos.html", { "message" : "Envío de correo exitoso" })
+        return  HttpResponseForbidden('Invalid header found.')
+    
+    connection.close()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def get_current_event():
