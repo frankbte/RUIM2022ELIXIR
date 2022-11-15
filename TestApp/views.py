@@ -80,7 +80,7 @@ def constancias(request):
         for autor in autores:
             authors_list.append(autor)
             
-    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_lis
+    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list})
 
 @login_required
 def ponenciasAdmin(request):
