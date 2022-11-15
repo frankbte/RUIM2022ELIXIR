@@ -72,17 +72,21 @@ def evento(request):
 
 @login_required
 def constancias(request):
-    return render(request, 'TestApp/AdminFront/constancias.html')
+    return render(request, 'TestApp/AdminFront/constancias.html',
+            {'evento' : get_editing_event()})
 
 @login_required
 def ponenciasAdmin(request):
     evento = get_current_event()
     ponencias_list = evento.presentacionregistro_set.all()
-    return render(request, 'TestApp/AdminFront/estadoAdmin.html', {'ponencias_list' : ponencias_list})
+    return render(request, 'TestApp/AdminFront/estadoAdmin.html', 
+            {'ponencias_list' : ponencias_list,
+             'evento' : get_editing_event()})
 
 @login_required
 def correos(request):
-    return render(request, 'TestApp/AdminFront/correos.html')
+    return render(request, 'TestApp/AdminFront/correos.html',
+            {'evento' : get_editing_event()})
 
 
 @login_required
@@ -95,30 +99,35 @@ def iterAdmin(request):
     if Evento.objects.count() > 0:
         if Evento.objects.filter(active = 1).count() == 1:
             current_event = Evento.objects.get(active = 1)
-            return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : message})
+            return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : message,
+                'evento' : get_editing_event()})
             
-        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion_list' : eventos, 'message' : message})
+        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion_list' : eventos, 'message' : message, 'evento' : get_editing_event()})
     
-    return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message})
+    return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message, 'evento' : get_editing_event()})
 
 @login_required
 def create_iter(request):
-    return render(request, 'TestApp/AdminFront/creacionIteracion.html')
+    return render(request, 'TestApp/AdminFront/creacionIteracion.html',
+            {'evento' : get_editing_event()})
 
 
 @login_required
 def informe(request):
-    return render(request, 'TestApp/AdminFront/informe.html')
+    return render(request, 'TestApp/AdminFront/informe.html',
+            {'evento' : get_editing_event()})
 
 @login_required
 def inicioAdmin(request):
     form = InicioPageForm()
-    return render(request, 'TestApp/AdminFront/inicioAdmin.html', {'form': form})
+    return render(request, 'TestApp/AdminFront/inicioAdmin.html', 
+            {'form': form, 'evento' : get_editing_event()})
 
 @login_required
 def contactoAdmin(request):
     form = ContactoPageForm()
-    return render(request, 'TestApp/AdminFront/contactoAdmin.html', {'form': form})
+    return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
+            {'form': form, 'evento' : get_editing_event()})
 
 ############################
 
@@ -207,6 +216,7 @@ def insert_iter(request):
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
+
 def report(request):
     nombre = request.POST.get('nombre_completo')
     modalidad = request.POST.get('modalidad')
@@ -278,7 +288,21 @@ def remove_iteration(request):
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
-    
+def change_editing_event(request):
+    year = request.POST.get("editar")
+
+    currently_editing = get_editing_event()
+    currently_editing.editing = False
+    currently_editing.save()
+
+    new_editing = Evento.objects.get(year = year)
+    new_editing.editing = True
+    new_editing.save()
+
+    request.session["success_message"] = "Ahora puedes editar la información de la edición " + str(year) + " en las demás pestañas" 
+    return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
+
+
 def activate_event(request):
     year = request.POST.get("activar")
 
@@ -334,4 +358,25 @@ def get_current_event():
             return eventos[0]
 
     return DEFAULT_EVENT
+
+def get_editing_event():
+    editing_events = Evento.objects.filter(editing = True)
+
+    if editing_events.count() == 0:
+        if Evento.objects.all().count() == 0:
+            q = DEFAULT_EVENT
+            q.save_all()
+            q.editing = True
+            q.save()
+            return q
+        new_editing = Evento.objects.all()[0]
+        new_editing.editing = True
+        new_editing.save()
+        return new_editing
+
+    if editing_events.count() > 1:
+        for i in range(1, editing_events.count() - 1):
+            editing_events[i].editing = False
+
+    return editing_events[0]
 
