@@ -1,45 +1,85 @@
 {% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-{% load static %}
+{% block title %}Generar constancias{% endblock %}
 
 {% block content %}
 
-<div><p>
-    <head>
-        <meta charset="UTF-8">
-        <title>PDF Report</title>
-    </head>
-    <body>
-            <div class="container shadow"
-                style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
-                <p class="text-black"> Para generar una constancia presione el boton debajo</p>
-            
-                <form method="POST" action="/admin/report/" class="loginfrm">
-                    {% csrf_token %}
-                    <div>
-                        <label>Nombre Completo: </label>
-                        <input type = "text" name="nombre_completo" >
-                    </div><br>
-                    <div>
-                        <label>Modalidad: </label>
-                        <input type = "text" name="modalidad" >
-                    </div><br>
-                    <div>
-                        <label>Titulo de la presentacion </label>
-                        <input type = "text" name="title_pres" >
-                    </div><br>
-            
-                    <!-- submit button -->
-                    <div class="form-group row">  
-                        <label class="col-sm-1 col-form-label"></label>  
-                        <div class="col-sm-4">  
-                            <button type="submit" class="btn btn-primary">Send</button>  
-                        </div>  
-                    </div>  
-                </form>
-            </div>
-        </div> 
-    </body>
-</p></div>
+    <div class="container">
+        <div class="row mt-5">
+            {% if not authors_list %}
+                <div class="col">
+                    <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado autores a la iteración </p>
+                </div>
+            {% else %}        
+                <table id="listaPonencias" class="table table-bordered table-hover">
+                    <caption style="caption-side:top ">Lista de autores:</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">Grado académico</th>
+                            <th scope="col">Institución</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Presentacion</th>
+                            <th scope="col">Modalidad</th>
+                            <th scope="col">Correo asociado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for autor in authors_list %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</td>
+                                <td>{{ autor.apellido_pat }} {{ autor.apellido_mat }} {{ autor.nombre }}</td>
+                                <td>{{ autor.grado }}</td>
+                                <td>{{ autor.institucion }}</td>
+                                <td>{{ autor.departamento }}</td>
+                                <td>{{ autor.presentacion.presentacion_titulo }}</td>
+                                <td>{{ autor.presentacion.modalidad }}</td>
+                                <td>{{ autor.presentacion.resp_email }}</td>
+                                <td>
+                                    <form method="POST" action="/admin/report/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="nombre_completo" value="{{ autor.apellido_pat }} {{ autor.apellido_mat }} {{ autor.nombre }}">
+                                        <input type="hidden" name="modalidad" value="{{ autor.presentacion.modalidad }}">
+                                        <input type="hidden" name="title_pres" value="{{ autor.presentacion.presentacion_titulo }}">
+                                        <button type="submit" class="btn btn-primary">Generar constancia</button> 
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+        <div class="container shadow"
+        style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
+        <h3>Pruebas:</h3>
+        <p class="text-black"> Para generar una constancia presione el boton debajo</p>
+    
+        <form method="POST" action="/admin/report/" class="loginfrm">
+            {% csrf_token %}
+            <div>
+                <label>Nombre Completo: </label>
+                <input type = "text" name="nombre_completo" >
+            </div><br>
+            <div>
+                <label>Modalidad: </label>
+                <input type = "text" name="modalidad" >
+            </div><br>
+            <div>
+                <label>Titulo de la presentacion </label>
+                <input type = "text" name="title_pres" >
+            </div><br>
+    
+            <!-- submit button -->
+            <div class="form-group row">  
+                <label class="col-sm-1 col-form-label"></label>  
+                <div class="col-sm-4">  
+                    <button type="submit" class="btn btn-primary">generar</button>  
+                </div>  
+            </div>  
+        </form>
+    </div>
 
 {% endblock %}

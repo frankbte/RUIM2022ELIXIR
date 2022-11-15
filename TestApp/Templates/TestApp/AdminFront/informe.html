@@ -1,6 +1,9 @@
-<!DOCTYPE html>
+{% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-<html>
+{% block title %}Informe{% endblock %}
+
+{% block content %}
+
     <head>
         <meta charset="utf-8">
         <title>Informe RUIM</title>
@@ -31,4 +34,4 @@
         <p>Presentaciones totales rechazadas: {{ pres_rechazadas }}</p>
         </center>
     </body>
-</html>
+    {% endblock %}
