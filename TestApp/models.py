@@ -120,7 +120,7 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, \
                                                 text = "Para cualquier duda o comentario, ponemos a su disposición \n la siguiente dirección de correo electrónico: \n", \
                                                 contacto = "ruim@unison.mx"), \
                         edicion = EdicionesPage(title = "Ediciones anteriores de la RUIM:", text = ""),
-                        registro = RegistroPage(title_participacion_ponente = "Participación como ponenete",
+                        registro = RegistroPage(title_participacion_ponente = "Participación como ponente",
                                                 text_participacion_ponente = "Las formas de Participación en la RUIM 2022 son las siguientes: \n\n - Pláticas Invitadas\n - Posters.\n",
                                                 title_formato_resumen = "Formato para Resumen",
                                                 text_formato_resumen = "El formato del Resumen es igual para las dos formas de participación y la extensión es de una o dos cuartillas siguiendo la plantilla en formato Word 2010 y posteriores (*.docx), la cual está disponible en esta página",
