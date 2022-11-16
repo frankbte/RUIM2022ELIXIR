@@ -17,40 +17,57 @@ import socket
 from fpdf import FPDF
 
 def home(request):
-    return render(request, 'TestApp/home.html', {'home' : get_current_event().inicio})
+    current_event = get_current_event(request)
+    return render(request, 'TestApp/home.html', 
+            {'home' : current_event.inicio, 'evento' : current_event})
 
 def programa(request):
+    current_event = get_current_event(request)
     return render(request, 'TestApp/programa.html', 
-            {'programa' : get_current_event().programa})
+            {'programa' : current_event.programa, 'evento' : current_event})
 
 def poster(request):
+    current_event = get_current_event(request)
     return render(request, 'TestApp/poster.html', 
-            {'poster' : get_current_event().poster})
+            {'poster' : current_event.poster, 'evento' : current_event})
 
 def ubicacion(request):
+    current_event = get_current_event(request)
     return render(request, 'TestApp/ubicacion.html', 
-            {'ubicacion' : get_current_event().ubicacion})
+            {'ubicacion' : current_event.ubicacion, 'evento' : current_event})
 
 
 def contacto(request):
+    current_event = get_current_event(request)
     return render(request, 'TestApp/contacto.html', 
-            {'contacto' : get_current_event().contacto})
+            {'contacto' : current_event.contacto, 'evento' : current_event})
 
 
 def ponencias(request):
-        return render(request, 'TestApp/ponencias.html', 
-                      {'registro': get_current_event().registro})
+    current_event = get_current_event(request)
+    return render(request, 'TestApp/ponencias.html', 
+            {'registro': current_event.registro, 'evento' : current_event})
 
 def ediciones(request):
+    current_event = get_current_event(request)
+
+    past_events = (Evento.objects.filter(active = True) |Evento.objects.filter(year__lt = current_event.year)).order_by('-year') 
+
+    if request.session.get("showing_year", "no_event") == "no_event":
+        past_events = Evento.objects.filter(year__lt = current_event.year).order_by('year')
+
+
     return render(request, 'TestApp/ediciones.html', 
-            {'edicion' : get_current_event().edicion})
+            {'edicion' : current_event.edicion, 'evento' : current_event,
+                'past_events' : past_events})
 
 
 def inforegistro(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
 
-    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : get_current_event().registro, 'message' : message })
+    current_event = get_current_event(request)
+    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : current_event.registro, 'message' : message , 'evento' : current_event})
 
 
 # Vistas de administrador
@@ -71,7 +88,7 @@ def evento(request):
 
 @login_required
 def constancias(request):
-    evento = get_current_event()
+    evento = get_current_event(request, True)
     ponencias_list = evento.presentacionregistro_set.all()
     authors_list = []
     
@@ -84,7 +101,7 @@ def constancias(request):
 
 @login_required
 def ponenciasAdmin(request):
-    evento = get_current_event()
+    evento = get_current_event(request, True)
     ponencias_list = evento.presentacionregistro_set.all()
     return render(request, 'TestApp/AdminFront/estadoAdmin.html', 
             {'ponencias_list' : ponencias_list,
@@ -196,6 +213,7 @@ def insert_iter(request):
 
     new_event = Evento()
     new_event.active = False
+    new_event.editing = False
     new_event.year = year
     new_event.cartel = cartel
     new_event.correo_comunicacion = correo
@@ -216,7 +234,7 @@ def insert_iter(request):
     try:
         new_event.save_all()
         new_event.save() 
-        request.session["success_message"] = "Evento nuevo creado con información default para vistas de usuario."
+        request.session["success_message"] = "Nuevo evento creado con información default para vistas de usuario."
 
     except Evento.DoesNotExist:
         request.session["seccess_message"] = "No se pudo crear el evento!"
@@ -229,7 +247,7 @@ def report(request):
     modalidad = request.POST.get('modalidad')
     titulo = request.POST.get('title_pres')
     
-    current_event = get_current_event()
+    current_event = get_current_event(request, True)
     fecha = current_event.fecha;
     lugar = current_event.lugar;
 
@@ -312,6 +330,10 @@ def change_editing_event(request):
     request.session["success_message"] = "Ahora puedes editar la información de la edición " + str(year) + " en las demás pestañas" 
     return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
 
+def change_viewing_event(request, year):
+    request.session['showing_year'] = year
+
+    return HttpResponseRedirect(reverse('TestApp:Home'))
 
 def activate_event(request):
     year = request.POST.get("activar")
@@ -342,7 +364,7 @@ def send_email(request):
     fpass = request.POST.get('pass')
     
     if from_email=='':
-        current_event = get_current_event();
+        current_event = get_current_event(request, True);
         from_email = current_event.correo_comunicacion;
         fpass = current_event.correo_contrasena;
     
@@ -368,7 +390,17 @@ def send_email(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-def get_current_event():
+def get_current_event(request, admin = False):
+    showing_year = request.session.get("showing_year", "no_event")
+
+    if showing_year != "no_event" and (not admin):
+        showing_year = int(showing_year)
+        showing_event = Evento.objects.filter(year = showing_year)
+
+        if showing_event.count() == 1:
+            return showing_event[0]
+
+
     eventos = Evento.objects.all()
 
     if eventos.count() > 0:

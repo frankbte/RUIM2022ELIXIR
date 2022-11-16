@@ -15,10 +15,9 @@ urlpatterns = [
     path('programa/', views.programa, name="Programa"),
     path('ubicacion/', views.ubicacion, name="Ubicacion"),
 
+    path('cambiando_vista/<int:year>', views.change_viewing_event, name="Cambiar Vista"),
 
     # URLs de la interfaz del admin
-    path('admin/home/', views.baseFront, name="BaseFront"),
-
 
     path('admin/informe/', views.informe, name="Informe final"),
     path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion_Iteraciones"),
