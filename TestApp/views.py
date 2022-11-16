@@ -12,6 +12,7 @@ from django.core import mail
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 import re
+import copy
     
 from fpdf import FPDF
 
@@ -50,7 +51,7 @@ def ponencias(request):
 def ediciones(request):
     current_event = get_current_event(request)
 
-    past_events = (Evento.objects.filter(active = True) |Evento.objects.filter(year__lt = current_event.year)).order_by('-year') 
+    past_events = (Evento.objects.filter(active = True) | Evento.objects.filter(year__lt = current_event.year)).order_by('-year') 
 
     if request.session.get("showing_year", "no_event") == "no_event":
         past_events = Evento.objects.filter(year__lt = current_event.year).order_by('year')
@@ -119,15 +120,12 @@ def iterAdmin(request):
     message = request.session.get("success_message", "")
     request.session["success_message"] = ""
         
-    if Evento.objects.count() > 0:
-        if Evento.objects.filter(active = 1).count() == 1:
-            current_event = Evento.objects.get(active = 1)
-            return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion' : current_event, 'iteracion_list' : eventos, 'message' : message,
-                'evento' : get_editing_event()})
+    current_editing_event = get_editing_event()
+
+    return render(request, 'TestApp/AdminFront/edicionesFront.html', 
+                    {'iteracion' : current_editing_event, 'iteracion_list' : eventos, 'message' : message,
+                'evento' : current_editing_event})
             
-        return render(request, 'TestApp/AdminFront/edicionesFront.html', {'iteracion_list' : eventos, 'message' : message, 'evento' : get_editing_event()})
-    
-    return render(request, 'TestApp/AdminFront/edicionesFront.html', {'message' : message, 'evento' : get_editing_event()})
 
 @login_required
 def create_iter(request):
@@ -309,7 +307,15 @@ def remove_iteration(request):
 
     try:
         event = Evento.objects.get(year = event_year)
+        event.inicio.delete()
+        event.programa.delete()
+        event.poster.delete()
+        event.ubicacion.delete()
+        event.contacto.delete()
+        event.registro.delete()
+        event.edicion.delete()
         event.delete()
+
         request.session["success_message"] = "Evento eliminado!"
 
     except Evento.DoesNotExist:
@@ -410,17 +416,20 @@ def get_current_event(request, admin = False):
         if eventos.count() > 0:
             return eventos[0]
 
-    return DEFAULT_EVENT
+        eventos = Evento.objects.all()
+        eventos[0].active = True
+        eventos[0].save()
+        return eventos[0]
+
+    return copy.deepcopy(DEFAULT_EVENT)
 
 def get_editing_event():
     editing_events = Evento.objects.filter(editing = True)
 
     if editing_events.count() == 0:
         if Evento.objects.all().count() == 0:
-            q = DEFAULT_EVENT
-            q.save_all()
-            q.editing = True
-            q.save()
+            q = copy.deepcopy(DEFAULT_EVENT)
+            q.year = "Sin eventos!"
             return q
         new_editing = Evento.objects.all()[0]
         new_editing.editing = True

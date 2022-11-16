@@ -135,25 +135,3 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, \
 
 
 
-#class Presentation(models.Model):
-#    modalidadChoices = (
-#        ('Cartel','Cartel'),
-#    )
-#    estatusChoices = (
-#        ('Sin revisar','Sin revisar'),
-#        ('Aceptado', 'Aceptado'),
-#        ('Rechazado', 'Rechazado')
-#    )
-#    presentacion_titulo = models.CharField(max_length = 40,verbose_name="Título")
-#    resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, verbose_name="Responsable")
-#    resp_email = models.EmailField(blank=True,null=True)
-#    a1 = models.ForeignKey('Author', related_name = "a1", on_delete = models.CASCADE, blank=True,null=True)
-#    a2 = models.ForeignKey('Author', related_name = "a2", on_delete = models.CASCADE, blank=True,null=True)
-#    a3 = models.ForeignKey('Author', related_name = "a3", on_delete = models.CASCADE, blank=True,null=True)
-#    a4 = models.ForeignKey('Author', related_name = "a4", on_delete = models.CASCADE, blank=True,null=True)
-#    a5 = models.ForeignKey('Author', related_name = "a5", on_delete = models.CASCADE, blank=True,null=True)
-#    a6 = models.ForeignKey('Author', related_name = "a6", on_delete = models.CASCADE, blank=True,null=True)
-#    a7 = models.ForeignKey('Author', related_name = "a7", on_delete = models.CASCADE, blank=True,null=True)
-#    modalidad = models.CharField(max_length = 30,default='Cartel',choices=modalidadChoices,verbose_name="Modalidad") # cartel o ponencia
-#    estatus = models.CharField(max_length = 30, default='Sin revisar', choices=estatusChoices,verbose_name="Estatus")
-#    anio = models.IntegerField(default=2022, verbose_name="Año")
