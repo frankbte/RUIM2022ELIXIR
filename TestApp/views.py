@@ -12,7 +12,6 @@ from django.core import mail
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 import re
-import socket
     
 from fpdf import FPDF
 
@@ -223,8 +222,11 @@ def insert_iter(request):
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
+
+
 @login_required
 def report(request):
+    
     nombre = request.POST.get('nombre_completo')
     modalidad = request.POST.get('modalidad')
     titulo = request.POST.get('title_pres')
@@ -277,11 +279,11 @@ def report(request):
     pdf.set_font(font, '', size)
     pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
     
-    pdfname = 'constancia' + nombre.replace(' ','_') + '.pdf'
+    pdfname = 'constancia-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
     dest = 'TestApp/static/TestApp/archivos/constancias/'
     pdf.output(dest + pdfname, 'F')
     
-    return FileResponse(open(pdfname, 'rb'), as_attachment=True, content_type='TestApp/static/TestApp/archivos/constancias/')
+    return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type= 'application/pdf')
 
 @login_required
 def remove_iteration(request):

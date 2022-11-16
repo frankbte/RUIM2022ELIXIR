@@ -88,7 +88,7 @@
                               <span class="ms-2 badge bg-secondary">i</span>
                            </div>
                         </div>
-                        <input name="resumen" accept="application/pdf" controlid="" type="file" class="form-control">
+                        <input name="resumen" accept="application/pdf" controlid="" type="file" class="form-control" required>
                      </div>
                   </div>
                   <br>
@@ -172,11 +172,11 @@
                   <div class="col">
                      <p>Seleccione la cantidad de autores a agregar 
                         <input type="range" value="0" name="cant_auth"  id ="cant_auth" min="0" max="7" oninput="this.nextElementSibling.value = this.value">
-                        <output cant_auth.value default="0"></output>
+                        <output cant_auth.value default="1"></output>
                      </p> 
                   </div>
                   <div class="col">
-                     <button onclick="addauthors(cant_auth.value)" class=" btn-primary mt-4  btn btn-info">Agregar autores</button><br>
+                     <input value="Agregar autores" onclick="addauthors(cant_auth.value)" class=" btn-primary mt-4  btn btn-info"></button><br>
                   </div>
                   <p><br><br><input type="submit" value="Enviar" class=" btn-primary mt-4  btn btn-primary"></p>
                </div>
