@@ -9,23 +9,16 @@
 
                <div class="container p-5 center-0 text-center bg-faded p-4 rounded" style="margin-top: 0cm; background-color: rgba(28, 72, 124); width: 80%;">
                   <h3 style=" font-size: 150%; text-align: center; color: white;">
-                     Centro de las Artes de la Universidad de Sonora <br> <br>
-                     Ubicado en Blvd. Luis Donaldo Colosio y Rosales S/N 
-                     Colonia Centro, 
-                     Hermosillo, Sonora. <br> <br>
-                     <a href="https://goo.gl/maps/muocjqEYp8YSUs1p6" target="_blank" style="font-weight: bold; color: rgb(255, 255, 255);">Ver en Google Maps</a>
+                     {{ubicacion.text}}
+                     <br> <br>
+                     <a href={{ubicacion.url_maps}} target="_blank" style="font-weight: bold; color: rgb(255, 255, 255);">Ver en Google Maps</a>
                   </h3>
                </div>
                
-               <div style="text-align: center; margin-right:3.5cm; margin-top: .5cm;">
-                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3486.814738923721!2d-110.96154618495328!3d29.081618982242823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86ce84491ead1bcf%3A0xfdb274fba98a7049!2sCentro%20de%20las%20Artes%20Unison!5e0!3m2!1ses!2smx!4v1666635438505!5m2!1ses!2smx" 
-                     width="600" 
-                     height="450" 
-                     style="border:0; margin-left: 100px;"
-                     allowfullscreen="" 
-                     loading="lazy" 
-                     referrerpolicy="no-referrer-when-downgrade">
-                  </iframe>
+               <div style="text-align: center; margin-top: .5cm; align-items: center;" >
+                  {% autoescape off %}
+                     {{ubicacion.url_maps_embed}}
+                  {% endautoescape %}
                </div>
             </div>
          

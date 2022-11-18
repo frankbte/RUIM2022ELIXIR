@@ -29,6 +29,8 @@ urlpatterns = [
     path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('admin/ponencias/', views.ponenciasAdmin, name="Estados Ponencias"),
     path('admin/contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
+    path('admin/ubicacionAdmin/', views.ubicacionAdmin, name="Edición Ubicacion"),
+    path('admin/processUbicacion/', views.processUbicacion),
     path('admin/constancias/', views.constancias, name="Constancias"),
     path('admin/report/', views.report),
 
