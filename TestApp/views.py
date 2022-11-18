@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import models
-from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, PresentacionForm
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, DEFAULT_EVENT
+from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, UbicacionPageForm, PresentacionForm
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, UbicacionPage, Author, DEFAULT_EVENT
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -149,6 +149,28 @@ def contactoAdmin(request):
     form = ContactoPageForm()
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
             {'form': form, 'evento' : get_editing_event()})
+    
+@login_required
+def ubicacionAdmin(request):
+    form = UbicacionPageForm()
+    return render(request, 'TestApp/AdminFront/ubicacionAdmin.html', 
+            {'form': form})
+    
+@login_required
+def processUbicacion(request):
+    evento=get_editing_event()
+    evento.ubicacion = UbicacionPage(title = request.POST.get('title'), text = request.POST.get('text'),
+                                     url_maps_embed = request.POST.get('url_maps_embed'), url_maps = request.POST.get('url_maps'))
+    
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session["message"] = "Página de ubicación actualizada."
+        
+    except Exception as error:
+        request.session["message"] = "Ocurrió un error inesperado: " + format(error) + "."
+        
+    return render(request, 'TestApp/AdminFront/ubicacionAdmin.html')
 
 ############################
 

@@ -1,0 +1,30 @@
+{% extends "TestApp/AdminFront/baseAdmin.html" %}
+
+{% block title %}Edición de Ubicacion{% endblock %}
+
+{% block content %}
+
+    <body>
+		<br/>
+        <center>
+            {% if message %}
+                <h2 style="color: rgb(129, 235, 246); font-weight: bold;">{{ message }} </h2>
+                </br>
+            {% endif %}
+            <h1>
+                Edición de la pestaña de Ubicacion
+            </h1>
+            {% if form.errors %}
+                <p>Debe completar todos los campos correctamente.</p>
+            {% else %}
+                <p>Ingrese los cambios a los campos que se mostrarán en la página de Ubicacion:</p>
+            {% endif %}
+
+            <form action="/admin/processUbicacion/" method="POST">
+                {% csrf_token %}
+                {{ form.as_ul }}
+                <input type="submit" value="Confirmar cambios">
+            </form>
+        </center>
+    </body>
+{% endblock %}
