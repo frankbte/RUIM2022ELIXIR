@@ -1,6 +1,6 @@
 from telnetlib import AUTHENTICATION
 from django import forms  
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, UbicacionPage
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, UbicacionPage, PosterPage, ProgramaPage
 
 class EventoForm(forms.ModelForm):  
     class Meta:  
@@ -58,3 +58,17 @@ class UbicacionPageForm(forms.ModelForm):
                   'text' : 'Mensaje',
                   'url_maps' : 'URL de maps',
                   'url_maps_embed' : 'URL del embed de maps'}
+
+class PosterPageForm(forms.ModelForm):  
+    class Meta:  
+        model = PosterPage
+        fields = "__all__"
+        labels = {'poster_img' : 'Imagen del poster',
+                  'poster_pdf' : 'PDF del poster'}
+        
+class ProgramaPageForm(forms.ModelForm):  
+    class Meta:  
+        model = ProgramaPage
+        fields = "__all__"
+        labels = {'programa_img' : 'Imagen del Programa',
+                  'programa_pdf' : 'PDF del programa'}

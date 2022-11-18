@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import models
-from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, UbicacionPageForm, PresentacionForm
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, UbicacionPage, Author, DEFAULT_EVENT
+from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, UbicacionPageForm, PresentacionForm, PosterPageForm, ProgramaPageForm
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, UbicacionPage, PosterPage, Author, DEFAULT_EVENT
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -153,8 +153,11 @@ def contactoAdmin(request):
 @login_required
 def ubicacionAdmin(request):
     form = UbicacionPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/ubicacionAdmin.html', 
-            {'form': form})
+            {'form': form,
+             'message' : message})
     
 @login_required
 def processUbicacion(request):
@@ -165,12 +168,65 @@ def processUbicacion(request):
     try:
         evento.save_all()
         evento.save() 
-        request.session["message"] = "Página de ubicación actualizada."
+        request.session['message'] = "Página de ubicación actualizada."
         
     except Exception as error:
-        request.session["message"] = "Ocurrió un error inesperado: " + format(error) + "."
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Ubicacion')) )
+
+@login_required
+def posterAdmin(request):
+    form = PosterPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    return render(request, 'TestApp/AdminFront/posterAdmin.html', 
+            {'form': form,
+             'message' : message})
+    
+@login_required
+def processPoster(request):
+    evento=get_editing_event()
+    evento.ubicacion = PosterPage(poster_img = request.POST.get('poster_img'),
+                                  poster_pdf = request.POST.get('poster_pdf'))
+    
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Poster actualizado."
         
-    return render(request, 'TestApp/AdminFront/ubicacionAdmin.html')
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Poster')) )
+
+@login_required
+def programaAdmin(request):
+    form = ProgramaPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    return render(request, 'TestApp/AdminFront/programaAdmin.html', 
+            {'form': form,
+             'message' : message})
+    
+@login_required
+def processPrograma(request):
+    evento=get_editing_event()
+    evento.ubicacion = PosterPage(programa_img = request.POST.get('programa_img'),
+                                  programa_pdf = request.POST.get('programa_pdf'))
+    
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Programa actualizado."
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Programa')) )
 
 ############################
 
