@@ -2,10 +2,6 @@ from django.db import models
 from django.forms import ModelForm
 from django.core.validators import FileExtensionValidator
 
-def validate_file_extension_pdf(value):
-    if not value.name.endswith('.pdf'):
-        raise ValidationError(u'El archivos debe tener extensión .pdf')
-
 class PresentacionRegistro(models.Model):
     modalidadChoices = (
         ('Cartel','Cartel'),
@@ -84,7 +80,7 @@ class Evento(models.Model):
     active = models.BooleanField()
     editing = models.BooleanField()
     year = models.IntegerField(default=2022)
-    cartel = models.FileField(upload_to = 'base/', blank=True,null=True)
+    cartel = models.FileField(upload_to = 'base/')
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
     programa = models.ForeignKey('ProgramaPage', on_delete = models.CASCADE, blank=True,null=True)
     poster = models.ForeignKey('PosterPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -92,7 +88,7 @@ class Evento(models.Model):
     contacto = models.ForeignKey('ContactoPage', on_delete = models.CASCADE, blank=True,null=True)
     registro = models.ForeignKey('RegistroPage', on_delete = models.CASCADE, blank=True,null=True)
     edicion = models.ForeignKey('EdicionesPage', on_delete = models.CASCADE,blank=True,null=True)
-    plantilla_constancias_img = models.ImageField(upload_to = 'constancias/base/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
+    plantilla_constancias_img = models.ImageField(upload_to = 'constancias/base/')    # Imagen tamaño Letter (216 x 280 mm)
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
     fecha = models.DateField()

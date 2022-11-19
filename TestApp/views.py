@@ -291,12 +291,12 @@ def insert_iter(request):
         request.session["success_message"] = "No se pueden registrar dos eventos de un mismo año!"
         return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
 
-    cartel = request.POST.get("cartel")
+    cartel = request.FILES.get("cartel")
     correo = request.POST.get("correo")
     correo_contrasena = request.POST.get("correo_contrasena")
     fecha = request.POST.get("date")
     lugar = request.POST.get("place")
-    plantilla_constancias = request.POST.get("plantilla_constancias")
+    plantilla_constancias = request.FILES.get("plantilla_constancias")
 
     new_event = Evento()
     new_event.active = False
@@ -319,12 +319,17 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
+        validator = FileExtensionValidator(allowed_extensions=[".jpg", ".jpeg"])
+
+        validator(new_event.cartel)
+        validator(new_event.plantilla_constancias_img)
         new_event.save_all()
         new_event.save() 
         request.session["success_message"] = "Nuevo evento creado con información default para vistas de usuario."
-
     except Evento.DoesNotExist:
-        request.session["seccess_message"] = "No se pudo crear el evento!"
+        request.session["success_message"] = "No se pudo crear el evento!"
+    except ValidationError:
+        request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos"
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
