@@ -231,22 +231,22 @@ def processPrograma(request):
 ############################
 
 def AddPresentation(request):
-    presentacion = PresentacionRegistro(presentacion_titulo=request.POST.get("pres_tit"),
-                                        resp_email=request.POST.get("pres_email"),
-                                        modalidad=request.POST.get("mod"),
-                                        resumen=request.FILES.get("resumen"),
-                                        estatus="Sin revisar",
-                                        evento=Evento.objects.filter(active=True).get())
+    presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
+                                        resp_email = request.POST.get("pres_email"),
+                                        modalidad = request.POST.get("mod"),
+                                        resumen = request.FILES.get("resumen"),
+                                        estatus = "Sin revisar",
+                                        evento = get_current_event(request))
 
     presentacion.save()
 
-    responsable = Author(nombre=request.POST.get("resp_nom"),
-                         apellido_pat=request.POST.get("resp_pat"),
-                         apellido_mat=request.POST.get("resp_mat"),
-                         institucion=request.POST.get("resp_inst"),
-                         departamento=request.POST.get("resp_dep"),
-                         grado=request.POST.get("resp_grado"),
-                         presentacion=presentacion)
+    responsable = Author(nombre = request.POST.get("resp_nom"),
+                         apellido_pat = request.POST.get("resp_pat"),
+                         apellido_mat = request.POST.get("resp_mat"),
+                         institucion = request.POST.get("resp_inst"),
+                         departamento = request.POST.get("resp_dep"),
+                         grado = request.POST.get("resp_grado"),
+                         presentacion = presentacion)
 
     responsable.save()
     
@@ -255,13 +255,13 @@ def AddPresentation(request):
     cant_auth=int(request.POST.get("cant_auth"))
     if cant_auth > 0:
         for x in range(1,cant_auth+1):
-            autor = Author( nombre=request.POST.get("a" + str(x) + "_nom"),
-                            apellido_pat=request.POST.get("a" + str(x) + "_pat"),
-                            apellido_mat=request.POST.get("a" + str(x) + "_mat"),
-                            institucion=request.POST.get("a" + str(x) + "_inst"),
-                            departamento=request.POST.get("a" + str(x) + "_dep"),
-                            grado=request.POST.get("a" + str(x) + "_grado"),
-                            presentacion=presentacion)
+            autor = Author( nombre = request.POST.get("a" + str(x) + "_nom"),
+                            apellido_pat = request.POST.get("a" + str(x) + "_pat"),
+                            apellido_mat = request.POST.get("a" + str(x) + "_mat"),
+                            institucion = request.POST.get("a" + str(x) + "_inst"),
+                            departamento = request.POST.get("a" + str(x) + "_dep"),
+                            grado = request.POST.get("a" + str(x) + "_grado"),
+                            presentacion = presentacion)
             autor.save()
 
     presentacion.save()
