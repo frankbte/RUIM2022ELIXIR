@@ -17,12 +17,12 @@
 
 		<form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" class="loginfrm">
 			<p>Año del evento: <input type="number" name="year" required></p>
-			<p>Cartel del evento(.jpg): <input type="file" name="cartel"></p>
-			<p>Plantilla para constancias(.jpg): <input type="file" name="plantilla_constancias"></p>
-			<p>Correo de comunicación: <input type="email" name="correo"></p>
-			<p>Contraseña del correo de comunicación: <input type="password" name="correo_contrasena"></p>
+			<p>Cartel del evento(.jpg): <input type="file" name="cartel" required></p>
+			<p>Plantilla para constancias(.jpg): <input type="file" name="plantilla_constancias" required></p>
+			<p>Correo de comunicación: <input type="email" name="correo" required></p>
+			<p>Contraseña del correo de comunicación: <input type="password" name="correo_contrasena" required></p>
 			<p>Fecha del evento: <input type="date" name="date" required></p>
-			<p>Lugar del evento: <input type="text" name="place"></p>
+			<p>Lugar del evento: <input type="text" name="place" required></p>
             {% csrf_token %}
             <input type="submit" value="Crear">
         </form>

@@ -13,6 +13,8 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModif
 from django.contrib.auth.decorators import login_required
 import re
 import copy
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
     
 from fpdf import FPDF
 
@@ -231,14 +233,23 @@ def processPrograma(request):
 ############################
 
 def AddPresentation(request):
-    presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
+
+    try:
+        presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
                                         resp_email = request.POST.get("pres_email"),
                                         modalidad = request.POST.get("mod"),
                                         resumen = request.FILES.get("resumen"),
                                         estatus = "Sin revisar",
                                         evento = get_current_event(request))
 
-    presentacion.save()
+        FileExtensionValidator(allowed_extensions = ['pdf'])(presentacion.resumen)
+
+        presentacion.save()
+    except ValidationError:
+        request.session["message"] = "El resumen debe tener extensión .pdf!\n Vuelve a intentarlo con un archivo válido"
+        return HttpResponseRedirect(reverse('TestApp:Registro')) 
+
+
 
     responsable = Author(nombre = request.POST.get("resp_nom"),
                          apellido_pat = request.POST.get("resp_pat"),
