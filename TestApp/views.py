@@ -234,6 +234,7 @@ def AddPresentation(request):
     presentacion = PresentacionRegistro(presentacion_titulo=request.POST.get("pres_tit"),
                                         resp_email=request.POST.get("pres_email"),
                                         modalidad=request.POST.get("mod"),
+                                        resumen=request.FILES.get("resumen"),
                                         estatus="Sin revisar",
                                         evento=Evento.objects.filter(active=True).get())
 
