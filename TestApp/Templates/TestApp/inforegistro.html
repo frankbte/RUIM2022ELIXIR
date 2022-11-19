@@ -11,7 +11,7 @@
     </div>
     <center>
 	{% if message %}
-	<h2 style="color: rgb(129, 235, 246); font-weight: bold;">{{ message }} </h2>
+	<h2 style="color: rgb(129, 235, 246); font-weight: bold;">{{ message|linebreaks }} </h2>
 	</br>
 	{% endif %}
     <div style="background-color: white; text-align: center; width: 50%; margin-bottom: -1.5cm;">
@@ -25,7 +25,7 @@
     </u>
     </h3>
 	<h2 style="color: black;">
-			<a href="{% url 'TestApp:Ponencias' %}" target="_blank" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique;">Acceso a registro de ponencias</a><br/>
+			<a href="{% url 'TestApp:Ponencias' %}" target="_self" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique;">Acceso a registro de ponencias</a><br/>
 	</h2>
     </div>
     </center>
