@@ -11,11 +11,11 @@
 
   <center>
     &nbsp;<br />
-    <!--<img alt="Póster del evento" src="{% static '/TestApp/archivos/poster.jpg' %}" /></a>-->
-    <img alt="Póster del evento" src="{% static '/TestApp/archivos/admin/poster.jpg' %}" /></a>
+    <!--<img alt="Póster del evento" src="{% static evento.poster.poster_img /></a>-->
+    <img alt="Póster del evento" src="{% static evento.poster.poster_img %}" width="900px"/></a>
     <h3 style="font-size: 165%; color: white;">Para ver el póster en formato PDF para impresión, haga click
       <u>
-      <a href="{% static 'TestApp/archivos/admin/poster.pdf'%}" target="_blank" style="color: white;">AQUÍ</a>
+      <a href="{% static evento.poster.poster_pdf  %}" target="_blank" style="color: white;">AQUÍ</a>
       </u>
     </h3>
 </center>
