@@ -1,18 +1,17 @@
 {% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-{% block title %}Informe{% endblock %}
+{% block additional-head %}
+    <meta charset="utf-8">
+{% endblock %}
+
+{% block title %}Informe RUIM {{ evento.year }}{% endblock %}
 
 {% block content %}
-
-    <head>
-        <meta charset="utf-8">
-        <title>Informe RUIM</title>
-    </head>
 
     <body>
         <center>
         <h1>
-            {{ evento.nombre_evento }}
+            {{ evento.year }}
         </h1>
         <br>
         <h2>Informe final</h2>
