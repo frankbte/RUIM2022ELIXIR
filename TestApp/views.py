@@ -55,8 +55,8 @@ def ediciones(request):
 
     past_events = (Evento.objects.filter(active = True) | Evento.objects.filter(year__lt = current_event.year)).order_by('-year') 
 
-    if request.session.get("showing_year", "no_event") == "no_event":
-        past_events = Evento.objects.filter(year__lt = current_event.year).order_by('year')
+    if request.session.get("showing_year", "no_event") == "no_event" or get_current_event(request).year == get_current_event(request,True).year:
+        past_events = Evento.objects.filter(year__lt = current_event.year).order_by('-year')
 
 
     return render(request, 'TestApp/ediciones.html', 
