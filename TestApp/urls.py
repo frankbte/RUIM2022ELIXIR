@@ -28,11 +28,14 @@ urlpatterns = [
     path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
     path('admin/edicionesAdmin/activar', views.activate_event, name="Activar Iteracion"),
     path('admin/edicionesAdmin/editing', views.change_editing_event, name="Change Editing"),
-    path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     
     path('admin/ponencias/', views.ponenciasAdmin, name="Estados Ponencias"),
     
+    path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
+    path('admin/processInicio/', views.processInicio),
+    
     path('admin/contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
+    path('admin/processContacto/', views.processContacto),
     
     path('admin/ubicacionAdmin/', views.ubicacionAdmin, name="Edición Ubicacion"),
     path('admin/processUbicacion/', views.processUbicacion),
@@ -43,14 +46,18 @@ urlpatterns = [
     path('admin/programaAdmin/', views.programaAdmin, name="Edición Programa"),
     path('admin/processPrograma/', views.processPrograma),
     
+    path('admin/registroAdmin/', views.registroAdmin, name="Edición Registro"),
+    path('admin/processRegistro/', views.processRegistro),
+    
     path('admin/constancias/', views.constancias, name="Constancias"),
     path('admin/report/', views.report),
-
-    path('admin/', include('django.contrib.auth.urls')),
-    path('admin/', views.administrador_redirect_login),
+    path('admin/processConstancia/', views.processConstancia),
 
     path('admin/correos/', views.correos, name="Correos"),
     path('admin/sendmail/', views.send_email),
+    
+    path('admin/', include('django.contrib.auth.urls')),
+    path('admin/', views.administrador_redirect_login),
     
     path('add/', views.AddPresentation),
     #path('addauthor/', views.AddPresentation),

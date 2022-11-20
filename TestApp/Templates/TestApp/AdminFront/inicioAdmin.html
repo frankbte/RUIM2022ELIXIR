@@ -7,6 +7,10 @@
     <body>
 		<br/>
         <center>
+            {% if message %}
+                <h2 style="color: rgb(129, 235, 246); font-weight: bold;">{{ message }} </h2>
+                </br>
+            {% endif %}
         <h1>
             Edición de la pestaña de inicio
         </h1>
@@ -16,7 +20,7 @@
             <p>Ingrese los cambios a los campos que se mostrarán en la página de inicio:</p>
         {% endif %}
 
-        <form action="/inicioAdmin/" method="POST">
+        <form action="/admin/processInicio/" method="POST">
             {{ form.as_ul }}
             {% csrf_token %}
             <input type="submit" value="Confirmar cambios">

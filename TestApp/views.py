@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.db import models
-from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, UbicacionPageForm, PresentacionForm, PosterPageForm, ProgramaPageForm
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, UbicacionPage, PosterPage, Author, DEFAULT_EVENT
+from TestApp.forms import AuthorForm, EventoForm, InicioPageForm, ContactoPageForm, UbicacionPageForm, PresentacionForm, RegistroPageForm, PosterPageForm, ProgramaPageForm
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, UbicacionPage, PosterPage, RegistroPage, ProgramaPage, Author, DEFAULT_EVENT
 from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail, EmailMessage
+from django.core.mail import BadHeaderError, send_mail, EmailMessage 
 from django.core.mail.backends.smtp import EmailBackend
 from django.core import mail
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
@@ -84,35 +84,11 @@ def administrador_redirect_login(request):
 def baseFront(request):
     return render(request, 'TestApp/AdminFront/baseAdmin.html')
 
-@login_required
-def evento(request):
-    return render(request, 'TestApp/evento.html')
-
-@login_required
-def constancias(request):
-    evento = get_current_event(request, True)
-    ponencias_list = evento.presentacionregistro_set.all()
-    authors_list = []
-    
-    for ponencia in ponencias_list:
-        autores = Author.objects.filter(presentacion = ponencia)
-        for autor in autores:
-            authors_list.append(autor)
-            
-    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list})
-
-@login_required
-def ponenciasAdmin(request):
-    evento = get_current_event(request, True)
-    ponencias_list = evento.presentacionregistro_set.all()
-    return render(request, 'TestApp/AdminFront/estadoAdmin.html', 
-            {'ponencias_list' : ponencias_list,
-             'evento' : get_editing_event()})
 
 @login_required
 def correos(request):
-    return render(request, 'TestApp/AdminFront/correos.html',
-            {'evento' : get_editing_event()})
+    evento = get_editing_event()
+    return render(request, 'TestApp/AdminFront/correos.html', {'evento' : evento})
 
 
 @login_required
@@ -140,18 +116,95 @@ def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html',
             {'evento' : get_editing_event()})
 
+# Inicio
 @login_required
 def inicioAdmin(request):
     form = InicioPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', 
-            {'form': form, 'evento' : get_editing_event()})
+            {'form': form, 'evento' : get_editing_event(), 'message' : message})
 
 @login_required
-def contactoAdmin(request):
-    form = ContactoPageForm()
-    return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
-            {'form': form, 'evento' : get_editing_event()})
+def processInicio(request):
+    evento=get_editing_event()
     
+    evento.inicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
+                               text_descripcion = request.POST.get('text_descripcion'))
+    
+    try:
+        evento.inicio.save_all()
+        evento.inicio.save() 
+        request.session['message'] = "Página de inicio actualizada."
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Inicio')) )
+
+
+# Poster
+@login_required
+def posterAdmin(request):
+    form = PosterPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    return render(request, 'TestApp/AdminFront/posterAdmin.html', 
+            {'form': form,
+             'message' : message})
+    
+@login_required
+def processPoster(request):
+    evento=get_editing_event()
+    evento.poster = PosterPage(poster_img = request.FILES.get('poster_img'),
+                                  poster_pdf = request.FILES.get('poster_pdf'))
+    evento.poster.poster_img.name = str(evento.year) + 'poster.jpg'
+    evento.poster.poster_pdf.name = str(evento.year) + 'poster.pdf'
+
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Poster actualizado."
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error) 
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Poster')) )
+
+
+# Programa
+@login_required
+def programaAdmin(request):
+    form = ProgramaPageForm()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    return render(request, 'TestApp/AdminFront/programaAdmin.html', 
+            {'form': form,
+             'message' : message})
+    
+@login_required
+def processPrograma(request):
+    evento=get_editing_event()
+    evento.programa = ProgramaPage(programa_img = request.FILES.get('programa_img'),
+                                  programa_pdf = request.FILES.get('programa_pdf'))
+    evento.programa.programa_img.name = str(evento.year) + 'programa.jpg'
+    evento.programa.programa_pdf.name = str(evento.year) + 'programa.pdf'
+    
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Programa actualizado."
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Edición Programa')) )
+
+
+#Ubicacion
 @login_required
 def ubicacionAdmin(request):
     form = UbicacionPageForm()
@@ -173,66 +226,123 @@ def processUbicacion(request):
         request.session['message'] = "Página de ubicación actualizada."
         
     except Exception as error:
-        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error) 
     
     
     return(HttpResponseRedirect(reverse('TestApp:Edición Ubicacion')) )
 
+
+# Contacto
 @login_required
-def posterAdmin(request):
-    form = PosterPageForm()
+def contactoAdmin(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
-    return render(request, 'TestApp/AdminFront/posterAdmin.html', 
-            {'form': form,
-             'message' : message})
-    
+    form = ContactoPageForm()
+    return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
+            {'form': form, 'evento' : get_editing_event(), 'message' : message})
+
 @login_required
-def processPoster(request):
+def processContacto(request):
     evento=get_editing_event()
-    evento.ubicacion = PosterPage(poster_img = request.POST.get('poster_img'),
-                                  poster_pdf = request.POST.get('poster_pdf'))
+    evento.contacto = ContactoPage(title= request.POST.get('title'), 
+                                 text = request.POST.get('text'),
+                                 contacto = request.POST.get('contacto'))
     
     try:
         evento.save_all()
         evento.save() 
-        request.session['message'] = "Poster actualizado."
+        request.session['message'] = "Página de contacto actualizada."
         
     except Exception as error:
-        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Edición Poster')) )
+    return(HttpResponseRedirect(reverse('TestApp:Edición Contacto')) )
 
+
+# Registro
 @login_required
-def programaAdmin(request):
-    form = ProgramaPageForm()
+def registroAdmin(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
-    return render(request, 'TestApp/AdminFront/programaAdmin.html', 
-            {'form': form,
-             'message' : message})
-    
+    form = RegistroPageForm()
+    return render(request, 'TestApp/AdminFront/registroAdmin.html', 
+            {'form': form, 'evento' : get_editing_event(), 'message' : message})
+
 @login_required
-def processPrograma(request):
+def processRegistro(request):
     evento=get_editing_event()
-    evento.ubicacion = PosterPage(programa_img = request.POST.get('programa_img'),
-                                  programa_pdf = request.POST.get('programa_pdf'))
+    evento.registro = RegistroPage(title= request.POST.get('title'), 
+                                 text = request.POST.get('text'),
+                                 registro = request.POST.get('registro'))
     
     try:
         evento.save_all()
         evento.save() 
-        request.session['message'] = "Programa actualizado."
+        request.session['message'] = "Página de Registro actualizada."
         
     except Exception as error:
-        request.session['message'] = "Ocurrió un error inesperado: " + format(error) + "."
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Edición Programa')) )
+    return(HttpResponseRedirect(reverse('TestApp:Edición Registro')) )
 
+
+# Estado
+@login_required
+def ponenciasAdmin(request):
+    evento = get_editing_event()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    ponencias_list = evento.presentacionregistro_set.all()
+    return render(request, 'TestApp/AdminFront/estadoAdmin.html', 
+            {'ponencias_list' : ponencias_list, 
+             'evento' : evento,
+             'message' : message})
+
+
+# Constancias
+@login_required
+def constancias(request):
+    evento = get_editing_event()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    ponencias_list = evento.presentacionregistro_set.all()
+    authors_list = []
+    
+    for ponencia in ponencias_list:
+        autores = Author.objects.filter(presentacion = ponencia)
+        for autor in autores:
+            authors_list.append(autor)
+            
+    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list, 'message' : message})
+
+@login_required
+def processConstancia(request):
+    evento=get_editing_event()
+    evento.fecha =request.POST.get('date')
+    evento.lugar = request.POST.get('place')
+    evento.plantilla_constancias_img = request.FILES.get('plantilla')
+    evento.plantilla_constancias_img.name = str(evento.year) + 'plantilla.jpg'
+    
+    try:
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Datos de constancia actualizados."
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Constancias')) )
+
+############################
 ############################
 
 def AddPresentation(request):
+    presentacion_titulo = request.POST.get("pres_tit")
+    evento = get_current_event(request)
+    presentacion = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
 
     try:
         presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
@@ -240,15 +350,16 @@ def AddPresentation(request):
                                         modalidad = request.POST.get("mod"),
                                         resumen = request.FILES.get("resumen"),
                                         estatus = "Sin revisar",
-                                        evento = get_current_event(request))
+                                        evento = evento)
 
         FileExtensionValidator(allowed_extensions = ['pdf'])(presentacion.resumen)
-
+        
+        presentacion.resumen.name = str(evento.year) + presentacion_titulo.replace(' ','_') + '.pdf'
         presentacion.save()
+        
     except ValidationError:
         request.session["message"] = "El resumen debe tener extensión .pdf!\n Vuelve a intentarlo con un archivo válido"
         return HttpResponseRedirect(reverse('TestApp:Registro')) 
-
 
 
     responsable = Author(nombre = request.POST.get("resp_nom"),
@@ -342,7 +453,7 @@ def report(request):
     modalidad = request.POST.get('modalidad')
     titulo = request.POST.get('title_pres')
     
-    current_event = get_current_event(request, True)
+    current_event = get_editing_event()
     fecha = current_event.fecha;
     lugar = current_event.lugar;
 
@@ -354,8 +465,8 @@ def report(request):
     pdf.set_text_color(0,0,0)
     
     pdf.add_page()
-    pdf.image('TestApp\static\TestApp\img\Certificado.jpg', x=0, y=0, w=280, h=216)
-    pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
+    pdf.image('TestApp/static/TestApp/archivos/admin/' + current_event.plantilla_constancias_img, x=0, y=0, w=280, h=216)
+    pdf.image('TestApp/static/TestApp/archivos/admin/Escudo_Unison.png', x=15, y=7, w=35, h=40)
     pdf.set_font(font, '', size)
     pos = pdf.get_y() + 40
     
@@ -390,7 +501,7 @@ def report(request):
     pdf.set_font(font, '', size)
     pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
     
-    pdfname = 'constancia-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
+    pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
     dest = 'TestApp/static/TestApp/archivos/constancias/'
     pdf.output(dest + pdfname, 'F')
     
