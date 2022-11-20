@@ -1,6 +1,6 @@
 from telnetlib import AUTHENTICATION
 from django import forms  
-from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, UbicacionPage, PosterPage, ProgramaPage
+from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, UbicacionPage, PosterPage, ProgramaPage, RegistroPage
 
 class EventoForm(forms.ModelForm):  
     class Meta:  
@@ -40,7 +40,7 @@ class PresentacionForm(forms.ModelForm):
 class InicioPageForm(forms.ModelForm):
     class Meta:
         model = InicioPage
-        fields = ['title_descripcion', 'text_descripcion']
+        fields = "__all__"
         labels = {'title_descripcion' : 'Descripción del evento', 'text_descripcion' : 'Encabezado de la pestaña'}
 
 class ContactoPageForm(forms.ModelForm):
@@ -72,3 +72,16 @@ class ProgramaPageForm(forms.ModelForm):
         fields = "__all__"
         labels = {'programa_img' : 'Imagen del Programa',
                   'programa_pdf' : 'PDF del programa'}
+
+class RegistroPageForm(forms.ModelForm):  
+    class Meta:  
+        model = RegistroPage
+        fields = "__all__"
+        labels = {'title_participacion_ponente' : 'Título para participación del ponente',
+                  'text_participacion_ponente' : 'Texto para participación del ponente',
+                  'title_formato_resumen' : 'Título para formato del resumen',
+                  'text_formato_resumen' : 'Texto para formato del resumen',
+                  'title_constancias_participacion' : 'Título para entrega de constancias ',
+                  'text_constancias_participacion' : 'Texto para entrega de constancias ',
+                  'title_participacion_asistente' : 'Título para participación del asistente',
+                  'text_participacion_asistente' : 'Texto para participación del asistente'}        

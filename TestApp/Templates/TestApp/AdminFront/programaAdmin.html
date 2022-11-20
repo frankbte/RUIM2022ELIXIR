@@ -1,6 +1,6 @@
 {% extends "TestApp/AdminFront/baseAdmin.html" %}
 
-{% block title %}Edición de Ubicacion{% endblock %}
+{% block title %}Edición de Programa{% endblock %}
 
 {% block content %}
 
@@ -20,7 +20,7 @@
                 <p>Ingrese los cambios a los campos que se mostrarán en la página de Programa:</p>
             {% endif %}
 
-            <form action="/admin/processPrograma/" method="POST">
+            <form action="/admin/processPrograma/" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_ul }}
                 <input type="submit" value="Confirmar cambios">

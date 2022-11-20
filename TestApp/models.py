@@ -15,7 +15,7 @@ class PresentacionRegistro(models.Model):
     resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '', blank=True,null=True)
     resp_email = models.EmailField()
     modalidad = models.CharField(max_length = 30, choices=modalidadChoices) # cartel o ponencia
-    resumen = models.FileField(upload_to = 'registros/resumenes/')
+    resumen = models.FileField(upload_to = 'resumenes/')
     estatus = models.CharField(max_length = 30, choices=estatusChoices)
     evento = models.ForeignKey('Evento', on_delete = models.CASCADE,)
     
@@ -40,12 +40,12 @@ class InicioPage(models.Model):
     text_descripcion = models.CharField(max_length = 300)
 
 class ProgramaPage(models.Model):
-    programa_pdf = models.FileField(upload_to = 'TestApp/static/TestApp/archivos/')
-    programa_img = models.ImageField(upload_to = 'archivos/')
+    programa_pdf = models.FileField(upload_to = 'admin/')
+    programa_img = models.ImageField(upload_to = 'admin/')
 
 class PosterPage(models.Model):
-    poster_img = models.ImageField(upload_to = 'archivos/')
-    poster_pdf = models.FileField(upload_to = 'archivos/')
+    poster_img = models.ImageField(upload_to = 'admin/')
+    poster_pdf = models.FileField(upload_to = 'admin/')
 
 class RegistroPage(models.Model):
     title_participacion_ponente = models.CharField(max_length = 40)
@@ -56,7 +56,7 @@ class RegistroPage(models.Model):
     text_constancias_participacion = models.CharField(max_length = 300)
     title_participacion_asistente = models.CharField(max_length = 40)
     text_participacion_asistente = models.CharField(max_length = 300)
-    formato_resumen_pdf = models.FileField(upload_to = 'archivos/registros/resumenes/')
+    formato_resumen_pdf = models.FileField(upload_to = 'admin/')
 
 
 class UbicacionPage(models.Model):
@@ -79,7 +79,7 @@ class Evento(models.Model):
     active = models.BooleanField()
     editing = models.BooleanField()
     year = models.IntegerField(default=2022)
-    cartel = models.FileField(upload_to = 'base/', blank=True,null=True)
+    cartel = models.FileField(upload_to = 'admin/', blank=True,null=True)
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
     programa = models.ForeignKey('ProgramaPage', on_delete = models.CASCADE, blank=True,null=True)
     poster = models.ForeignKey('PosterPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -87,7 +87,7 @@ class Evento(models.Model):
     contacto = models.ForeignKey('ContactoPage', on_delete = models.CASCADE, blank=True,null=True)
     registro = models.ForeignKey('RegistroPage', on_delete = models.CASCADE, blank=True,null=True)
     edicion = models.ForeignKey('EdicionesPage', on_delete = models.CASCADE,blank=True,null=True)
-    plantilla_constancias_img = models.ImageField(upload_to = 'constancias/base/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
+    plantilla_constancias_img = models.ImageField(upload_to = 'admin/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
     fecha = models.DateField()
@@ -108,8 +108,8 @@ DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, \
                         inicio = InicioPage(title_descripcion = "RUIM 2022", \
                                 text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \
     \n\n Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022)."), \
-                        programa = ProgramaPage(programa_pdf = "archivos/programa.pdf", programa_img = "archivos/programa.jpg"), \
-                        poster = PosterPage(poster_pdf = "archivos/poster.pdf", poster_img = "archivos/poster.jpg"), \
+                        programa = ProgramaPage(programa_pdf = "archivos/admin/programa.pdf", programa_img = "archivos/admin/programa.jpg"), \
+                        poster = PosterPage(poster_pdf = "archivos/admin/poster.pdf", poster_img = "archivos/admin/poster.jpg"), \
                         ubicacion = UbicacionPage(title = "RUIM 2022", \
                                                     text = "Centro de las Artes de la Universidad de Sonora \n \
                                                     Ubicado en: Blvd. Luis Donaldo Colosio y Rosales S/N  \n \

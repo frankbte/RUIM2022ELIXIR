@@ -6,8 +6,27 @@
 
     <div class="container">
         <div class="row mt-5">
+            {% if message %}
+                <h2 style="color: rgb(21, 0, 114); font-weight: bold;">{{ message }} </h2>
+                </br>
+            {% endif %}
+            <div class="container shadow" style="max-width: 640px; margin: auto; margin-top: 1em; padding: 1em">
+                <h5> Ingresa los datos que aparecerán en las constancias.</h5><br>
+                <form method="POST" action="/admin/processConstancia/" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <table>
+                        <h6>Fecha del evento: <input type="date" name="date" required></h6>
+			            <h6>Lugar del evento: <input type="text" name="place" required></h6>
+                        <tr>
+                            <th><h6>Plantilla de constancias (imagen): <input type="file" name="plantilla" accept=".jpg, .jpeg, .png"></h6> </th>
+                            <th> <button type="submit" class="btn btn-primary"> Guardar </button> </th>
+                        </tr>
+                    </table>
+                    
+                </form>
+            </div>
             {% if not authors_list %}
-                <div class="col">
+                <div class="container">
                     <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado autores a la iteración </p>
                 </div>
             {% else %}        

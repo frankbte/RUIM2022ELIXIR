@@ -13,15 +13,15 @@
             </br>
         {% endif %}
         <h1>
-            Edición de la pestaña de Contacto
+            Edición de la pestaña de Registro
         </h1>
         {% if form.errors %}
             <p>Debe completar todos los campos correctamente.</p>
         {% else %}
-            <p>Ingrese los cambios a los campos que se mostrarán en la pestaña de Contacto:</p>
+            <p>Ingrese los cambios a los campos que se mostrarán en la pestaña de Registro:</p>
         {% endif %}
 
-        <form action="/admin/processContacto/" method="POST">
+        <form action="/admin/processRegistro/" method="POST">
             {% csrf_token %}
             {{ form.as_ul }}
             <input type="submit" value="Confirmar cambios">
