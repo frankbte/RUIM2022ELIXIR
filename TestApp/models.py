@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm
+from django.core.validators import FileExtensionValidator
 
 class PresentacionRegistro(models.Model):
     modalidadChoices = (
@@ -15,7 +16,7 @@ class PresentacionRegistro(models.Model):
     resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '', blank=True,null=True)
     resp_email = models.EmailField()
     modalidad = models.CharField(max_length = 30, choices=modalidadChoices) # cartel o ponencia
-    resumen = models.FileField(upload_to = 'resumenes/')
+    resumen = models.FileField(upload_to = 'registros/resumenes/', validators = [FileExtensionValidator(allowed_extensions = ['pdf'])])
     estatus = models.CharField(max_length = 30, choices=estatusChoices)
     evento = models.ForeignKey('Evento', on_delete = models.CASCADE,)
     
@@ -87,7 +88,7 @@ class Evento(models.Model):
     contacto = models.ForeignKey('ContactoPage', on_delete = models.CASCADE, blank=True,null=True)
     registro = models.ForeignKey('RegistroPage', on_delete = models.CASCADE, blank=True,null=True)
     edicion = models.ForeignKey('EdicionesPage', on_delete = models.CASCADE,blank=True,null=True)
-    plantilla_constancias_img = models.ImageField(upload_to = 'admin/', blank=True,null=True)    # Imagen tamaño Letter (216 x 280 mm)
+    plantilla_constancias_img = models.ImageField(upload_to = 'admin/', blank=True,null=True)    # Imagen tamaño Letter
     correo_comunicacion = models.EmailField(blank=True,null=True)
     correo_contrasena = models.CharField(max_length = 100, blank=True,null=True)
     fecha = models.DateField()
