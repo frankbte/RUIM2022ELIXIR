@@ -342,8 +342,6 @@ def processConstancia(request):
 def AddPresentation(request):
     presentacion_titulo = request.POST.get("pres_tit")
     evento = get_current_event(request)
-    presentacion = PresentacionRegistro(presentacion_titulo = presentacion_titulo,
-
     try:
         presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
                                         resp_email = request.POST.get("pres_email"),
