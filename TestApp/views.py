@@ -428,17 +428,17 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
-        validator = FileExtensionValidator(allowed_extensions=[".jpg", ".jpeg"])
+        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg"])
 
         validator(new_event.cartel)
-        validator(new_event.plantilla_constancias_img)
+        #validator(new_event.plantilla_constancias_img)
         new_event.save_all()
         new_event.save() 
         request.session["success_message"] = "Nuevo evento creado con información default para vistas de usuario."
     except Evento.DoesNotExist:
         request.session["success_message"] = "No se pudo crear el evento!"
-    except ValidationError:
-        request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos"
+    #except ValidationError as err:
+    #    request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos\n" + err.value
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
