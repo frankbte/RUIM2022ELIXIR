@@ -1,13 +1,15 @@
  {% extends "TestApp/AdminFront/baseAdmin.html" %}
 
  {% load static %}
+ {% block additional-head %}
+ <link rel="stylesheet" href="{% static 'TestApp/css/login.css' %}">
+ {% endblock %}
 
  {% block content %}
-
    <!-- Heading -->
    <center>
 		<div class="container">
-			<div class="row">
+			<div>
 				<h1 style="font-weight: bold; color: black">
 					Login
 				</h1>
@@ -30,13 +32,13 @@
 
 			<form method="post" action="{% url 'TestApp:login' %}" style="color: black">
 			{% csrf_token %}
-				<div class="row">
-					<td class="form-control mb-0">{{ form.username.label_tag }}</td>
-					<td class="form-control mb-0">{{ form.username }}</td>
+				<div class="field-text">
+					<td class="label-text">{{ form.username.label_tag }}</td>
+					<td class="field-text">{{ form.username }}</td>
 				</div>
-				<div>
-					<td class="mb-0">{{ form.password.label_tag }}</td>
-					<td class="mb-0">{{ form.password }}</td>
+				<div class="field-text">
+					<td class="label-text">{{ form.password.label_tag }}</td>
+					<td class="field-text">{{ form.password }}</td>
 				</div>
 
 				<div>
