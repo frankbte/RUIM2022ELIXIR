@@ -32,7 +32,7 @@
                     <tbody>
                         {% for ponencia in ponencias_list %}
                             <tr>
-                                <th scope="row">{{ forloop.counter }}</td>
+                                <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ ponencia.presentacion_titulo }}</td>
                                 <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
                                 <td>{{ ponencia.resp.grado }}</td>

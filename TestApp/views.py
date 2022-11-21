@@ -55,8 +55,8 @@ def ediciones(request):
 
     past_events = (Evento.objects.filter(active = True) | Evento.objects.filter(year__lt = current_event.year)).order_by('-year') 
 
-    if request.session.get("showing_year", "no_event") == "no_event":
-        past_events = Evento.objects.filter(year__lt = current_event.year).order_by('year')
+    if request.session.get("showing_year", "no_event") == "no_event" or get_current_event(request).year == get_current_event(request,True).year:
+        past_events = Evento.objects.filter(year__lt = current_event.year).order_by('-year')
 
 
     return render(request, 'TestApp/ediciones.html', 
@@ -107,8 +107,31 @@ def create_iter(request):
 
 @login_required
 def informe(request):
+    evento_actual = get_editing_event()
+    pres_total = evento_actual.presentacionregistro_set.all().count()
+    ponen_total = evento_actual.presentacionregistro_set.filter(modalidad='Ponencia').count()
+    cart_total = evento_actual.presentacionregistro_set.filter(modalidad='Cartel').count()
+    
+    pres_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado').count()
+    pres_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado').count()
+    ponen_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Ponencia').count()
+    ponen_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Ponencia').count()
+    cart_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Cartel').count()
+    cart_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Cartel').count()
+
     return render(request, 'TestApp/AdminFront/informe.html',
-            {'evento' : get_editing_event()})
+            {
+                'evento' : evento_actual,
+                'pres_total' : pres_total,
+                'ponen_total' : ponen_total,
+                'cart_total' : cart_total,
+                'pres_acept' : pres_acept,
+                'pres_rechaz' : pres_rechaz,
+                'ponen_acept' : ponen_acept,
+                'ponen_rechaz' : ponen_rechaz,
+                'cart_acept' : cart_acept,
+                'cart_rechaz' : cart_rechaz
+            })
 
 # Inicio
 @login_required
@@ -525,7 +548,7 @@ def insert_iter(request):
         request.session["success_message"] = "Nuevo evento creado con información default para vistas de usuario."
     except Evento.DoesNotExist:
         request.session["success_message"] = "No se pudo crear el evento!"
-    except ValidationError:
+    except ValidationError as err:
         request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos"
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
