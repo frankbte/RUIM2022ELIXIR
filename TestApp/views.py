@@ -453,6 +453,7 @@ def send_email(request):
 def AddPresentation(request):
     presentacion_titulo = request.POST.get("pres_tit")
     evento = get_current_event(request)
+    to_email = ''
     try:
         presentacion = PresentacionRegistro(presentacion_titulo = request.POST.get("pres_tit"),
                                         resp_email = request.POST.get("pres_email"),
@@ -465,6 +466,7 @@ def AddPresentation(request):
         
         presentacion.resumen.name = str(evento.year) + presentacion_titulo.replace(' ','_') + '.pdf'
         presentacion.save()
+        to_email = presentacion.resp_email
         
     except ValidationError:
         request.session["message"] = "El resumen debe tener extensión .pdf!\n Vuelve a intentarlo con un archivo válido"
@@ -496,8 +498,43 @@ def AddPresentation(request):
             autor.save()
 
     presentacion.save()
+    request.session["message"] = "Registro de presentación exitoso!\n\n"
+    
+    ## Envio de correo
+    subject = 'Reunion Universitaria de investigación de materiales ' + str(evento.year)
+    message = '¡Muchas gracias por tu participación!\n Hemos recibido tu solicitud, pronto te llegará un correo de parte del comité organizador.'
+    
+    from_email = evento.correo_comunicacion;
+    fpass = evento.correo_contrasena;
+    
+    if not valid_email_address(from_email) :
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+        return HttpResponseRedirect(reverse('TestApp:Registro'))
+    
+    if not valid_email_address(to_email) :
+        request.session['message'] = request.session['message'] + "El correo registrado es inválido, correo de confirmación no enviado"
+        return HttpResponseRedirect(reverse('TestApp:Registro'))
 
-    request.session["message"] = "Registro de ponencia exitoso!"
+    # Manually open the connection
+    try:
+        connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
+        connection.open()
+    except Exception as error:
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+    
+    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
+
+    try:
+        email.send(fail_silently=False)
+        request.session['message'] = request.session['message'] + "Correo de confirmación enviado a " + to_email 
+    except Exception as error:
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado: correo de confirmación no enviado"
+    
+        
+    
+    connection.close()
+
+    
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
 
 ###########################
