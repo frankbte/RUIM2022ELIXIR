@@ -150,9 +150,9 @@ def processInicio(request):
                                text_descripcion = request.POST.get('text_descripcion'))
     
     try:
-        evento.inicio.save_all()
-        evento.inicio.save() 
-        request.session['message'] = "Página de inicio actualizada."
+        evento.save_all()
+        evento.save() 
+        request.session['message'] = "Página de inicio actualizada." + str(evento.year)
         
     except Exception as error:
         request.session['message'] = "Ocurrió un error inesperado: " + format(error)
