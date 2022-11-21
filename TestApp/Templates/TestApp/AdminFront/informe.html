@@ -9,28 +9,44 @@
 {% block content %}
 
     <body>
-        <center>
-        <h1>
-            {{ evento.year }}
-        </h1>
-        <br>
-        <h2>Informe final</h2>
-        <h3>
-            Se presentan las estadísticas relacionadas a las presentaciones 
-            registradas a traves de la página de la RUIM para esta edición:
-        </h3>
-        <p>Cantidad de solicitudes recibidas: {{ solicitudes }} </p>
-        <br>
-        <p>Número de ponencias: {{ ponencias }}</p>
-        <p>Ponencias aceptadas: {{ p_aceptadas }} </p>
-        <p>Ponencias rechazadas: {{ p_rechazadas }}</p>
-        <br>
-        <p>Número de carteles: {{ carteles }}</p>
-        <p>Carteles aceptados: {{ c_aceptados }}</p>
-        <p>Carteles rechazados: {{ c_rechazados }}</p>
-        <br>
-        <p>Presentaciones totales aceptadas: {{ pres_aceptadas }}</p>
-        <p>Presentaciones totales rechazadas: {{ pres_rechazadas }}</p>
-        </center>
+        <div class="container mt-4">
+
+            <br>
+            <h1 class="row justify-content-center" style="font-weight: bold">Informe final: RUIM {{ evento.year }}</h1>
+            <h2>
+                Se presentan las estadísticas relacionadas a las presentaciones 
+                registradas a través de la página de la RUIM para la edición {{ evento.year }} :
+            </h2>
+            <br>
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side:top ">Número de presentaciones:</caption>
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Presentaciones</th>
+                    <th scope="col">Ponencias</th>
+                    <th scope="col">Carteles</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Aceptadas</th>
+                        <td>{{ pres_acept }}</td>
+                        <td>{{ ponen_acept }}</td>
+                        <td>{{ cart_acept }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Rechazadas</th>
+                        <td>{{ pres_rechaz }}</td>
+                        <td>{{ ponen_rechaz }}</td>
+                        <td>{{ cart_rechaz }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Totales</th>
+                        <td>{{ pres_total }}</td>
+                        <td>{{ ponen_total }}</td>
+                        <td>{{ cart_total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
     {% endblock %}

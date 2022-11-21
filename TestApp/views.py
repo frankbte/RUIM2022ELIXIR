@@ -113,8 +113,31 @@ def create_iter(request):
 
 @login_required
 def informe(request):
+    evento_actual = get_editing_event()
+    pres_total = evento_actual.presentacionregistro_set.all().count()
+    ponen_total = evento_actual.presentacionregistro_set.filter(modalidad='Ponencia').count()
+    cart_total = evento_actual.presentacionregistro_set.filter(modalidad='Cartel').count()
+    
+    pres_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado').count()
+    pres_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado').count()
+    ponen_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Ponencia').count()
+    ponen_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Ponencia').count()
+    cart_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Cartel').count()
+    cart_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Cartel').count()
+
     return render(request, 'TestApp/AdminFront/informe.html',
-            {'evento' : get_editing_event()})
+            {
+                'evento' : evento_actual,
+                'pres_total' : pres_total,
+                'ponen_total' : ponen_total,
+                'cart_total' : cart_total,
+                'pres_acept' : pres_acept,
+                'pres_rechaz' : pres_rechaz,
+                'ponen_acept' : ponen_acept,
+                'ponen_rechaz' : ponen_rechaz,
+                'cart_acept' : cart_acept,
+                'cart_rechaz' : cart_rechaz
+            })
 
 # Inicio
 @login_required
