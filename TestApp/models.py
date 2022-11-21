@@ -16,7 +16,7 @@ class PresentacionRegistro(models.Model):
     resp = models.ForeignKey('Author',related_name = "resp", on_delete = models.CASCADE, default = '', blank=True,null=True)
     resp_email = models.EmailField()
     modalidad = models.CharField(max_length = 30, choices=modalidadChoices) # cartel o ponencia
-    resumen = models.FileField(upload_to = 'registros/resumenes/', validators = [FileExtensionValidator(allowed_extensions = ['pdf'])])
+    resumen = models.FileField(upload_to = 'resumenes/', validators = [FileExtensionValidator(allowed_extensions = ['pdf'])])
     estatus = models.CharField(max_length = 30, choices=estatusChoices)
     evento = models.ForeignKey('Evento', on_delete = models.CASCADE,)
     

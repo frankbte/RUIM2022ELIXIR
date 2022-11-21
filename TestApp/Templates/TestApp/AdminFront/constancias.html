@@ -4,101 +4,110 @@
 
 {% block content %}
 
+<head>
+    <script>
+        function getData(){
+            var data =`<h6> Fecha guardada: `+ evento.date.toString() + `</h6>
+            <h6> Lugar guardado: `+ evento.lugar.toString() + `</h6>`
+            document.getElementById('show').innerHTML = data;
+        }
+    </script>
+</head>
+<body>
     <div class="container">
         <div class="row mt-5">
             {% if message %}
-                <h2 style="color: rgb(21, 0, 114); font-weight: bold;">{{ message }} </h2>
+                <h4 style="color: rgb(21, 0, 114); font-weight: bold;">{{ message|linebreaks }} </h4>
                 </br>
             {% endif %}
-            <div class="container shadow" style="max-width: 640px; margin: auto; margin-top: 1em; padding: 1em">
-                <h5> Ingresa los datos que aparecerán en las constancias.</h5><br>
-                <form method="POST" action="/admin/processConstancia/" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <table>
-                        <h6>Fecha del evento: <input type="date" name="date" required></h6>
-			            <h6>Lugar del evento: <input type="text" name="place" required></h6>
-                        <tr>
-                            <th><h6>Plantilla de constancias (imagen): <input type="file" name="plantilla" accept=".jpg, .jpeg, .png"></h6> </th>
-                            <th> <button type="submit" class="btn btn-primary"> Guardar </button> </th>
-                        </tr>
-                    </table>
-                    
-                </form>
-            </div>
-            {% if not authors_list %}
+            <table>
+                <tr>
+                    <th>
+                        <div class="container shadow" style="max-width: 640px; margin: auto; margin-top: 1em; padding: 1em">
+                            <h5> Ingresa los datos que aparecerán en las constancias.</h5><br>
+                            <form method="POST" action="/admin/processConstancia/" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <table>
+                                    <h6>Fecha del evento: <input type="date" name="date" required></h6>
+                                    <h6>Lugar del evento: <input type="text" name="place" required></h6>
+                                    <tr>
+                                        <th><h6>Plantilla de constancias (imagen): <input type="file" name="plantilla" accept=".jpg, .jpeg, .png"></h6> </th>
+                                        <th> <button type="submit" class="btn btn-primary"> Guardar </button> </th>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="container shadow" style="max-width: 640px; margin: auto; margin-top: 1em; padding: 1em">
+                            
+                            <div id="show"></div>
+                            <h5> Datos guardados:</h5><br>
+                            <table>
+                                <body onload='getData()'></body>
+                                <tr>
+                                    <th><h6>Fecha guardada: </h6></th>
+                                    <th><h6>{{ evento.fecha }}</h6></th>
+                                </tr>   
+                                <tr>
+                                    <th><h6>Lugar guardado: </h6></th>
+                                    <th><h6>{{ evento.lugar }}</h6></th>
+                                </tr>   
+                                <tr>
+                                    <th><h6>Plantilla de constancias (imagen): </h6></th>
+                                    <th><img style="text-align: center; width: 80%; margin-bottom: -1cm;"  alt="plantilla" src={{evento.plantilla_constancias_img}} /></a></th>
+                                         
+                                </tr>   
+                            </table>
+                        </div>
+                    </th>
+                </tr>
+            </table>
+            {% if not ponencias_list %}
                 <div class="container">
-                    <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado autores a la iteración </p>
+                    <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado presentaciones a la iteración </p>
                 </div>
             {% else %}        
                 <table id="listaPonencias" class="table table-bordered table-hover">
-                    <caption style="caption-side:top ">Lista de autores:</caption>
+                    <caption style="caption-side:top ">Lista de presentaciones aceptadas:</caption>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Autor</th>
-                            <th scope="col">Grado académico</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">Representante</th>
+                            <th scope="col">Correo del representante</th>
                             <th scope="col">Institución</th>
-                            <th scope="col">Departamento</th>
-                            <th scope="col">Presentacion</th>
                             <th scope="col">Modalidad</th>
-                            <th scope="col">Correo asociado</th>
+                            <th scope="col">Detalles</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for autor in authors_list %}
+                        {% for ponencia in ponencias_list %}
+                        {% if ponencia.estatus == 'Aceptado' %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</td>
-                                <td>{{ autor.apellido_pat }} {{ autor.apellido_mat }} {{ autor.nombre }}</td>
-                                <td>{{ autor.grado }}</td>
-                                <td>{{ autor.institucion }}</td>
-                                <td>{{ autor.departamento }}</td>
-                                <td>{{ autor.presentacion.presentacion_titulo }}</td>
-                                <td>{{ autor.presentacion.modalidad }}</td>
-                                <td>{{ autor.presentacion.resp_email }}</td>
+                                <td>{{ ponencia.presentacion_titulo }}</td>
+                                <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
+                                <td>{{ ponencia.resp_email }}</td>
+                                <td>{{ ponencia.resp.institucion }}</td>
+                                <td>{{ ponencia.modalidad }}</td>
                                 <td>
                                     <form method="POST" action="/admin/report/">
                                         {% csrf_token %}
-                                        <input type="hidden" name="nombre_completo" value="{{ autor.apellido_pat }} {{ autor.apellido_mat }} {{ autor.nombre }}">
-                                        <input type="hidden" name="modalidad" value="{{ autor.presentacion.modalidad }}">
-                                        <input type="hidden" name="title_pres" value="{{ autor.presentacion.presentacion_titulo }}">
-                                        <button type="submit" class="btn btn-primary">Generar constancia</button> 
+                                        <input type="hidden" name="pk" value="{{ ponencia.pk }}">
+                                        <button type="submit" class="btn btn-primary">Generar</button> 
                                     </form>
                                 </td>
                             </tr>
+                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
+                
             {% endif %}
         </div>
 
-        <div class="container shadow"
-        style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
-        <h3>Pruebas:</h3>
-        <p class="text-black"> Para generar una constancia presione el boton debajo</p>
-    
-        <form method="POST" action="/admin/report/" class="loginfrm">
-            {% csrf_token %}
-            <div>
-                <label>Nombre Completo: </label>
-                <input type = "text" name="nombre_completo" >
-            </div><br>
-            <div>
-                <label>Modalidad: </label>
-                <input type = "text" name="modalidad" >
-            </div><br>
-            <div>
-                <label>Titulo de la presentacion </label>
-                <input type = "text" name="title_pres" >
-            </div><br>
-    
-            <!-- submit button -->
-            <div class="form-group row">  
-                <label class="col-sm-1 col-form-label"></label>  
-                <div class="col-sm-4">  
-                    <button type="submit" class="btn btn-primary">generar</button>  
-                </div>  
-            </div>  
-        </form>
     </div>
+</body>
 
 {% endblock %}

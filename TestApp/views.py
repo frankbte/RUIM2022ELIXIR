@@ -86,12 +86,6 @@ def baseFront(request):
 
 
 @login_required
-def correos(request):
-    evento = get_editing_event()
-    return render(request, 'TestApp/AdminFront/correos.html', {'evento' : evento})
-
-
-@login_required
 def iterAdmin(request):
     eventos = Evento.objects.all()
     
@@ -290,7 +284,7 @@ def processRegistro(request):
 
 # Estado
 @login_required
-def ponenciasAdmin(request):
+def estadoAdmin(request):
     evento = get_editing_event()
     message = request.session.get("message", "")
     request.session["message"] = ""
@@ -299,6 +293,30 @@ def ponenciasAdmin(request):
             {'ponencias_list' : ponencias_list, 
              'evento' : evento,
              'message' : message})
+    
+@login_required
+def processEstado(request):
+    pk = request.POST.get('pk')
+    presentacion = PresentacionRegistro.objects.get(pk = pk)
+    presentacion.estatus = request.POST.get('estatus')
+    
+    try:
+        presentacion.save() 
+        request.session['message'] = "Cambio guardado." + presentacion.presentacion_titulo
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    
+    return(HttpResponseRedirect(reverse('TestApp:Estado')) )
+
+@login_required
+def getResumen(request):
+    pk = request.POST.get('pk')
+    presentacion = PresentacionRegistro.objects.get(pk = pk)
+    resumen = presentacion.resumen.path
+    
+    return FileResponse(open(resumen, 'rb'), as_attachment=True, content_type= 'application/pdf')
 
 
 # Constancias
@@ -315,7 +333,10 @@ def constancias(request):
         for autor in autores:
             authors_list.append(autor)
             
-    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list, 'message' : message})
+    return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list, 
+                                                                   'message' : message,
+                                                                   'ponencias_list' : ponencias_list, 
+                                                                   'evento' : evento})
 
 @login_required
 def processConstancia(request):
@@ -335,6 +356,73 @@ def processConstancia(request):
     
     
     return(HttpResponseRedirect(reverse('TestApp:Constancias')) )
+
+
+# Correos
+@login_required
+def correos(request):
+    evento = get_editing_event()
+    message = request.session.get("message", "")
+    request.session["message"] = ""
+    ponencias_list = evento.presentacionregistro_set.all()
+    return render(request, 'TestApp/AdminFront/correos.html', {'evento' : evento,
+                                                               'message' : message,
+                                                               'ponencias_list' : ponencias_list,})
+    
+@login_required
+def processCorreo(request):
+    user= request.POST.get('user')
+    password = request.POST.get('password')
+    evento = get_editing_event()
+    evento.correo_comunicacion = user
+    evento.correo_contrasena = password
+    
+    try:
+        evento.save() 
+        request.session['message'] = "Correo cambiado." 
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    return(HttpResponseRedirect(reverse('TestApp:Correo')) )
+
+@login_required
+def send_email(request):
+    subject = request.POST.get('subject')
+    message = request.POST.get('message')
+    to_email = request.POST.get('to_email')
+    
+    current_event = get_editing_event();
+    from_email = current_event.correo_comunicacion;
+    fpass = current_event.correo_contrasena;
+    
+    if not valid_email_address(from_email) :
+        return  HttpResponseBadRequest('El correo emisor no es válido')
+    
+    if not valid_email_address(to_email) :
+        return HttpResponseBadRequest('El correo destinatario no es válido')
+
+    # Manually open the connection
+    try:
+        connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
+        connection.open()
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+    
+    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
+
+    try:
+        email.send(fail_silently=False)
+        request.session['message'] = "Correo enviado a " + to_email 
+        
+    except Exception as error:
+        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+        
+    
+    connection.close()
+    
+    return(HttpResponseRedirect(reverse('TestApp:Correo')) )
+
 
 ############################
 ############################
@@ -428,17 +516,17 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
-        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg"])
+        validator = FileExtensionValidator(allowed_extensions=[".jpg", ".jpeg"])
 
         validator(new_event.cartel)
-        #validator(new_event.plantilla_constancias_img)
+        validator(new_event.plantilla_constancias_img)
         new_event.save_all()
         new_event.save() 
         request.session["success_message"] = "Nuevo evento creado con información default para vistas de usuario."
     except Evento.DoesNotExist:
         request.session["success_message"] = "No se pudo crear el evento!"
-    #except ValidationError as err:
-    #    request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos\n" + err.value
+    except ValidationError:
+        request.session["success_message"] = "Los archivos que ingresaste no tienen la extensión correcta!!!\nPor favor intenta de nuevo con otros archivos"
 
     return redirect(reverse('TestApp:Edicion_Iteraciones')) 
 
@@ -446,64 +534,80 @@ def insert_iter(request):
 
 @login_required
 def report(request):
+    pk = request.POST.get('pk')
+    presentacion = PresentacionRegistro.objects.get(pk = pk)
     
-    nombre = request.POST.get('nombre_completo')
-    modalidad = request.POST.get('modalidad')
-    titulo = request.POST.get('title_pres')
+    authors = Author.objects.filter(presentacion = presentacion)
     
-    current_event = get_editing_event()
+    modalidad = presentacion.modalidad
+    titulo = presentacion.presentacion_titulo
+    
+    current_event = presentacion.evento
     fecha = current_event.fecha;
     lugar = current_event.lugar;
+        
+    request.session['message'] = "Constancias creadas: \n\n"
+    
+    for author in authors:
+        nombre = author.nombre+author.apellido_pat+author.apellido_mat
 
-    font = 'times'
-    size = 20
-    height = 12
+        font = 'times'
+        size = 20
+        height = 12
+        
+        pdf = FPDF('L', 'mm', 'letter')
+        pdf.set_text_color(0,0,0)
+        
+        pdf.add_page()
+        pdf.image(current_event.plantilla_constancias_img, x=0, y=0, w=280, h=216)
+        pdf.image('TestApp/static/TestApp/archivos/admin/Escudo_Unison.png', x=15, y=7, w=35, h=40)
+        pdf.set_font(font, '', size)
+        pos = pdf.get_y() + 40
+        
+        pdf.set_xy(10, pos)
+        pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+        pos = pdf.get_y() + 5
+        
+        pdf.set_xy(10, pos)
+        pdf.set_font(font, 'B', size + 8)
+        pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
+        pos = pdf.get_y() + 5
+        
+        pdf.set_xy(10, pos)
+        pdf.set_font(font, '', size)
+        pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
+        pdf.set_xy(15,pos)
+        pdf.set_font(font, 'I', size)
+        pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
+        pos = pdf.get_y() + 5
+        
+        pdf.set_xy(10,pos)
+        pdf.set_font(font, '', size)
+        pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
+        pos = pdf.get_y() + 5
+        
+        pdf.set_xy(10,pos)
+        pdf.set_font(font, 'I', size)
+        pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
+        pos = pdf.get_y() + 5
+        
+        pdf.set_xy(10,pos)
+        pdf.set_font(font, '', size)
+        pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
+        
+        pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
+        dest = 'TestApp/static/TestApp/archivos/constancias/'
+        pdf.output(dest + pdfname, 'F')
+        
+        try:
+            pdf.output(dest + pdfname, 'F')
+            request.session['message'] = request.session['message'] + " " + pdfname + "\n"
+        except Exception as error:
+            request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
-    pdf = FPDF('L', 'mm', 'letter')
-    pdf.set_text_color(0,0,0)
     
-    pdf.add_page()
-    pdf.image('TestApp/static/TestApp/archivos/admin/' + current_event.plantilla_constancias_img, x=0, y=0, w=280, h=216)
-    pdf.image('TestApp/static/TestApp/archivos/admin/Escudo_Unison.png', x=15, y=7, w=35, h=40)
-    pdf.set_font(font, '', size)
-    pos = pdf.get_y() + 40
-    
-    pdf.set_xy(10, pos)
-    pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
-    pos = pdf.get_y() + 5
-    
-    pdf.set_xy(10, pos)
-    pdf.set_font(font, 'B', size + 8)
-    pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
-    pos = pdf.get_y() + 5
-    
-    pdf.set_xy(10, pos)
-    pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
-    pdf.set_xy(15,pos)
-    pdf.set_font(font, 'I', size)
-    pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
-    pos = pdf.get_y() + 5
-    
-    pdf.set_xy(10,pos)
-    pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
-    pos = pdf.get_y() + 5
-    
-    pdf.set_xy(10,pos)
-    pdf.set_font(font, 'I', size)
-    pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
-    pos = pdf.get_y() + 5
-    
-    pdf.set_xy(10,pos)
-    pdf.set_font(font, '', size)
-    pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
-    
-    pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
-    dest = 'TestApp/static/TestApp/archivos/constancias/'
-    pdf.output(dest + pdfname, 'F')
-    
-    return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type= 'application/pdf')
+    return(HttpResponseRedirect(reverse('TestApp:Constancias')) )
+    #return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type= 'application/pdf')
 
 @login_required
 def remove_iteration(request):
@@ -566,40 +670,6 @@ def activate_event(request):
 # return true if email_address is valid, false if is not valid
 def valid_email_address(email_address):
    return re.search(r"^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$", email_address) != None
-
-@login_required
-def send_email(request):
-    subject = request.POST.get('subject')
-    message = request.POST.get('message')
-    to_email = request.POST.get('to_email') # A list or tuple of recipient addresses.
-    from_email = request.POST.get('from_email')
-    fpass = request.POST.get('pass')
-    
-    if from_email=='':
-        current_event = get_current_event(request, True);
-        from_email = current_event.correo_comunicacion;
-        fpass = current_event.correo_contrasena;
-    
-    if not valid_email_address(from_email) :
-        return  HttpResponseBadRequest('El correo emisor no es válido')
-    
-    if not valid_email_address(to_email) :
-        return HttpResponseBadRequest('El correo destinatario no es válido')
-
-    # Manually open the connection
-    connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
-    connection.open()
-    
-    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
-
-    try:
-        email.send(fail_silently=False)
-    except BadHeaderError:
-        return  HttpResponseForbidden('Invalid header found.')
-    
-    connection.close()
-    
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def get_current_event(request, admin = False):

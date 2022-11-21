@@ -4,52 +4,177 @@
 
 {% block content %}
 
- <div><p>
-    <head>
-        <meta charset="UTF-8">
-        <title>Send Mails</title>
-    </head>
-    <body>
-        <div class="container shadow"
-            style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
-            <p class="text-black"> Ingresa los datos del correo</p>
-        </div>
-            
-    <form method="POST" action="/admin/sendmail/" class="loginfrm">
-        {% csrf_token %}
-        <div>
-            <label>HOST email: </label>
-            <input type = "text" name="from_email" >
-        </div><br>
-        <div>
-            <label>HOST pass: </label>
-            <input type = "password" name="pass" >
-        </div><br>
-        <div>
-            <label>Asunto del correo: </label>
-            <input type = "text" name="subject" >
-        </div><br>
-        <div>
-            <label>Destinatario </label>
-            <input type = "email" name="to_email" >
-        </div><br>
-        <div>
-            <label>Contenido del mensaje </label>
-            <input type = "text" name="message" >
-        </div><br>
 
-        <!-- submit button -->
-        <div class="form-group row">  
-            <label class="col-sm-1 col-form-label"></label>  
-            <div class="col-sm-4">  
-                <button type="submit" class="btn btn-primary">Send</button>  
-            </div>  
-        </div>  
-  
-          </div>  
-      </form>
-       
-    </body>
- </p></div>
+
+ <div class="container">
+    
+    <div class="row mt-5">
+        <div class="container shadow" style="max-width: 640px; margin: auto; margin-top: 2em; padding: 2em">
+
+            {% if message %}
+                <h4 style="color: rgb(21, 0, 114); font-weight: bold;">{{ message }} </h4>
+                </br>
+            {% endif %}
+
+            <h5>  Ingresa los datos del correo</h5>
+            <form method="POST" action="/admin/processCorreo/" class="loginfrm">
+                {% csrf_token %}
+                <div>
+                    <label>HOST email: (solo dominios de Outlook) </label>
+                    <input type = "email" name="user" >
+                </div><br>
+                <div>
+                    <label>HOST pass: </label>
+                    <input type = "password" name="password" >
+                </div><br>
+                <button type="submit" class="btn btn-primary">Guardar</button>  
+            </form>
+
+        </div>
+        
+        {% if not ponencias_list %}
+            <div class="col">
+                <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado presentaciones a la iteración </p>
+            </div>
+        {% else %}        
+
+        
+            <table id="listaPonencias" class="table table-bordered table-hover">
+                <caption style="caption-side:top ">Lista de presentaciones Aceptadas:</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Representante</th>
+                        <th scope="col">Grado académico</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">Modalidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ponencia in ponencias_list %}
+                        {% if ponencia.estatus == 'Aceptado' %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</td>
+                                <td>{{ ponencia.presentacion_titulo }}</td>
+                                <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
+                                <td>{{ ponencia.resp.grado }}</td>
+                                <td>{{ ponencia.resp.institucion }}</td>
+                                <td>{{ ponencia.modalidad }}</td>
+                                    <form method="POST" action="/admin/sendmail/" class="loginfrm">
+                                        {% csrf_token %}
+                                        <td>
+                                            <label>Asunto del correo: </label>
+                                            <input type = "text" name="subject" >
+                                        </td>
+                                        <td>
+                                            <label>Contenido del mensaje </label>
+                                            <input type = "text" name="message" >
+                                        </td>
+                                        <input type="hidden" name="to_email" value="{{ ponencia.resp_email }}">
+                                        <td>
+                                            <!-- submit button -->
+                                            <button type="submit" class="btn btn-primary">Send</button>  
+                                        </td>
+                                    </form>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <table id="listaPonencias" class="table table-bordered table-hover">
+                <caption style="caption-side:top ">Lista de presentaciones Rechazadas:</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Representante</th>
+                        <th scope="col">Grado académico</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">Modalidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ponencia in ponencias_list %}
+                        {% if ponencia.estatus == 'Rechazado' %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</td>
+                                <td>{{ ponencia.presentacion_titulo }}</td>
+                                <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
+                                <td>{{ ponencia.resp.grado }}</td>
+                                <td>{{ ponencia.resp.institucion }}</td>
+                                <td>{{ ponencia.modalidad }}</td>
+                                    <form method="POST" action="/admin/sendmail/" class="loginfrm">
+                                        {% csrf_token %}
+                                        <td>
+                                            <label>Asunto del correo: </label>
+                                            <input type = "text" name="subject" >
+                                        </td>
+                                        <td>
+                                            <label>Contenido del mensaje </label>
+                                            <input type = "text" name="message" >
+                                        </td>
+                                        <input type="hidden" name="to_email" value="{{ ponencia.resp_email }}">
+                                        <td>
+                                            <!-- submit button -->
+                                            <button type="submit" class="btn btn-primary">Send</button>  
+                                        </td>
+                                    </form>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <table id="listaPonencias" class="table table-bordered table-hover">
+                <caption style="caption-side:top ">Lista de presentaciones Sin revisar:</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Representante</th>
+                        <th scope="col">Grado académico</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">Modalidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ponencia in ponencias_list %}
+                        {% if ponencia.estatus == 'Sin revisar' %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</td>
+                                <td>{{ ponencia.presentacion_titulo }}</td>
+                                <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
+                                <td>{{ ponencia.resp.grado }}</td>
+                                <td>{{ ponencia.resp.institucion }}</td>
+                                <td>{{ ponencia.modalidad }}</td>
+                                    <form method="POST" action="/admin/sendmail/" class="loginfrm">
+                                        {% csrf_token %}
+                                        <td>
+                                            <label>Asunto del correo: </label>
+                                            <input type = "text" name="subject" >
+                                        </td>
+                                        <td>
+                                            <label>Contenido del mensaje </label>
+                                            <input type = "text" name="message" >
+                                        </td>
+                                        <input type="hidden" name="to_email" value="{{ ponencia.resp_email }}">
+                                        <td>
+                                            <!-- submit button -->
+                                            <button type="submit" class="btn btn-primary">Send</button>  
+                                        </td>
+                                    </form>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% endif %}
+    </div>
+</div>
 
  {% endblock %}

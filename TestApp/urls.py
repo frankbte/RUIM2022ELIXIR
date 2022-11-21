@@ -29,16 +29,8 @@ urlpatterns = [
     path('admin/edicionesAdmin/activar', views.activate_event, name="Activar Iteracion"),
     path('admin/edicionesAdmin/editing', views.change_editing_event, name="Change Editing"),
     
-    path('admin/ponencias/', views.ponenciasAdmin, name="Estados Ponencias"),
-    
     path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('admin/processInicio/', views.processInicio),
-    
-    path('admin/contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
-    path('admin/processContacto/', views.processContacto),
-    
-    path('admin/ubicacionAdmin/', views.ubicacionAdmin, name="Edición Ubicacion"),
-    path('admin/processUbicacion/', views.processUbicacion),
     
     path('admin/posterAdmin/', views.posterAdmin, name="Edición Poster"),
     path('admin/processPoster/', views.processPoster),
@@ -46,14 +38,25 @@ urlpatterns = [
     path('admin/programaAdmin/', views.programaAdmin, name="Edición Programa"),
     path('admin/processPrograma/', views.processPrograma),
     
+    path('admin/contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
+    path('admin/processContacto/', views.processContacto),
+    
+    path('admin/ubicacionAdmin/', views.ubicacionAdmin, name="Edición Ubicacion"),
+    path('admin/processUbicacion/', views.processUbicacion),
+    
     path('admin/registroAdmin/', views.registroAdmin, name="Edición Registro"),
     path('admin/processRegistro/', views.processRegistro),
+    
+    path('admin/estado/', views.estadoAdmin, name="Estado"),
+    path('admin/processEstado/', views.processEstado),
+    path('admin/getResumen/', views.getResumen),
     
     path('admin/constancias/', views.constancias, name="Constancias"),
     path('admin/report/', views.report),
     path('admin/processConstancia/', views.processConstancia),
 
-    path('admin/correos/', views.correos, name="Correos"),
+    path('admin/correo/', views.correos, name="Correo"),
+    path('admin/processCorreo/', views.processCorreo),
     path('admin/sendmail/', views.send_email),
     
     path('admin/', include('django.contrib.auth.urls')),

@@ -5,6 +5,10 @@
 {% block content %}
     <div class="container">
         <div class="row mt-5">
+            {% if message %}
+                <h4 style="color: rgb(21, 0, 114); font-weight: bold;">{{ message }} </h4>
+                </br>
+            {% endif %}
             {% if not ponencias_list %}
                 <div class="col">
                     <p style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: black">No se han registrado presentaciones a la iteración </p>
@@ -17,13 +21,12 @@
                             <th scope="col">#</th>
                             <th scope="col">Título</th>
                             <th scope="col">Representante</th>
-                            <th scope="col">Correo del representante</th>
                             <th scope="col">Grado académico</th>
                             <th scope="col">Institución</th>
-                            <th scope="col">Departamento</th>
                             <th scope="col">Modalidad</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Detalles</th>
+                            <th scope="col">Asignar Estado</th>
+                            <th scope="col">Estado guardado</th>
+                            <th scope="col">Resumen</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,23 +35,31 @@
                                 <th scope="row">{{ forloop.counter }}</td>
                                 <td>{{ ponencia.presentacion_titulo }}</td>
                                 <td>{{ ponencia.resp.apellido_pat }} {{ ponencia.resp.apellido_mat }} {{ ponencia.resp.nombre }}</td>
-                                <td>{{ ponencia.resp_email }}</td>
                                 <td>{{ ponencia.resp.grado }}</td>
                                 <td>{{ ponencia.resp.institucion }}</td>
-                                <td>{{ ponencia.resp.departamento }}</td>
                                 <td>{{ ponencia.modalidad }}</td>
                                 <td>
-                                    <form>
-                                        <div class="form-group">
-                                            <select name="estatus_form" id="inputEstado" class="p-2 form-control">
+                                    <form action="/admin/processEstado/" method="POST">
+                                        <div class="form-group" >
+                                            {% csrf_token %}
+                                            <select name="estatus" id="inputEstado" class="p-2 form-control">
                                                 <option value="Sin revisar">Sin revisar</option>
                                                 <option value="Aceptado">Aceptado</option>
                                                 <option value="Rechazado">Rechazado</option>
                                             </select>
+                                            <input type="hidden" name="pk" value="{{ ponencia.pk }}">
+                                            <input type="submit"  value="cambiar" class=" btn-primary mt-4  btn btn-primary">
                                         </div>
                                     </form>
                                 </td>
-                                <td><button type="button" class="btn btn-info">Detalles</button></td>
+                                <td>{{ ponencia.estatus }}</td>
+                                <td>
+                                    <form method="POST" action="/admin/getResumen/">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="pk" value="{{ ponencia.pk }}">
+                                        <button type="submit" class="btn btn-primary">Ver</button> 
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
