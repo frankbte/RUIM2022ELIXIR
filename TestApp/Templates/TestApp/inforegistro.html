@@ -25,7 +25,12 @@
     </u>
     </h3>
 	<h2 style="color: black;">
-			<a href="{% url 'TestApp:Ponencias' %}" target="_self" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique;">Acceso a registro de ponencias</a><br/>
+			{% if evento.register_available %}
+			<a href="{% url 'TestApp:Ponencias' %}" target="_self" style="color: rgb(29, 6, 111); font-weight: bold; font-style: oblique;">Acceso a registro de ponencias</a>
+			{% else %}
+			<br/>
+			<u>El registro de presentaciones ya no está disponible</u>
+			{% endif %}<br/>
 	</h2>
     </div>
     </center>

@@ -79,6 +79,7 @@ class EdicionesPage(models.Model):
 class Evento(models.Model):
     active = models.BooleanField()
     editing = models.BooleanField()
+    register_available = models.BooleanField()
     year = models.IntegerField(default=2022)
     cartel = models.FileField(upload_to = 'admin/', blank=True,null=True)
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -105,7 +106,7 @@ class Evento(models.Model):
         return 0
 
 
-DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, \
+DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, register_available = True, \
                         cartel = "admin/banner.jpg", \
                         inicio = InicioPage(title_descripcion = "RUIM 2022", \
                                 text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \

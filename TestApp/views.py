@@ -97,6 +97,15 @@ def iterAdmin(request):
     return render(request, 'TestApp/AdminFront/edicionesFront.html', 
                     {'iteracion' : current_editing_event, 'iteracion_list' : eventos, 'message' : message,
                 'evento' : current_editing_event})
+
+@login_required
+def disable_registro(request):
+    active_event = get_current_event(request, True)
+
+    active_event.register_available = not active_event.register_available
+    active_event.save()
+
+    return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
             
 
 @login_required
