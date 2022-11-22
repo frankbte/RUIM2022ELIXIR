@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/edicionesAdmin/', views.iterAdmin, name="Edicion_Iteraciones"),
     path('admin/crearEdicion/', views.create_iter, name= "Crear una Iteración"),
     path('admin/insertEdicion/', views.insert_iter, name = "Insertando Iteración"),
+
+    path('admin/edicionesAdmin/disable_registro', views.disable_registro, name = "Activar registro"),
     
     path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
     path('admin/edicionesAdmin/activar', views.activate_event, name="Activar Iteracion"),

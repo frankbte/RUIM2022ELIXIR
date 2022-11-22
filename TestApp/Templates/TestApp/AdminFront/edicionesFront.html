@@ -37,7 +37,21 @@
                                 <button type="submit" name="eliminar" value={{ evento.year }} class="btn btn-danger" style="width: 100%">Eliminar</button> 
                                 </form> 
                         {% if evento.active %}
-                        <td class="col-3 table-success" style="text-align: center; vertical-align: middle; font-size: 1.5rem"> ¡Evento activo! </td>
+                        <td class="col-3" style="text-align: center; vertical-align: middle; font-size: 1.5rem">
+								<table><tr><td class="table-success">¡Evento activo!</td>
+											
+											<td class="col-3" style="text-align: center; vertical-align: middle; font-size: 1.5rem">
+													<form action="{% url 'TestApp:Activar registro' %}" method="POST">
+															{% csrf_token %}
+															<button type="submit" name="registro" value={{evento.year}} class="btn btn-info" style="width:100%">
+																	{% if evento.register_available %}
+																	Desactivar registro
+																	{% else %}
+																	Activar registro
+																	{% endif %}
+															</button>
+													</form>
+											</td></tr></table></td>
                         {% else %}
                         <td class="col-3"style="vertical-align: middle"> <form action="{% url 'TestApp:Activar Iteracion' %}" method="POST"> 
                                 {% csrf_token %}
