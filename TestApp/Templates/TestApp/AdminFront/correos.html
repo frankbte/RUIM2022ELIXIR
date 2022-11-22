@@ -22,7 +22,7 @@
                 {% csrf_token %}
                 <div>
                     <label>HOST email: (solo dominios de Outlook) </label>
-                    <input type = "email" name="user" >
+					<input type = "email" name="user" value="{{evento.correo_comunicacion}}">
                 </div><br>
                 <div>
                     <label>HOST pass: </label>

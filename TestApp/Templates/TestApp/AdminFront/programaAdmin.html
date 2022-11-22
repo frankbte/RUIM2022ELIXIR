@@ -21,7 +21,7 @@
                 <p>Ingrese los cambios a los campos que se mostrarán en la página de Programa:</p>
             {% endif %}
 
-            <form action="/admin/processPrograma/" method="POST" enctype="multipart/form-data">
+			<form action="{% url 'TestApp:Procesar Programa' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_ul }}
                 <input type="submit" value="Confirmar cambios">

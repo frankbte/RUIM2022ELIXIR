@@ -38,7 +38,7 @@ class Author(models.Model):
 
 class InicioPage(models.Model):
     title_descripcion = models.CharField(max_length = 40)
-    text_descripcion = models.CharField(max_length = 300)
+    text_descripcion = models.CharField(max_length = 1000)
 
 class ProgramaPage(models.Model):
     programa_pdf = models.FileField(upload_to = 'admin/')

@@ -21,7 +21,7 @@
             <p>Ingrese los cambios a los campos que se mostrarán en la página de inicio:</p>
         {% endif %}
 
-        <form action="/admin/processInicio/" method="POST">
+		<form action="{% url 'TestApp:Procesar Inicio' %}" method="POST">
             {{ form.as_ul }}
             {% csrf_token %}
             <input type="submit" value="Confirmar cambios">
