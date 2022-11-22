@@ -6,7 +6,7 @@ from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail, EmailMessage 
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.core.mail.backends.smtp import EmailBackend
 from django.core import mail
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
@@ -132,6 +132,7 @@ def informe(request):
                 'cart_acept' : cart_acept,
                 'cart_rechaz' : cart_rechaz
             })
+                
 
 # Inicio
 @login_required
@@ -508,7 +509,7 @@ def AddPresentation(request):
     fpass = evento.correo_contrasena;
     
     if not valid_email_address(from_email) :
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado debido a configuración de correos"
         return HttpResponseRedirect(reverse('TestApp:Registro'))
     
     if not valid_email_address(to_email) :
@@ -519,20 +520,16 @@ def AddPresentation(request):
     try:
         connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
         connection.open()
-    except Exception as error:
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
-    
-    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
-
-    try:
+        
+        email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
         email.send(fail_silently=False)
         request.session['message'] = request.session['message'] + "Correo de confirmación enviado a " + to_email 
+
+        connection.close()
     except Exception as error:
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado: correo de confirmación no enviado"
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+        connection.close()
     
-        
-    
-    connection.close()
 
     
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
@@ -576,7 +573,7 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
-        validator = FileExtensionValidator(allowed_extensions=[".jpg", ".jpeg"])
+        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg"])
 
         validator(new_event.cartel)
         validator(new_event.plantilla_constancias_img)
