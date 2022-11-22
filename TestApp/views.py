@@ -776,6 +776,7 @@ def activate_event(request):
 
     for i in active_events:
         i.active = False
+        i.register_available = False
         i.save()
 
     to_activate = Evento.objects.get(year = year)
