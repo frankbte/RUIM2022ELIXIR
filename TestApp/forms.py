@@ -1,6 +1,7 @@
 from telnetlib import AUTHENTICATION
 from django import forms  
 from TestApp.models import Evento, InicioPage, ContactoPage, PresentacionRegistro, Author, UbicacionPage, PosterPage, ProgramaPage, RegistroPage
+from django.forms import Textarea, FileInput
 
 class EventoForm(forms.ModelForm):  
     class Meta:  
@@ -41,13 +42,15 @@ class InicioPageForm(forms.ModelForm):
     class Meta:
         model = InicioPage
         fields = "__all__"
-        labels = {'title_descripcion' : 'Descripción del evento', 'text_descripcion' : 'Encabezado de la pestaña'}
+        labels = {'title_descripcion' : 'Título para descripción del evento', 'text_descripcion' : 'Texto para descripción del evento'}
+        widgets = {'text_descripcion': Textarea,}
 
 class ContactoPageForm(forms.ModelForm):
     class Meta:
         model = ContactoPage
         fields = ['title', 'text', 'contacto']
         labels = {'title' : 'Encabezado de la pestaña', 'text' : 'Mensaje', 'contacto' : 'Correo electrónico de contacto'}
+        widgets = {'text' : Textarea(attrs={'rows': 2})}
 
 
 class UbicacionPageForm(forms.ModelForm):  
@@ -58,6 +61,7 @@ class UbicacionPageForm(forms.ModelForm):
                   'text' : 'Mensaje',
                   'url_maps' : 'URL de maps',
                   'url_maps_embed' : 'URL del embed de maps'}
+        widgets = {'text' : Textarea(attrs={'rows': 4})}
 
 class PosterPageForm(forms.ModelForm):  
     class Meta:  
@@ -72,6 +76,8 @@ class ProgramaPageForm(forms.ModelForm):
         fields = "__all__"
         labels = {'programa_img' : 'Imagen del Programa',
                   'programa_pdf' : 'PDF del programa'}
+        widgets = {'programa_img': FileInput(attrs={'accept':'.jpg, .jpeg'}),
+                   'programa_pdf' : FileInput(attrs={'accpet':'.pdf'}), }
 
 class RegistroPageForm(forms.ModelForm):  
     class Meta:  
@@ -85,3 +91,7 @@ class RegistroPageForm(forms.ModelForm):
                   'text_constancias_participacion' : 'Texto para entrega de constancias ',
                   'title_participacion_asistente' : 'Título para participación del asistente',
                   'text_participacion_asistente' : 'Texto para participación del asistente'}        
+        widgets = {'text_participacion_ponente' : Textarea(attrs={'rows': 3}),
+                'text_formato_resumen' : Textarea(attrs={'rows': 3}),
+                'text_constancias_participacion' : Textarea(attrs={'rows': 3}),
+                'text_participacion_asistente' : Textarea(attrs={'rows': 3}),}

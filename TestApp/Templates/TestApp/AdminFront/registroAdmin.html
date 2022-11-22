@@ -22,7 +22,7 @@
             <p>Ingrese los cambios a los campos que se mostrarán en la pestaña de Registro:</p>
         {% endif %}
 
-        <form action="/admin/processRegistro/" method="POST">
+		<form action="{% url 'TestApp:Procesar Registro' %}" method="POST">
             {% csrf_token %}
             {{ form.as_ul }}
             <input type="submit" value="Confirmar cambios">

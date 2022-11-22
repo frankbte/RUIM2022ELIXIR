@@ -6,7 +6,7 @@ from TestApp import urls
 from django.http import FileResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
-from django.core.mail import BadHeaderError, send_mail, EmailMessage 
+from django.core.mail import BadHeaderError, send_mail, EmailMessage
 from django.core.mail.backends.smtp import EmailBackend
 from django.core import mail
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotModified, HttpResponseForbidden, HttpResponseBadRequest
@@ -132,15 +132,18 @@ def informe(request):
                 'cart_acept' : cart_acept,
                 'cart_rechaz' : cart_rechaz
             })
+                
 
 # Inicio
 @login_required
 def inicioAdmin(request):
-    form = InicioPageForm()
+    event = get_editing_event()
+    form = InicioPageForm(initial={'title_descripcion': event.inicio.title_descripcion,
+                                   'text_descripcion': event.inicio.text_descripcion})
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', 
-            {'form': form, 'evento' : get_editing_event(), 'message' : message})
+            {'form': form, 'evento' : event, 'message' : message})
 
 @login_required
 def processInicio(request):
@@ -152,7 +155,7 @@ def processInicio(request):
     try:
         evento.save_all()
         evento.save() 
-        request.session['message'] = "Página de inicio actualizada." + str(evento.year)
+        request.session['message'] = "Página de inicio actualizada para el evento " + str(evento.year)
         
     except Exception as error:
         request.session['message'] = "Ocurrió un error inesperado: " + format(error)
@@ -164,20 +167,31 @@ def processInicio(request):
 # Poster
 @login_required
 def posterAdmin(request):
+    editing_event = get_editing_event()
+
     form = PosterPageForm()
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/posterAdmin.html', 
             {'form': form,
-             'message' : message})
+                'message' : message, 'evento' : editing_event})
     
 @login_required
 def processPoster(request):
     evento=get_editing_event()
     evento.poster = PosterPage(poster_img = request.FILES.get('poster_img'),
                                   poster_pdf = request.FILES.get('poster_pdf'))
+
+    try: 
+        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg'])(evento.poster.poster_img)
+        FileExtensionValidator(allowed_extensions = ['pdf'])(evento.poster.poster_pdf)
+    except ValidationError:
+        request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+        return(HttpResponseRedirect(reverse('TestApp:Edición Poster')))
+
     evento.poster.poster_img.name = str(evento.year) + 'poster.jpg'
     evento.poster.poster_pdf.name = str(evento.year) + 'poster.pdf'
+
 
     try:
         evento.save_all()
@@ -206,6 +220,15 @@ def processPrograma(request):
     evento=get_editing_event()
     evento.programa = ProgramaPage(programa_img = request.FILES.get('programa_img'),
                                   programa_pdf = request.FILES.get('programa_pdf'))
+
+    try: 
+        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg'])(evento.programa.programa_img)
+        FileExtensionValidator(allowed_extensions = ['pdf'])(evento.programa.programa_pdf)
+    except ValidationError:
+        request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+        return(HttpResponseRedirect(reverse('TestApp:Edición Programa')))
+        
+
     evento.programa.programa_img.name = str(evento.year) + 'programa.jpg'
     evento.programa.programa_pdf.name = str(evento.year) + 'programa.pdf'
     
@@ -218,13 +241,17 @@ def processPrograma(request):
         request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Edición Programa')) )
+    return(HttpResponseRedirect(reverse('TestApp:Edición Programa')))
 
 
 #Ubicacion
 @login_required
 def ubicacionAdmin(request):
-    form = UbicacionPageForm()
+    editing_ev = get_editing_event()
+
+    form = UbicacionPageForm(initial = {'title' : editing_ev.ubicacion.title,
+        'text' : editing_ev.ubicacion.text, 'url_maps_embed' : editing_ev.ubicacion.url_maps_embed,
+        'url_maps' : editing_ev.ubicacion.url_maps})
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/ubicacionAdmin.html', 
@@ -254,7 +281,11 @@ def processUbicacion(request):
 def contactoAdmin(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
-    form = ContactoPageForm()
+
+    event = get_editing_event()
+
+    form = ContactoPageForm(initial = {'title' : event.contacto.title,
+        'text' : event.contacto.text, 'contacto' : event.contacto.contacto})
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
             {'form': form, 'evento' : get_editing_event(), 'message' : message})
 
@@ -282,16 +313,38 @@ def processContacto(request):
 def registroAdmin(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
-    form = RegistroPageForm()
+    
+    event = get_editing_event()
+    form = RegistroPageForm(initial = {'title_participacion_ponente' : event.registro.title_participacion_ponente,
+        'text_participacion_ponente' : event.registro.text_participacion_ponente,
+        'title_formato_resumen' : event.registro.title_formato_resumen,
+        'text_formato_resumen' : event.registro.text_formato_resumen,
+        'title_constancias_participacion' : event.registro.title_constancias_participacion,
+        'text_constancias_participacion' : event.registro.text_constancias_participacion,
+        'title_participacion_asistente' : event.registro.title_participacion_asistente,
+        'text_participacion_asistente' : event.registro.text_participacion_asistente})
+
     return render(request, 'TestApp/AdminFront/registroAdmin.html', 
             {'form': form, 'evento' : get_editing_event(), 'message' : message})
 
 @login_required
 def processRegistro(request):
     evento=get_editing_event()
-    evento.registro = RegistroPage(title= request.POST.get('title'), 
-                                 text = request.POST.get('text'),
-                                 registro = request.POST.get('registro'))
+    evento.registro = RegistroPage(title_participacion_ponente= request.POST.get('title_participacion_ponente'), 
+                                 text_participacion_ponente = request.POST.get('text_participacion_ponente'),
+                                 title_formato_resumen = request.POST.get('title_formato_resumen'),
+                                 text_formato_resumen = request.POST.get('text_formato_resumen'),
+                                 title_constancias_participacion = request.POST.get('title_constancias_participacion'),
+                                 text_constancias_participacion = request.POST.get('text_constancias_participacion'),
+                                 title_participacion_asistente = request.POST.get('title_participacion_asistente'),
+                                 text_participacion_asistente = request.POST.get('text_participacion_asistente'),
+                                 formato_resumen_pdf = request.POST.get('formato_resumen_pdf'))
+
+    try: 
+        FileExtensionValidator(allowed_extensions = ['pdf'])(evento.registro.formato_resumen_pdf)
+    except ValidationError:
+        request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+        return(HttpResponseRedirect(reverse('TestApp:Edición Registro')))
     
     try:
         evento.save_all()
@@ -508,7 +561,7 @@ def AddPresentation(request):
     fpass = evento.correo_contrasena;
     
     if not valid_email_address(from_email) :
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado debido a configuración de correos"
         return HttpResponseRedirect(reverse('TestApp:Registro'))
     
     if not valid_email_address(to_email) :
@@ -519,20 +572,16 @@ def AddPresentation(request):
     try:
         connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
         connection.open()
-    except Exception as error:
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
-    
-    email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
-
-    try:
+        
+        email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
         email.send(fail_silently=False)
         request.session['message'] = request.session['message'] + "Correo de confirmación enviado a " + to_email 
+
+        connection.close()
     except Exception as error:
-        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado: correo de confirmación no enviado"
+        request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
+        connection.close()
     
-        
-    
-    connection.close()
 
     
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
@@ -576,7 +625,7 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
-        validator = FileExtensionValidator(allowed_extensions=[".jpg", ".jpeg"])
+        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg"])
 
         validator(new_event.cartel)
         validator(new_event.plantilla_constancias_img)

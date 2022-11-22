@@ -30,22 +30,22 @@ urlpatterns = [
     path('admin/edicionesAdmin/editing', views.change_editing_event, name="Change Editing"),
     
     path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
-    path('admin/processInicio/', views.processInicio),
+    path('admin/processInicio/', views.processInicio, name="Procesar Inicio"),
     
     path('admin/posterAdmin/', views.posterAdmin, name="Edición Poster"),
-    path('admin/processPoster/', views.processPoster),
+    path('admin/processPoster/', views.processPoster, name='Procesar Poster'),
     
     path('admin/programaAdmin/', views.programaAdmin, name="Edición Programa"),
-    path('admin/processPrograma/', views.processPrograma),
+    path('admin/processPrograma/', views.processPrograma, name="Procesar Programa"),
     
     path('admin/contactoAdmin/', views.contactoAdmin, name="Edición Contacto"),
-    path('admin/processContacto/', views.processContacto),
+    path('admin/processContacto/', views.processContacto, name="Procesar Contacto"),
     
     path('admin/ubicacionAdmin/', views.ubicacionAdmin, name="Edición Ubicacion"),
-    path('admin/processUbicacion/', views.processUbicacion),
+    path('admin/processUbicacion/', views.processUbicacion, name="Procesar Ubicacion"),
     
     path('admin/registroAdmin/', views.registroAdmin, name="Edición Registro"),
-    path('admin/processRegistro/', views.processRegistro),
+    path('admin/processRegistro/', views.processRegistro, name="Procesar Registro"),
     
     path('admin/estado/', views.estadoAdmin, name="Estado"),
     path('admin/processEstado/', views.processEstado),
