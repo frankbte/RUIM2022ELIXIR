@@ -16,10 +16,19 @@
                </div>
                
                <div style="text-align: center; margin-top: .5cm; align-items: center;" >
-                  {% autoescape off %}
-                     {{ubicacion.url_maps_embed}}
+               	  {% autoescape off %}
+				  	<iframe src="{{ubicacion.url_maps_embed}}"
+               			width="600" 
+               			height="450" 
+               			style="border:0; margin-left: 100px;"
+               			allowfullscreen="" 
+               			loading="lazy" 
+               			referrerpolicy="no-referrer-when-downgrade">
+         			</iframe>	
                   {% endautoescape %}
+				  <br/>
                </div>
+			   <br/>
             </div>
          
    </body>
