@@ -616,6 +616,7 @@ def insert_iter(request):
     new_event = Evento()
     new_event.active = False
     new_event.editing = False
+    new_event.register_available = False
     new_event.year = year
     new_event.cartel = cartel
     new_event.correo_comunicacion = correo
