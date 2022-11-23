@@ -667,7 +667,7 @@ def report(request):
     request.session['message'] = "Constancias creadas: \n\n"
     
     for author in authors:
-        nombre = author.nombre+author.apellido_pat+author.apellido_mat
+        nombre = author.nombre+ ' ' + author.apellido_pat+ ' ' + author.apellido_mat
 
         font = 'times'
         size = 20
@@ -678,7 +678,7 @@ def report(request):
         
         pdf.add_page()
         pdf.image(current_event.plantilla_constancias_img, x=0, y=0, w=280, h=216)
-        pdf.image('TestApp/static/TestApp/archivos/admin/Escudo_Unison.png', x=15, y=7, w=35, h=40)
+        pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
         pdf.set_font(font, '', size)
         pos = pdf.get_y() + 40
         
