@@ -191,7 +191,17 @@ def processInicio(request):
     evento=get_editing_event()
     
     evento.inicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
-                               text_descripcion = request.POST.get('text_descripcion'))
+                               text_descripcion = request.POST.get('text_descripcion'),
+                               title_news = request.POST.get('title_news'),
+                               text_news = request.POST.get('text_news'),
+                               cartel = request.FILES.get('cartel'))
+    if evento.inicio.cartel:
+        try: 
+            FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.inicio.cartel)
+        except ValidationError:
+            request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+            return(HttpResponseRedirect(reverse('TestApp:Edición Inicio')))
+        evento.inicio.cartel.name = str(evento.year) + 'banner.png'
     
     try:
         evento.save_all()
@@ -640,7 +650,6 @@ def insert_iter(request):
         request.session["success_message"] = "No se pueden registrar dos eventos de un mismo año!"
         return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
 
-    cartel = request.FILES.get("cartel")
     correo = request.POST.get("correo")
     correo_contrasena = request.POST.get("correo_contrasena")
     fecha = request.POST.get("date")
@@ -652,7 +661,6 @@ def insert_iter(request):
     new_event.editing = False
     new_event.register_available = False
     new_event.year = year
-    new_event.cartel = cartel
     new_event.correo_comunicacion = correo
     new_event.correo_contrasena = correo_contrasena
     new_event.fecha = fecha
