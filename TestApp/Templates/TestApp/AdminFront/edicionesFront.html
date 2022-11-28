@@ -5,6 +5,31 @@
 
 {% block content %}
 <body>
+    <script>
+        function alertDelete1(arg) {
+            if (confirm("¿Seguro que deseas eliminar el evento?")){
+                return;
+            }else{
+                document.getElementById("delete"+arg).reset()
+                return;
+            }
+        }
+        function alertDelete(arg) {
+            del = confirm("¿Seguro que deseas eliminar el evento?");
+            myform = document.getElementById(arg);
+            myform['del'].value = del;
+            console.log(myform['del'].value);
+            return;
+           
+        }
+        function showDelete(arg) {
+            data = `<form name="delete`+ arg +`" action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
+                        {% csrf_token %}
+                        <button type="submit" name="eliminar" value=`+ arg +` class="btn btn-danger" style="width: 100%" onclick=alertDelete1()>Eliminar</button> 
+                    </form> `
+            document.getElementById(arg).innerHTML = data;
+        }
+        </script>
     <div class="container">
         <h1 class="row py-4">Editando: Edición " {{ iteracion.year }} "</h1>
 
@@ -27,15 +52,21 @@
                 {% for evento in iteracion_list %}
                     <tr>
                         <td class="col-1" style="text-align: center; vertical-align: middle; font-size: 1.5rem; font-weight: bold;" scope="col"> {{ evento.year }} </td>
-                        <td class="col-3" style="text-align: center; vertical-align: middle;"> <form action="{% url 'TestApp:Change Editing' %}" method="POST">
+                        <td class="col-3" style="text-align: center; vertical-align: middle;">
+                            <form action="{% url 'TestApp:Change Editing' %}" method="POST">
                                 {% csrf_token %}
-                                <button type="submit" name="editar" value={{ evento.year }} class="btn btn-secondary" style="width: 100%">Editar</button> 
+                                <button type="submit" name="editar" value={{evento.year}} class="btn btn-secondary" style="width: 100%">Editar</button> 
                             </form>
                         </td>
-                        <td class= "col-3" style="vertical-align: middle; text-align: center"> <form action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
+
+                        <td class= "col-3" style="vertical-align: middle; text-align: center"> 
+                            <form id='{{evento.year}}' action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
                                 {% csrf_token %}
-                                <button type="submit" name="eliminar" value={{ evento.year }} class="btn btn-danger" style="width: 100%">Eliminar</button> 
-                                </form> 
+                                <input type="hidden" id="del" name="del">
+                                <button type="submit" onclick='alertDelete( {{evento.year}} )' name="pk" form='{{evento.year}}' formmethod="post" value={{evento.pk}}  class="btn btn-danger" style="width: 100%">Eliminar</button> 
+                            </form> 
+                        </td>
+
                         {% if evento.active %}
                         <td class="col-3" style="text-align: center; vertical-align: middle; font-size: 1.5rem">
 								<table><tr><td class="table-success">¡Evento activo!</td>
@@ -53,9 +84,10 @@
 													</form>
 											</td></tr></table></td>
                         {% else %}
-                        <td class="col-3"style="vertical-align: middle"> <form action="{% url 'TestApp:Activar Iteracion' %}" method="POST"> 
+                        <td class="col-3"style="vertical-align: middle"> 
+                            <form action="{% url 'TestApp:Activar Iteracion' %}" method="POST"> 
                                 {% csrf_token %}
-                                <button type="submit" name="activar" value={{ evento.year }} class="btn btn-success" style="width: 100%">Activar evento</button> 
+                                <button type="submit" name="activar" value={{evento.year}} class="btn btn-success" style="width: 100%">Activar evento</button> 
                             </form> 
                         </td>
                         {% endif %}
