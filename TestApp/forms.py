@@ -42,8 +42,9 @@ class InicioPageForm(forms.ModelForm):
     class Meta:
         model = InicioPage
         fields = "__all__"
-        labels = {'title_descripcion' : 'Título para descripción del evento', 'text_descripcion' : 'Texto para descripción del evento'}
-        widgets = {'text_descripcion': Textarea,}
+        labels = {'title_descripcion' : 'Título para descripción del evento', 'text_descripcion' : 'Texto para descripción del evento',
+                  'title_news' : 'Título para noticias (opcional)', 'text_news' : 'Texto para noticias (opcional)', 'cartel' : 'Banner del inicio (imagen)'}
+        widgets = {'text_descripcion': Textarea, 'text_news': Textarea,}
 
 class ContactoPageForm(forms.ModelForm):
     class Meta:
