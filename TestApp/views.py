@@ -393,7 +393,7 @@ def processEstado(request):
         request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Estado')) )
+    return redirect(reverse('TestApp:Estado')) 
 
 @login_required
 def getResumen(request):
@@ -440,7 +440,7 @@ def processConstancia(request):
         request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Constancias')) )
+    return redirect(reverse('TestApp:Constancias')) 
 
 
 # Correos
@@ -482,17 +482,19 @@ def send_email(request):
     fpass = current_event.correo_contrasena;
     
     if not valid_email_address(from_email) :
-        return  HttpResponseBadRequest('El correo emisor no es válido')
+        request.session['message'] = request.session['message']+"Ocurrió un error: El correo emisor no es válido"
+        return(HttpResponseRedirect(reverse('TestApp:Correo')) )
     
     if not valid_email_address(to_email) :
-        return HttpResponseBadRequest('El correo destinatario no es válido')
+        request.session['message'] = request.session['message']+"Ocurrió un error: El correo destinatario no es válido"
+        return(HttpResponseRedirect(reverse('TestApp:Correo')) )
 
     # Manually open the connection
     try:
         connection = EmailBackend(host='smtp-mail.outlook.com',port=587, username=from_email, password=fpass, use_tls=True) 
         connection.open()
     except Exception as error:
-        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+        request.session['message'] = "Ocurrió un error: " + format(error)
     
     email = EmailMessage(subject, message, from_email, [to_email], connection=connection)
 
@@ -501,12 +503,12 @@ def send_email(request):
         request.session['message'] = "Correo enviado a " + to_email 
         
     except Exception as error:
-        request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+        request.session['message'] = "Ocurrió un error: " + format(error)
         
     
     connection.close()
     
-    return(HttpResponseRedirect(reverse('TestApp:Correo')) )
+    return redirect(reverse('TestApp:Correo')) 
 
 
 ############################
@@ -562,6 +564,7 @@ def AddPresentation(request):
     presentacion.save()
     request.session["message"] = "Registro de presentación exitoso!\n\n"
     
+    """    
     ## Envio de correo
     subject = 'Reunion Universitaria de investigación de materiales ' + str(evento.year)
     message = '¡Muchas gracias por tu participación!\n Hemos recibido tu solicitud, pronto te llegará un correo de parte del comité organizador.'
@@ -590,8 +593,7 @@ def AddPresentation(request):
     except Exception as error:
         request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
         connection.close()
-    
-
+    """
     
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
 
@@ -635,7 +637,7 @@ def insert_iter(request):
     new_event.contacto = DEFAULT_EVENT.contacto
 
     try:
-        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg"])
+        validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])
 
         validator(new_event.cartel)
         validator(new_event.plantilla_constancias_img)
@@ -725,30 +727,34 @@ def report(request):
             request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
-    return(HttpResponseRedirect(reverse('TestApp:Constancias')) )
+    return redirect(reverse('TestApp:Constancias'))
     #return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type= 'application/pdf')
 
 @login_required
 def remove_iteration(request):
-    event_year = request.POST.get("eliminar") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
+    pk = request.POST.get("pk") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
+    print(request.POST.get("del"))
+    if request.POST.get("del") == 'true':
+        
+        try:
+            
+            event = Evento.objects.get(pk = pk)
+            print(event.year)
+            event.inicio.delete()
+            event.programa.delete()
+            event.poster.delete()
+            event.ubicacion.delete()
+            event.contacto.delete()
+            event.registro.delete()
+            event.edicion.delete()
+            event.delete()
 
-    try:
-        event = Evento.objects.get(year = event_year)
-        event.inicio.delete()
-        event.programa.delete()
-        event.poster.delete()
-        event.ubicacion.delete()
-        event.contacto.delete()
-        event.registro.delete()
-        event.edicion.delete()
-        event.delete()
+            request.session["success_message"] = "Evento eliminado!"
 
-        request.session["success_message"] = "Evento eliminado!"
+        except Evento.DoesNotExist:
+            request.session["success_message"] = "Ha ocurrido un error!"
 
-    except Evento.DoesNotExist:
-        request.session["seccess_message"] = "Ha ocurrido un error!"
-
-    return redirect(reverse('TestApp:Edicion_Iteraciones')) 
+    return redirect(reverse('TestApp:Edicion_Iteraciones'))
 
 @login_required
 def change_editing_event(request):
