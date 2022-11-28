@@ -117,16 +117,43 @@ def create_iter(request):
 @login_required
 def informe(request):
     evento_actual = get_editing_event()
-    pres_total = evento_actual.presentacionregistro_set.all().count()
-    ponen_total = evento_actual.presentacionregistro_set.filter(modalidad='Ponencia').count()
-    cart_total = evento_actual.presentacionregistro_set.filter(modalidad='Cartel').count()
     
-    pres_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado').count()
-    pres_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado').count()
-    ponen_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Ponencia').count()
-    ponen_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Ponencia').count()
-    cart_acept = evento_actual.presentacionregistro_set.filter(estatus='Aceptado', modalidad='Cartel').count()
-    cart_rechaz = evento_actual.presentacionregistro_set.filter(estatus='Rechazado', modalidad='Cartel').count()
+    pres_list = evento_actual.presentacionregistro_set.all()
+    pres_total = pres_list.count()
+    
+    pres_acept = pres_list.filter(estatus='Aceptado').count()
+    pres_rechaz = pres_list.filter(estatus='Rechazado').count()
+    
+    ponencias = pres_list.filter(modalidad='Ponencia')
+    ponen_acept = ponencias.filter(estatus='Aceptado').count()
+    ponen_rechaz = ponencias.filter(estatus='Aceptado').count()
+    ponen_total = ponencias.count()
+    
+    carteles = pres_list.filter(modalidad='Cartel')
+    cart_acept = carteles.filter(estatus='Aceptado').count()
+    cart_rechaz = carteles.filter(estatus='Rechazado').count()
+    cart_total = carteles.count()
+    
+
+    est = 0
+    lic = 0
+    ing = 0
+    mtr = 0
+    doc = 0
+    for pres in pres_list:
+        autores = Author.objects.filter(presentacion = pres)
+        for autor in autores:
+            match autor.grado:
+                case 'Estudiante':
+                    est = est+1
+                case 'Licenciatura':
+                    lic = lic+1
+                case 'Ingeniería':
+                    ing = ing+1
+                case 'Maestria':
+                    mtr = mtr+1
+                case 'Doctorado':
+                    doc = doc+1
 
     return render(request, 'TestApp/AdminFront/informe.html',
             {
@@ -139,7 +166,12 @@ def informe(request):
                 'ponen_acept' : ponen_acept,
                 'ponen_rechaz' : ponen_rechaz,
                 'cart_acept' : cart_acept,
-                'cart_rechaz' : cart_rechaz
+                'cart_rechaz' : cart_rechaz,
+                'est' : est,
+                'lic' : lic,
+                'ing' : ing,
+                'mtr' : mtr,
+                'doc' : doc
             })
                 
 
@@ -192,7 +224,7 @@ def processPoster(request):
                                   poster_pdf = request.FILES.get('poster_pdf'))
 
     try: 
-        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg'])(evento.poster.poster_img)
+        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.poster.poster_img)
         FileExtensionValidator(allowed_extensions = ['pdf'])(evento.poster.poster_pdf)
     except ValidationError:
         request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
@@ -231,7 +263,7 @@ def processPrograma(request):
                                   programa_pdf = request.FILES.get('programa_pdf'))
 
     try: 
-        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg'])(evento.programa.programa_img)
+        FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.programa.programa_img)
         FileExtensionValidator(allowed_extensions = ['pdf'])(evento.programa.programa_pdf)
     except ValidationError:
         request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
