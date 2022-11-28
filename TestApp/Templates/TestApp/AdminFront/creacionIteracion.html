@@ -19,7 +19,6 @@
 		<form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" enctype="multipart/form-data" class="loginfrm">
             {% csrf_token %}
 			<p>Año del evento: <input type="number" name="year" required></p>
-			<p>Cartel del evento(.jpg/.jpeg): <input type="file" accept=".jpg, .jpeg" name="cartel" required></p>
 			<p>Plantilla para constancias(.jpg/.jpeg): <input type="file" accept=".jpg, .jpeg" name="plantilla_constancias" required></p>
 			<p>Correo de comunicación: <input type="email" name="correo" required></p>
 			<p>Contraseña del correo de comunicación: <input type="password" name="correo_contrasena" required></p>

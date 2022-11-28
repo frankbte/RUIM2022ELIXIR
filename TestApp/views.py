@@ -679,7 +679,6 @@ def insert_iter(request):
     try:
         validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])
 
-        validator(new_event.cartel)
         validator(new_event.plantilla_constancias_img)
         new_event.save_all()
         new_event.save() 
