@@ -764,8 +764,10 @@ def report(request):
 
 @login_required
 def remove_iteration(request):
+
     pk = request.POST.get("pk") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
     print(request.POST.get("del"))
+
     if request.POST.get("del") == 'true':
         
         try:
@@ -821,6 +823,8 @@ def activate_event(request):
     to_activate = Evento.objects.get(year = year)
     to_activate.active = True
     to_activate.save()
+
+    request.session['showing_year'] = "no_event"
 
     return redirect(reverse('TestApp:Edicion_Iteraciones'))
 
