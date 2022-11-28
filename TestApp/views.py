@@ -606,7 +606,7 @@ def AddPresentation(request):
     presentacion.save()
     request.session["message"] = "Registro de presentación exitoso!\n\n"
     
-    """    
+           
     ## Envio de correo
     subject = 'Reunion Universitaria de investigación de materiales ' + str(evento.year)
     message = '¡Muchas gracias por tu participación!\n Hemos recibido tu solicitud, pronto te llegará un correo de parte del comité organizador.'
@@ -635,7 +635,7 @@ def AddPresentation(request):
     except Exception as error:
         request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
         connection.close()
-    """
+       
     
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
 
