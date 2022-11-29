@@ -6,14 +6,6 @@
 {% block content %}
 <body>
     <script>
-        function alertDelete1(arg) {
-            if (confirm("¿Seguro que deseas eliminar el evento?")){
-                return;
-            }else{
-                document.getElementById("delete"+arg).reset()
-                return;
-            }
-        }
         function alertDelete(arg) {
             del = confirm("¿Seguro que deseas eliminar el evento?");
             myform = document.getElementById(arg);
@@ -21,13 +13,6 @@
             console.log(myform['del'].value);
             return;
            
-        }
-        function showDelete(arg) {
-            data = `<form name="delete`+ arg +`" action="{% url 'TestApp:Borrando Iteracion' %}" method="POST"> 
-                        {% csrf_token %}
-                        <button type="submit" name="eliminar" value=`+ arg +` class="btn btn-danger" style="width: 100%" onclick=alertDelete1()>Eliminar</button> 
-                    </form> `
-            document.getElementById(arg).innerHTML = data;
         }
         </script>
     <div class="container">

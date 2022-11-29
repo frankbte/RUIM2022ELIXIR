@@ -15,6 +15,8 @@ import re
 import copy
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+
+from zipfile import ZipFile
     
 from fpdf import FPDF
 
@@ -473,7 +475,7 @@ def processConstancia(request):
     evento.plantilla_constancias_img = request.FILES.get('plantilla')
     
     
-    if evento.plantilla_constancias_img :
+    if evento.plantilla_constancias_img != "" :
         try: 
             FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.plantilla_constancias_img )
         except ValidationError:
@@ -717,10 +719,18 @@ def report(request):
     plantilla = current_event.plantilla_constancias_img
     print(plantilla)
     
-    if not plantilla:
+    if plantilla == "":
         request.session['message'] = 'No hay plantilla de constancias guardada :('
     else:
-        request.session['message'] = "Constancias creadas en RUIM2022ELIXIR/TestApp/static/TestApp/archivos/constancias: \n\n"
+        responseFileName = ""
+        zipFile = ""
+        dest = 'archivos/constancias/'
+
+        if authors.count() > 1:
+            #request.session['message'] = "Constancias creadas en un archivo .zip"
+            responseFileName = 'constancias' + str(current_event.year) + '-' + titulo.replace(' ','_') + '.zip'
+
+            zipFile = ZipFile(dest + responseFileName, 'w')
 
         for author in authors:
             nombre = author.nombre+ ' ' + author.apellido_pat+ ' ' + author.apellido_mat
@@ -733,9 +743,9 @@ def report(request):
             pdf.set_text_color(0,0,0)
             
             pdf.add_page()
-            pdf.image(plantilla, x=0, y=0, w=280, h=216)
-            pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
-            pdf.set_font(font, '', size)
+            pdf.image("./archivos/" + plantilla.name, x=0, y=0, w=280, h=216)
+            pdf.image('./TestApp/static/TestApp/img/Escudo_Unison.png', x=15, y=7, w=35, h=40)
+            pdf.set_font(font, 'I', size)
             pos = pdf.get_y() + 40
             
             pdf.set_xy(10, pos)
@@ -770,18 +780,23 @@ def report(request):
             pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
             
             pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
-            dest = 'TestApp/static/TestApp/archivos/constancias/'
-            pdf.output(dest + pdfname, 'F')
-            
+
             try:
                 pdf.output(dest + pdfname, 'F')
-                request.session['message'] = request.session['message'] + " " + pdfname + "\n"
+                if authors.count() > 1:
+                    zipFile.write(dest + pdfname, arcname = pdfname)
             except Exception as error:
                 request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+                return redirect(reverse('TestApp:Constancias'))
+
     
     
+        if authors.count() > 1:
+            zipFile.close()
+            return FileResponse(open(dest + responseFileName, 'rb'), as_attachment=True, content_type= 'application/zip')
+        return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type = 'application/pdf')
+
     return redirect(reverse('TestApp:Constancias'))
-    #return FileResponse(open(dest + pdfname, 'rb'), as_attachment=True, content_type= 'application/pdf')
 
 @login_required
 def remove_iteration(request):
