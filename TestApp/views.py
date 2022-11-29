@@ -71,7 +71,9 @@ def inforegistro(request):
     request.session["message"] = ""
 
     current_event = get_current_event(request)
-    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : current_event.registro, 'message' : message , 'evento' : current_event})
+    return render(request, 'TestApp/inforegistro.html', {'inf_registro' : current_event.registro, 
+                                                        'message' : message , 
+                                                        'evento' : current_event})
 
 
 # Vistas de administrador
@@ -202,11 +204,11 @@ def processInicio(request):
                                cartel = request.FILES.get('cartel'))
     if newInicio.cartel:
         try: 
-            FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.inicio.cartel)
+            FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(newInicio.cartel)
         except ValidationError:
             request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
             return(HttpResponseRedirect(reverse('TestApp:Edición Inicio')))
-        evento.inicio.cartel.name = str(evento.year) + 'banner.png'
+        newInicio.cartel.name = str(evento.year) + 'banner.png'
     else:
         newInicio.cartel = evento.inicio.cartel
 
@@ -401,7 +403,7 @@ def processRegistro(request):
                                  text_constancias_participacion = request.POST.get('text_constancias_participacion'),
                                  title_participacion_asistente = request.POST.get('title_participacion_asistente'),
                                  text_participacion_asistente = request.POST.get('text_participacion_asistente'),
-                                 formato_resumen_pdf = request.POST.get('formato_resumen_pdf'))
+                                 formato_resumen_pdf = request.FILES.get('formato_resumen_pdf'))
 
     try: 
         FileExtensionValidator(allowed_extensions = ['pdf'])(evento.registro.formato_resumen_pdf)
@@ -482,11 +484,12 @@ def processConstancia(request):
     evento=get_editing_event()
     evento.fecha =request.POST.get('date')
     evento.lugar = request.POST.get('place')
-    evento.plantilla_constancias_img = request.FILES.get('plantilla')
+    newPlantilla = request.FILES.get('plantilla')
     
     
-    if evento.plantilla_constancias_img != "" :
+    if newPlantilla != None :
         try: 
+            evento.plantilla_constancias_img = newPlantilla
             FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.plantilla_constancias_img )
         except ValidationError:
             request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
