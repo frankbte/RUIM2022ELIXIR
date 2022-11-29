@@ -8,41 +8,41 @@
  {% block content %}
    <!-- Heading -->
    <center>
-		<div class="container">
+		<div class="container mt-5">
 			<div>
-				<h1 style="font-weight: bold; color: black">
+				<h1 style="font-weight: bold; color: black; padding-bottom: 30px;">
 					Login
 				</h1>
 				{% if form.errors %}
-					<p class="mb-0" style="color: black">El usuario y la contraseña no coinciden. Por favor, intente de nuevo.</p>
+					<p class="mb-0" style="color: black; font-size: 1.40em; padding-bottom: 30px;">El usuario y la contraseña no coinciden. Por favor, intente de nuevo.</p>
 				{% else %}
-					<p class="mb-0" style="color: black">Ingrese el usuario y la contraseña de la cuenta del administrador de la página de la RUIM:</p>
+					<p class="mb-0" style="color: black; font-size: 1.40em; padding-bottom: 30px;">Ingrese el usuario y la contraseña de la cuenta del administrador de la página de la RUIM:</p>
 				{% endif %}
 
 
 				{% if next %}
 					{% if user.is_authenticated %}
-					<p class="mb-0" style="color: black">Your account doesn't have access to this page. To proceed,
+					<p class="mb-0" style="color: black; font-size: 1.40em; padding-bottom: 30px;">Your account doesn't have access to this page. To proceed,
 					please login with an account that has access.</p>
 					{% else %}
-					<p class="mb-0" style="color: black">Please login to see this page.</p>
+					<p class="mb-0" style="color: black; font-size: 1.40em; padding-bottom: 30px;">Please login to see this page.</p>
 					{% endif %}
 				{% endif %}
 			</div>
 
 			<form method="post" action="{% url 'TestApp:login' %}" style="color: black">
 			{% csrf_token %}
-				<div class="field-text">
-					<td class="label-text">{{ form.username.label_tag }}</td>
-					<td class="field-text">{{ form.username }}</td>
+				<div style="padding: 15px; padding-top: 0px">
+					<td>{{ form.username.label_tag }}</td>
+					<td>{{ form.username }}</td>
 				</div>
-				<div class="field-text">
-					<td class="label-text">{{ form.password.label_tag }}</td>
-					<td class="field-text">{{ form.password }}</td>
+				<div style="padding: 15px">
+					<td>{{ form.password.label_tag }}</td>
+					<td>{{ form.password }}</td>
 				</div>
-
+				<hr>
 				<div>
-				<input type="submit" value="login" />
+				<input type="submit" class="btn btn-primary btn-lg mt-3" value="Login" />
 				<input type="hidden" name="next" value="{{ next }}" />
 				</div>
 			</form>
