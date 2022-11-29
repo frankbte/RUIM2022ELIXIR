@@ -5,16 +5,15 @@
 
 {% block content %}
     <body>
-        <center>
-		<br/>
-        <h1>
-            Creación de una nueva iteración
-        </h1>
-        {% if form.errors %}
-            <p>Debe completar todos los campos correctamente.</p>
-        {% else %}
-            <p>Ingrese los datos de la nueva iteración:</p>
-        {% endif %}
+        <div class="container">
+            <h1 class="row">
+                Creación de una nueva iteración
+            </h1>
+            {% if form.errors %}
+                <p class="row">Debe completar todos los campos correctamente.</p>
+            {% else %}
+                <p class="row">Ingrese los datos de la nueva iteración:</p>
+            {% endif %}
 
 		<form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" enctype="multipart/form-data" class="loginfrm">
             {% csrf_token %}
