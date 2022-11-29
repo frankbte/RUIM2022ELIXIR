@@ -269,12 +269,14 @@ def processPoster(request):
 # Programa
 @login_required
 def programaAdmin(request):
+    current_editing_event = get_editing_event()
+
     form = ProgramaPageForm()
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/programaAdmin.html', 
             {'form': form,
-             'message' : message})
+                'message' : message, 'evento': current_editing_event})
     
 @login_required
 def processPrograma(request):
@@ -317,7 +319,7 @@ def ubicacionAdmin(request):
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/ubicacionAdmin.html', 
             {'form': form,
-             'message' : message})
+                'message' : message, 'evento' : editing_ev})
     
 @login_required
 def processUbicacion(request):
@@ -719,10 +721,13 @@ def report(request):
     
     modalidad = presentacion.modalidad
     titulo = presentacion.presentacion_titulo
+
+    month = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
+                'noviembre', 'diciembre']
     
     current_event = presentacion.evento
-    fecha = current_event.fecha;
-    lugar = current_event.lugar;
+    fecha = str(current_event.fecha.day) + " de " + month[current_event.fecha.month - 1] + " del " + str(current_event.fecha.year)
+    lugar = current_event.lugar
     
     plantilla = current_event.plantilla_constancias_img
     print(plantilla)
@@ -757,35 +762,35 @@ def report(request):
             pos = pdf.get_y() + 40
             
             pdf.set_xy(10, pos)
-            pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+            pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='C')
             pos = pdf.get_y() + 5
             
             pdf.set_xy(10, pos)
             pdf.set_font(font, 'B', size + 8)
-            pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
+            pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0, align ='C')
             pos = pdf.get_y() + 5
             
-            pdf.set_xy(10, pos)
-            pdf.set_font(font, '', size)
-            pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
+            #pdf.set_xy(10, pos)
+            #pdf.set_font(font, '', size)
+            #pdf.multi_cell(w = 0, h = height, txt= 'a: ', border = 0 ,align ='C')
             pdf.set_xy(15,pos)
             pdf.set_font(font, 'I', size)
-            pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
+            pdf.multi_cell(w = 0, h = height, txt= 'a: ' + nombre, border = 0 ,align ='C')
             pos = pdf.get_y() + 5
             
             pdf.set_xy(10,pos)
             pdf.set_font(font, '', size)
-            pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
-            pos = pdf.get_y() + 5
-            
-            pdf.set_xy(10,pos)
-            pdf.set_font(font, 'I', size)
-            pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
+            pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='C')
             pos = pdf.get_y() + 5
             
             pdf.set_xy(10,pos)
             pdf.set_font(font, '', size)
-            pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
+            pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='C')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10,pos)
+            pdf.set_font(font, '', size)
+            pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='C')
             
             pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
 
