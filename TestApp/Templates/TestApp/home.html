@@ -11,7 +11,7 @@
 
 <center>
     &nbsp;<br />
-   <img style="text-align: center; width: 80%; margin-bottom: -1cm;"  alt="Banner del evento" src="{% static evento.cartel %}" /></a>
+   <img style="text-align: center; width: 80%; margin-bottom: -1cm;"  alt="Banner del evento" src="{% static home.cartel %}" /></a>
 </center>
 
 
@@ -33,6 +33,28 @@
         </div>
       </div>
     </section>
+
+    {% if home.title_news %}
+    <section class="page-section cta">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-9 mx-auto">
+            <div class="cta-inner text-center rounded">
+              <h2 class="section-heading mb-4">
+                <span class="section-heading-upper"></span>
+                <span class="section-heading-lower"></span>
+              </h2> 
+                <h1 style="font-weight: bold;"> {{ home.title_news }} </h1>
+                  {% if home.text_news %}
+                  <p class="mb-0">	{{ home.text_news|linebreaks }}</p> 
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+    {% endif %}
+    
 
 {% endblock %}
    

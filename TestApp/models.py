@@ -37,8 +37,11 @@ class Author(models.Model):
     presentacion = models.ForeignKey('PresentacionRegistro', on_delete = models.CASCADE, default = '')
 
 class InicioPage(models.Model):
-    title_descripcion = models.CharField(max_length = 40)
+    cartel = models.ImageField(upload_to = 'admin/', blank=True,null=True)
+    title_descripcion = models.CharField(max_length = 80)
     text_descripcion = models.CharField(max_length = 1000)
+    title_news = models.CharField(max_length = 80, blank=True,null=True)
+    text_news = models.CharField(max_length = 1000, blank=True,null=True)
 
 class ProgramaPage(models.Model):
     programa_pdf = models.FileField(upload_to = 'admin/')
@@ -81,7 +84,6 @@ class Evento(models.Model):
     editing = models.BooleanField()
     register_available = models.BooleanField()
     year = models.IntegerField(default=2022)
-    cartel = models.FileField(upload_to = 'admin/', blank=True,null=True)
     inicio = models.ForeignKey('InicioPage', on_delete = models.CASCADE, blank=True,null=True)
     programa = models.ForeignKey('ProgramaPage', on_delete = models.CASCADE, blank=True,null=True)
     poster = models.ForeignKey('PosterPage', on_delete = models.CASCADE, blank=True,null=True)
@@ -107,8 +109,7 @@ class Evento(models.Model):
 
 
 DEFAULT_EVENT = Evento(active = False, year = 2022, editing = False, register_available = True, \
-                        cartel = "admin/banner.jpg", \
-                        inicio = InicioPage(title_descripcion = "RUIM 2022", \
+                        inicio = InicioPage(title_descripcion = "RUIM 2022", cartel = "admin/banner.jpg",\
                                 text_descripcion = "El objetivo de la Reunión Universitaria de Investigación en Materiales (RUIM 2022) es dar a conocer a la comunidad universitaria las actividades que se desarrollan en nuestra institución mediante la presentación de trabajos, por parte de estudiantes y profesores de la Universidad de Sonora, que tengan como temática la investigación en materiales. \
     \n\n Por lo anterior, se convoca a los estudiantes de Posgrado y estudiantes avanzados de Licenciatura, así como a los profesores e investigadores de las Divisiones de Ciencias Exactas y Naturales (DCEN), Ciencias Biológicas y de la Salud (DCBS), e Ingeniería (DI) de la Universidad de Sonora, a presentar trabajos en la XXV Reunión Universitaria de Investigación en Materiales (RUIM 2022)."), \
                         programa = ProgramaPage(programa_pdf = "admin/programa.pdf", programa_img = "admin/programa.jpg"), \

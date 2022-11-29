@@ -26,7 +26,7 @@
                                     <h6>Fecha del evento: <input type="date" name="date" required></h6>
                                     <h6>Lugar del evento: <input type="text" name="place" required></h6>
                                     <tr>
-                                        <th><h6>Plantilla de constancias (imagen): <input type="file" name="plantilla" accept=".jpg, .jpeg, .png"></h6> </th>
+                                        <th><h6>Plantilla de constancias (imagen tamaño Letter 280:216): <input type="file" name="plantilla" accept=".jpg, .jpeg, .png"></h6> </th>
                                         <th> <button type="submit" class="btn btn-primary"> Guardar </button> </th>
                                     </tr>
                                 </table>
@@ -50,7 +50,7 @@
                                 </tr>   
                                 <tr>
                                     <th><h6>Plantilla de constancias (imagen): </h6></th>
-                                    <th><img style="text-align: center; width: 80%; margin-bottom: -1cm;"  alt="plantilla" src={{evento.plantilla_constancias_img}} /></a></th>
+                                    <th><img style="text-align: center; width: 80%; margin-bottom: -1cm;"  alt="plantilla" src="{% static evento.plantilla_constancias_img %}" /></a></th>
                                          
                                 </tr>   
                             </table>

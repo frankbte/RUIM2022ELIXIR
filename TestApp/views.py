@@ -191,7 +191,17 @@ def processInicio(request):
     evento=get_editing_event()
     
     evento.inicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
-                               text_descripcion = request.POST.get('text_descripcion'))
+                               text_descripcion = request.POST.get('text_descripcion'),
+                               title_news = request.POST.get('title_news'),
+                               text_news = request.POST.get('text_news'),
+                               cartel = request.FILES.get('cartel'))
+    if evento.inicio.cartel:
+        try: 
+            FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.inicio.cartel)
+        except ValidationError:
+            request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+            return(HttpResponseRedirect(reverse('TestApp:Edición Inicio')))
+        evento.inicio.cartel.name = str(evento.year) + 'banner.png'
     
     try:
         evento.save_all()
@@ -461,8 +471,16 @@ def processConstancia(request):
     evento.fecha =request.POST.get('date')
     evento.lugar = request.POST.get('place')
     evento.plantilla_constancias_img = request.FILES.get('plantilla')
-    evento.plantilla_constancias_img.name = str(evento.year) + 'plantilla.jpg'
     
+    
+    if evento.plantilla_constancias_img :
+        try: 
+            FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.plantilla_constancias_img )
+        except ValidationError:
+            request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
+            return redirect(reverse('TestApp:Constancias')) 
+        evento.plantilla_constancias_img.name = str(evento.year) + 'plantilla.jpg'
+        
     try:
         evento.save_all()
         evento.save() 
@@ -596,7 +614,7 @@ def AddPresentation(request):
     presentacion.save()
     request.session["message"] = "Registro de presentación exitoso!\n\n"
     
-    """    
+           
     ## Envio de correo
     subject = 'Reunion Universitaria de investigación de materiales ' + str(evento.year)
     message = '¡Muchas gracias por tu participación!\n Hemos recibido tu solicitud, pronto te llegará un correo de parte del comité organizador.'
@@ -625,7 +643,7 @@ def AddPresentation(request):
     except Exception as error:
         request.session['message'] = request.session['message'] + "Ocurrió un error inesperado, correo de confirmación no enviado"
         connection.close()
-    """
+       
     
     return HttpResponseRedirect(reverse('TestApp:Registro')) 
 
@@ -640,7 +658,6 @@ def insert_iter(request):
         request.session["success_message"] = "No se pueden registrar dos eventos de un mismo año!"
         return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
 
-    cartel = request.FILES.get("cartel")
     correo = request.POST.get("correo")
     correo_contrasena = request.POST.get("correo_contrasena")
     fecha = request.POST.get("date")
@@ -652,7 +669,6 @@ def insert_iter(request):
     new_event.editing = False
     new_event.register_available = False
     new_event.year = year
-    new_event.cartel = cartel
     new_event.correo_comunicacion = correo
     new_event.correo_contrasena = correo_contrasena
     new_event.fecha = fecha
@@ -671,7 +687,6 @@ def insert_iter(request):
     try:
         validator = FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png"])
 
-        validator(new_event.cartel)
         validator(new_event.plantilla_constancias_img)
         new_event.save_all()
         new_event.save() 
@@ -698,65 +713,71 @@ def report(request):
     current_event = presentacion.evento
     fecha = current_event.fecha;
     lugar = current_event.lugar;
-        
-    request.session['message'] = "Constancias creadas: \n\n"
     
-    for author in authors:
-        nombre = author.nombre+ ' ' + author.apellido_pat+ ' ' + author.apellido_mat
+    plantilla = current_event.plantilla_constancias_img
+    print(plantilla)
+    
+    if not plantilla:
+        request.session['message'] = 'No hay plantilla de constancias guardada :('
+    else:
+        request.session['message'] = "Constancias creadas en RUIM2022ELIXIR/TestApp/static/TestApp/archivos/constancias: \n\n"
 
-        font = 'times'
-        size = 20
-        height = 12
-        
-        pdf = FPDF('L', 'mm', 'letter')
-        pdf.set_text_color(0,0,0)
-        
-        pdf.add_page()
-        pdf.image(current_event.plantilla_constancias_img, x=0, y=0, w=280, h=216)
-        pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
-        pdf.set_font(font, '', size)
-        pos = pdf.get_y() + 40
-        
-        pdf.set_xy(10, pos)
-        pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
-        pos = pdf.get_y() + 5
-        
-        pdf.set_xy(10, pos)
-        pdf.set_font(font, 'B', size + 8)
-        pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
-        pos = pdf.get_y() + 5
-        
-        pdf.set_xy(10, pos)
-        pdf.set_font(font, '', size)
-        pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
-        pdf.set_xy(15,pos)
-        pdf.set_font(font, 'I', size)
-        pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
-        pos = pdf.get_y() + 5
-        
-        pdf.set_xy(10,pos)
-        pdf.set_font(font, '', size)
-        pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
-        pos = pdf.get_y() + 5
-        
-        pdf.set_xy(10,pos)
-        pdf.set_font(font, 'I', size)
-        pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
-        pos = pdf.get_y() + 5
-        
-        pdf.set_xy(10,pos)
-        pdf.set_font(font, '', size)
-        pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
-        
-        pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
-        dest = 'TestApp/static/TestApp/archivos/constancias/'
-        pdf.output(dest + pdfname, 'F')
-        
-        try:
+        for author in authors:
+            nombre = author.nombre+ ' ' + author.apellido_pat+ ' ' + author.apellido_mat
+
+            font = 'times'
+            size = 20
+            height = 12
+            
+            pdf = FPDF('L', 'mm', 'letter')
+            pdf.set_text_color(0,0,0)
+            
+            pdf.add_page()
+            pdf.image(plantilla, x=0, y=0, w=280, h=216)
+            pdf.image('TestApp\static\TestApp\img\Escudo_Unison.png', x=15, y=7, w=35, h=40)
+            pdf.set_font(font, '', size)
+            pos = pdf.get_y() + 40
+            
+            pdf.set_xy(10, pos)
+            pdf.multi_cell(w = 0, h = height, txt= 'La Reunion Universitaria de Investigación en Materiales otorga el presente', border = 0 ,align ='c')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10, pos)
+            pdf.set_font(font, 'B', size + 8)
+            pdf.multi_cell(w = 0, h = height, txt= 'RECONOCIMIENTO', border = 0 ,align ='c')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10, pos)
+            pdf.set_font(font, '', size)
+            pdf.multi_cell(w = 0, h = height, txt= 'a:', border = 0 ,align ='l')
+            pdf.set_xy(15,pos)
+            pdf.set_font(font, 'I', size)
+            pdf.multi_cell(w = 0, h = height, txt= nombre, border = 0 ,align ='c')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10,pos)
+            pdf.set_font(font, '', size)
+            pdf.multi_cell(w = 0, h = height, txt= 'Por haber asistido y presentado su ' + modalidad + ' con título', border = 0 ,align ='c')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10,pos)
+            pdf.set_font(font, 'I', size)
+            pdf.multi_cell(w = 0, h = height, txt= titulo, border = 0 ,align ='c')
+            pos = pdf.get_y() + 5
+            
+            pdf.set_xy(10,pos)
+            pdf.set_font(font, '', size)
+            pdf.multi_cell(w = 0, h = height, txt= 'el día ' + str(fecha) + ' en ' + lugar + '.', border = 0 ,align ='c')
+            
+            pdfname = 'constancia' + str(current_event.year) + '-' + nombre.replace(' ','_') + '-' + titulo.replace(' ','_') + '.pdf'
+            dest = 'TestApp/static/TestApp/archivos/constancias/'
             pdf.output(dest + pdfname, 'F')
-            request.session['message'] = request.session['message'] + " " + pdfname + "\n"
-        except Exception as error:
-            request.session['message'] = "Ocurrió un error inesperado: " + format(error)
+            
+            try:
+                pdf.output(dest + pdfname, 'F')
+                request.session['message'] = request.session['message'] + " " + pdfname + "\n"
+            except Exception as error:
+                request.session['message'] = "Ocurrió un error inesperado: " + format(error)
     
     
     return redirect(reverse('TestApp:Constancias'))
@@ -764,8 +785,10 @@ def report(request):
 
 @login_required
 def remove_iteration(request):
+
     pk = request.POST.get("pk") #Desde el view, la seleccion de evento es a trav\'es del a\~no.
     print(request.POST.get("del"))
+
     if request.POST.get("del") == 'true':
         
         try:
@@ -821,6 +844,8 @@ def activate_event(request):
     to_activate = Evento.objects.get(year = year)
     to_activate.active = True
     to_activate.save()
+
+    request.session['showing_year'] = "no_event"
 
     return redirect(reverse('TestApp:Edicion_Iteraciones'))
 
