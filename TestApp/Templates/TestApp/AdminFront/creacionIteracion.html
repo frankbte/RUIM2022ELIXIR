@@ -6,25 +6,52 @@
 {% block content %}
     <body>
         <div class="container">
-            <h1 class="row">
+            <h1 class="row my-4 justify-content-center">
                 Creación de una nueva iteración
             </h1>
+            <hr>
             {% if form.errors %}
-                <p class="row">Debe completar todos los campos correctamente.</p>
+                <p class="row mb-4 pl-3" style="font-size: 1.4em">Debe completar todos los campos correctamente.</p>
             {% else %}
-                <p class="row">Ingrese los datos de la nueva iteración:</p>
+                <p class="row mb-4 pl-3" style="font-size: 1.4em">Ingrese los datos de la nueva iteración:</p>
             {% endif %}
 
-		<form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" enctype="multipart/form-data" class="loginfrm">
-            {% csrf_token %}
-			<p>Año del evento: <input type="number" name="year" required></p>
-			<p>Plantilla para constancias(.jpg/.jpeg): <input type="file" accept=".jpg, .jpeg" name="plantilla_constancias" required></p>
-			<p>Correo de comunicación: <input type="email" name="correo" required></p>
-			<p>Contraseña del correo de comunicación: <input type="password" name="correo_contrasena" required></p>
-			<p>Fecha del evento: <input type="date" name="date" required></p>
-			<p>Lugar del evento: <input type="text" name="place" required></p>
-            <input type="submit" value="Crear">
-        </form>
-        </center>
+            <form action="{% url 'TestApp:Insertando Iteración' %}" method="POST" enctype="multipart/form-data" class="loginfrm">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="year" style="font-size: 1.15em">Año del evento:</label>
+                        <input type="number" class="form-control" name="year" id="year"required>
+                    </div>
+                    <div class="form-group col">
+                        <label for="file" style="font-size: 1.15em">Plantilla para constancias(.jpg/.jpeg):</label>
+                        <input type="file" class="form-control" accept=".jpg, .jpeg" name="plantilla_constancias" id="file" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="correo" style="font-size: 1.15em">Correo de comunicación: </label>
+                        <input type="email" class="form-control" name="correo" id="correo" required>
+                    </div>
+                    <div class="form-group col">
+                        <label for="correo_contrasena" style="font-size: 1.15em">Contraseña del correo de comunicación: </label>
+                        <input type="password" class="form-control" name="correo_contrasena" id="correo_contrasena" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label for="date" style="font-size: 1.15em">Fecha del evento: </label>
+                        <input type="date" class="form-control" name="date" id="date" required>
+                    </div>
+                    <div class="form-group col-9">
+                        <label for="place" style="font-size: 1.15em">Lugar del evento: </label>
+                        <input type="text" class="form-control" name="place" id="place" required>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-primary btn-lg col-4 my-4" value="Crear">
+                </div>
+            </form>
+        </div>
     </body>
 {% endblock %}
