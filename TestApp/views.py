@@ -182,7 +182,10 @@ def informe(request):
 def inicioAdmin(request):
     event = get_editing_event()
     form = InicioPageForm(initial={'title_descripcion': event.inicio.title_descripcion,
-                                   'text_descripcion': event.inicio.text_descripcion})
+                                   'text_descripcion': event.inicio.text_descripcion,
+                                   'title_news' : event.inicio.title_news,
+                                   'text_news' : event.inicio.text_news,
+                                   'cartel' : event.inicio.cartel,})
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', 
@@ -192,18 +195,23 @@ def inicioAdmin(request):
 def processInicio(request):
     evento=get_editing_event()
     
-    evento.inicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
+    newInicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
                                text_descripcion = request.POST.get('text_descripcion'),
                                title_news = request.POST.get('title_news'),
                                text_news = request.POST.get('text_news'),
                                cartel = request.FILES.get('cartel'))
-    if evento.inicio.cartel:
+    if newInicio.cartel:
         try: 
             FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(evento.inicio.cartel)
         except ValidationError:
             request.session['message'] = "Extensión incorrecta para archivos. Intenta de nuevo."
             return(HttpResponseRedirect(reverse('TestApp:Edición Inicio')))
         evento.inicio.cartel.name = str(evento.year) + 'banner.png'
+    else:
+        newInicio.cartel = evento.inicio.cartel
+
+    evento.inicio.delete()
+    evento.inicio = newInicio
     
     try:
         evento.save_all()

@@ -64,8 +64,8 @@ class RegistroPage(models.Model):
 
 
 class UbicacionPage(models.Model):
-    title = models.CharField(max_length = 40)
-    text = models.CharField(max_length = 300)
+    title = models.CharField(max_length = 80)
+    text = models.CharField(max_length = 600)
     url_maps_embed = models.CharField(max_length = 500)
     url_maps = models.URLField(max_length = 200)
 
