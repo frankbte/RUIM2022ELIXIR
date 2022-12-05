@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 
+
 <html>
     <head>
         {% load static %}
     	<link rel="shortcut icon" type="image/png" href="{% static '/admin/Escudo_Unison.png'%}"/>
         <link rel="stylesheet" href="{% static 'TestApp/vendor/bootstrap/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'TestApp/css/baseFront.css' %}">
+		<link rel="stylesheet" href="{% static 'TestApp/css/dropdown.css' %}">
         <title>{% block title %}Administración RUIM{% endblock %}</title>
 
         {% block additional-head %} {% endblock %}
@@ -33,7 +35,14 @@
             </div>
           </div>
           <nav class="row navbar-expand-lg navbar-dark" id="navbar">
-              <span class="navbar-brand px-4 mb-0 h1">Edición {{ evento.year }} </span>
+				  <div class="dropdown">
+						  <button class="dropbtn">Editando: {{ evento.year }}
+								  <div class="dropdown-content">
+										  {% for ev in eventos %}
+										  <a href="{% url 'TestApp:editar ano' ev.year %}">{{ ev.year }}</a>
+										  {% endfor %}
+								  </div> </button>
+				  </div>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -62,7 +71,7 @@
                     <a class="nav-link" href="{% url 'TestApp:Edición Registro' %}">Registro</a>
                   </li>
                   <li class="nav-item">
-						  <a class="nav-link" href="{% url 'TestApp:Estado' %}">Estado de presentaciones</a>
+						  <a class="nav-link" href="{% url 'TestApp:Estado' %}">Revisar presentaciones</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'TestApp:Constancias' %}">Constancia</a>

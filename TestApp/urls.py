@@ -30,7 +30,7 @@ urlpatterns = [
     path('admin/edicionesAdmin/eliminar', views.remove_iteration, name="Borrando Iteracion"),
     path('admin/edicionesAdmin/activar', views.activate_event, name="Activar Iteracion"),
     path('admin/edicionesAdmin/editing', views.change_editing_event, name="Change Editing"),
-    
+    path('admin/ediiconesAdmin/editing/<int:year>', views.change_editing_event, name="editar ano"),
     path('admin/inicioAdmin/', views.inicioAdmin, name="Edición Inicio"),
     path('admin/processInicio/', views.processInicio, name="Procesar Inicio"),
     

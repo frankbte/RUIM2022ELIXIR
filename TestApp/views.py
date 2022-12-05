@@ -85,28 +85,26 @@ def administrador_redirect_login(request):
     return HttpResponseRedirect(reverse("TestApp:login"))
 
 @login_required
-def baseFront(request):
-    return render(request, 'TestApp/AdminFront/baseAdmin.html')
-
-
-@login_required
 def iterAdmin(request):
-    eventos = Evento.objects.all()
+    eventos = Evento.objects.all().order_by('-year')
     
     message = request.session.get("success_message", "")
     request.session["success_message"] = ""
         
     current_editing_event = get_editing_event()
+    editable_events = eventos.exclude(year = current_editing_event.year)
 
     return render(request, 'TestApp/AdminFront/edicionesFront.html', 
                     {'iteracion' : current_editing_event, 'iteracion_list' : eventos, 'message' : message,
-                'evento' : current_editing_event})
+                'evento' : current_editing_event,
+                'eventos' : editable_events})
 
 @login_required
 def disable_registro(request):
     active_event = get_current_event(request, True)
 
     active_event.register_available = not active_event.register_available
+
     active_event.save()
 
     return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
@@ -121,6 +119,7 @@ def create_iter(request):
 @login_required
 def informe(request):
     evento_actual = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=evento_actual.year)
     
     pres_list = evento_actual.presentacionregistro_set.all()
     pres_total = pres_list.count()
@@ -162,6 +161,7 @@ def informe(request):
     return render(request, 'TestApp/AdminFront/informe.html',
             {
                 'evento' : evento_actual,
+                'eventos' : eventos,
                 'pres_total' : pres_total,
                 'ponen_total' : ponen_total,
                 'cart_total' : cart_total,
@@ -183,6 +183,7 @@ def informe(request):
 @login_required
 def inicioAdmin(request):
     event = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=event.year)
     form = InicioPageForm(initial={'title_descripcion': event.inicio.title_descripcion,
                                    'text_descripcion': event.inicio.text_descripcion,
                                    'title_news' : event.inicio.title_news,
@@ -191,17 +192,17 @@ def inicioAdmin(request):
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/inicioAdmin.html', 
-            {'form': form, 'evento' : event, 'message' : message})
+            {'form': form, 'evento' : event, 'message' : message, 'eventos' : eventos})
 
 @login_required
 def processInicio(request):
     evento=get_editing_event()
     
     newInicio = InicioPage(title_descripcion = request.POST.get('title_descripcion'),
-                               text_descripcion = request.POST.get('text_descripcion'),
-                               title_news = request.POST.get('title_news'),
-                               text_news = request.POST.get('text_news'),
-                               cartel = request.FILES.get('cartel'))
+                                text_descripcion = request.POST.get('text_descripcion'), 
+                                title_news = request.POST.get('title_news'),
+                                text_news = request.POST.get('text_news'),
+                                cartel = request.FILES.get('cartel'))
     if newInicio.cartel:
         try: 
             FileExtensionValidator(allowed_extensions = ['jpg', 'jpeg', 'png'])(newInicio.cartel)
@@ -231,13 +232,14 @@ def processInicio(request):
 @login_required
 def posterAdmin(request):
     editing_event = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=editing_event.year)
 
     form = PosterPageForm()
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/posterAdmin.html', 
             {'form': form,
-                'message' : message, 'evento' : editing_event})
+                'message' : message, 'evento' : editing_event, 'eventos' : eventos})
     
 @login_required
 def processPoster(request):
@@ -272,13 +274,14 @@ def processPoster(request):
 @login_required
 def programaAdmin(request):
     current_editing_event = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=current_editing_event.year)
 
     form = ProgramaPageForm()
     message = request.session.get("message", "")
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/programaAdmin.html', 
             {'form': form,
-                'message' : message, 'evento': current_editing_event})
+                'message' : message, 'evento': current_editing_event, 'eventos' : eventos})
     
 @login_required
 def processPrograma(request):
@@ -313,6 +316,7 @@ def processPrograma(request):
 @login_required
 def ubicacionAdmin(request):
     editing_ev = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=editing_ev.year)
 
     form = UbicacionPageForm(initial = {'title' : editing_ev.ubicacion.title,
         'text' : editing_ev.ubicacion.text, 'url_maps_embed' : editing_ev.ubicacion.url_maps_embed,
@@ -321,7 +325,7 @@ def ubicacionAdmin(request):
     request.session["message"] = ""
     return render(request, 'TestApp/AdminFront/ubicacionAdmin.html', 
             {'form': form,
-                'message' : message, 'evento' : editing_ev})
+                'message' : message, 'evento' : editing_ev, 'eventos' : eventos})
     
 @login_required
 def processUbicacion(request):
@@ -348,11 +352,12 @@ def contactoAdmin(request):
     request.session["message"] = ""
 
     event = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=event.year)
 
     form = ContactoPageForm(initial = {'title' : event.contacto.title,
         'text' : event.contacto.text, 'contacto' : event.contacto.contacto})
     return render(request, 'TestApp/AdminFront/contactoAdmin.html', 
-            {'form': form, 'evento' : get_editing_event(), 'message' : message})
+            {'form': form, 'evento' : event, 'message' : message, 'eventos' : eventos})
 
 @login_required
 def processContacto(request):
@@ -380,6 +385,8 @@ def registroAdmin(request):
     request.session["message"] = ""
     
     event = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=event.year)
+
     form = RegistroPageForm(initial = {'title_participacion_ponente' : event.registro.title_participacion_ponente,
         'text_participacion_ponente' : event.registro.text_participacion_ponente,
         'title_formato_resumen' : event.registro.title_formato_resumen,
@@ -390,7 +397,7 @@ def registroAdmin(request):
         'text_participacion_asistente' : event.registro.text_participacion_asistente})
 
     return render(request, 'TestApp/AdminFront/registroAdmin.html', 
-            {'form': form, 'evento' : get_editing_event(), 'message' : message})
+            {'form': form, 'evento' : get_editing_event(), 'message' : message, 'eventos' : eventos})
 
 @login_required
 def processRegistro(request):
@@ -427,12 +434,15 @@ def processRegistro(request):
 @login_required
 def estadoAdmin(request):
     evento = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=evento.year)
+
     message = request.session.get("message", "")
     request.session["message"] = ""
     ponencias_list = evento.presentacionregistro_set.all()
     return render(request, 'TestApp/AdminFront/estadoAdmin.html', 
             {'ponencias_list' : ponencias_list, 
              'evento' : evento,
+             'eventos' : eventos,
              'message' : message})
     
 @login_required
@@ -464,6 +474,8 @@ def getResumen(request):
 @login_required
 def constancias(request):
     evento = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=evento.year)
+
     message = request.session.get("message", "")
     request.session["message"] = ""
     ponencias_list = evento.presentacionregistro_set.all()
@@ -477,7 +489,8 @@ def constancias(request):
     return render(request, 'TestApp/AdminFront/constancias.html', {'authors_list' : authors_list, 
                                                                    'message' : message,
                                                                    'ponencias_list' : ponencias_list, 
-                                                                   'evento' : evento})
+                                                                   'evento' : evento,
+                                                                   'eventos' : eventos})
 
 @login_required
 def processConstancia(request):
@@ -512,12 +525,15 @@ def processConstancia(request):
 @login_required
 def correos(request):
     evento = get_editing_event()
+    eventos = Evento.objects.all().order_by('-year').exclude(year=evento.year)
+
     message = request.session.get("message", "")
     request.session["message"] = ""
     ponencias_list = evento.presentacionregistro_set.all()
     return render(request, 'TestApp/AdminFront/correos.html', {'evento' : evento,
                                                                'message' : message,
-                                                               'ponencias_list' : ponencias_list,})
+                                                               'ponencias_list' : ponencias_list,
+                                                               'eventos' : eventos})
     
 @login_required
 def processCorreo(request):
@@ -843,8 +859,16 @@ def remove_iteration(request):
     return redirect(reverse('TestApp:Edicion_Iteraciones'))
 
 @login_required
-def change_editing_event(request):
-    year = request.POST.get("editar")
+def change_editing_event(request, year = None):
+
+    return_url = reverse('TestApp:Edicion_Iteraciones')
+    display_message = True
+
+    if year == None:
+        year = request.POST.get("editar")
+    else:
+        display_message = False
+        return_url = request.META.get('HTTP_REFERER')
 
     currently_editing = get_editing_event()
     currently_editing.editing = False
@@ -854,8 +878,8 @@ def change_editing_event(request):
     new_editing.editing = True
     new_editing.save()
 
-    request.session["success_message"] = "Ahora puedes editar la información de la edición " + str(year) + " en las demás pestañas" 
-    return HttpResponseRedirect(reverse('TestApp:Edicion_Iteraciones'))
+    if display_message: request.session["success_message"] = "Ahora puedes editar la información de la edición " + str(year) 
+    return HttpResponseRedirect(return_url)
 
 def change_viewing_event(request, year):
     request.session['showing_year'] = year
